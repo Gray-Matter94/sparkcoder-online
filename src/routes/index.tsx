@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, QUESTIONS } from "@/lib/questions";
-import { useProgress } from "@/lib/progress";
+import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { BadgesPanel } from "@/components/BadgesPanel";
+import { getDailyChallenge } from "@/lib/daily";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,6 +30,9 @@ function Home() {
   const total = QUESTIONS.length;
   const solved = Object.keys(progress.solved).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
+  const daily = getDailyChallenge();
+  const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
+  const dailyDone = !!progress.dailyChallenges[todayStr()];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,6 +65,37 @@ function Home() {
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
           <Stat label="Solved" value={`${solved}/${total}`} accent="secondary" />
         </section>
+
+        <Link
+          to="/daily"
+          className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
+            dailyDone
+              ? "border-primary/50 bg-primary/5"
+              : "border-accent bg-accent/5 hover:border-accent shadow-[0_0_24px_rgba(245,158,11,0.15)]"
+          }`}
+        >
+          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📅</div>
+          <div className="flex items-center gap-3 relative">
+            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+              {dailyDone ? "✅" : "🔥"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
+                  DAILY CHALLENGE
+                </h3>
+                <span className="text-[10px] text-zinc-500 font-mono">
+                  {dailyDone ? "DONE" : "+50 XP"}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground truncate">
+                {dailyMeta.emoji} {dailyMeta.name} · {daily.title}
+              </p>
+            </div>
+          </div>
+        </Link>
+
+        <BadgesPanel progress={progress} />
 
         <section className="space-y-3">
           <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
