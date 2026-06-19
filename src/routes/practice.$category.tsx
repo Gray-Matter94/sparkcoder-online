@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
 import { useProgress } from "@/lib/progress";
