@@ -8,6 +8,12 @@ ScriptArcade turns ServiceNow scripting prep into a mobile-friendly game. Pick a
 
 - [Arcade lobby](/): Module list, stats, streak, badges, and the daily challenge.
 - [Daily challenge](/daily): One curated puzzle per day for bonus XP and streak protection.
+- [Learn & quiz](/learn): Illustrated ServiceNow glossary and topic quizzes.
+- [Platform basics](/learn/platform): Instance, tables, scope, update sets.
+- [ITSM](/learn/itsm): Incident, Problem, Change, Request, SLA.
+- [CMDB](/learn/cmdb): Configuration items, classes, relationships, Discovery, CSDM.
+- [Flow Designer](/learn/flow): Flows, actions, subflows, spokes, IntegrationHub.
+- [Integrations](/learn/integration): REST messages, Scripted REST APIs, MID Server, import sets.
 - [GlideRecord puzzles](/practice/gliderecord): Server-side record queries, updates, and best practices.
 - [Business Rule puzzles](/practice/business-rules): Before/after rules, current vs previous, abort patterns.
 - [Client Script puzzles](/practice/client-scripts): onLoad/onChange/onSubmit logic and DOM-free patterns.
