@@ -30,6 +30,9 @@ function Home() {
   const total = QUESTIONS.length;
   const solved = Object.keys(progress.solved).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
+  const daily = getDailyChallenge();
+  const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
+  const dailyDone = !!progress.dailyChallenges[todayStr()];
 
   return (
     <div className="min-h-screen flex flex-col">
