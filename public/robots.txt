@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://service-spark-coder.lovable.app/sitemap.xml
