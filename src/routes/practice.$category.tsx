@@ -1,7 +1,8 @@
-import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
 import { useProgress } from "@/lib/progress";
+import { getCurrentTier, getNextTier } from "@/lib/difficulty";
 import { StatsBar } from "@/components/StatsBar";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
@@ -33,8 +34,15 @@ function Practice() {
   const meta = CATEGORIES.find((c) => c.id === (category as Category));
   if (!meta) throw notFound();
 
-  const questions = useMemo(() => questionsFor(category as Category), [category]);
   const { progress, award } = useProgress();
+  const tier = useMemo(() => getCurrentTier(progress), [progress]);
+  const nextTier = useMemo(() => getNextTier(progress), [progress]);
+  const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
+  const questions = useMemo(
+    () => allQuestions.filter((q) => q.level <= tier.maxLevel),
+    [allQuestions, tier.maxLevel]
+  );
+  const lockedCount = allQuestions.length - questions.length;
 
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<Option | null>(null);
