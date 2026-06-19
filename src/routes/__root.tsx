@@ -82,6 +82,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#09090b" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "ScriptArcade — ServiceNow Scripting Practice" },
+      { name: "twitter:title", content: "ScriptArcade — ServiceNow Scripting Practice" },
+      { property: "og:description", content: "Arcade-style ServiceNow scripting interview puzzles with a live simulator." },
+      { name: "twitter:description", content: "Arcade-style ServiceNow scripting interview puzzles with a live simulator." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7bf9b206-6a8d-46b2-a8e4-0c952f8cd1ed" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7bf9b206-6a8d-46b2-a8e4-0c952f8cd1ed" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
