@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DailyRoute = DailyRouteImport.update({
   id: '/daily',
   path: '/daily',
@@ -32,35 +38,46 @@ const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daily' | '/practice/$category'
+  fullPaths: '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daily' | '/practice/$category'
-  id: '__root__' | '/' | '/daily' | '/practice/$category'
+  to: '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
+  id: '__root__' | '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyRoute: typeof DailyRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/daily': {
       id: '/daily'
       path: '/daily'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyRoute: DailyRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
 }
 export const routeTree = rootRouteImport

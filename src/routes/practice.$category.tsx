@@ -12,14 +12,34 @@ export const Route = createFileRoute("/practice/$category")({
   head: ({ params }) => {
     const cat = CATEGORIES.find((c) => c.id === params.category);
     const name = cat?.name ?? "Practice";
+    const url = `https://service-spark-coder.lovable.app/practice/${params.category}`;
+    const description = `Solve interactive ${name} puzzles from real ServiceNow scripting interviews — pick the right block, run it in the simulator, and get coached the moment you miss.`;
     return {
       meta: [
         { title: `${name} Puzzles — ScriptArcade` },
-        {
-          name: "description",
-          content: `Practice ${name} ServiceNow scripting interview questions with live simulator feedback.`,
-        },
+        { name: "description", content: description },
         { property: "og:title", content: `${name} Puzzles — ScriptArcade` },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: `${name} Puzzles`,
+            description,
+            url,
+            isPartOf: {
+              "@type": "WebSite",
+              name: "ScriptArcade",
+              url: "https://service-spark-coder.lovable.app",
+            },
+            about: { "@type": "Thing", name: `ServiceNow ${name}` },
+          }),
+        },
       ],
     };
   },
@@ -163,9 +183,9 @@ function Practice() {
         />
 
         <div className="space-y-2">
-          <h3 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+          <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
             Choose the right block
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 gap-2.5">
             {q.options.map((o) => {
               const isPicked = picked?.id === o.id;
