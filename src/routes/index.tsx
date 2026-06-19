@@ -146,7 +146,7 @@ function Home() {
                       <span className="text-[10px] text-zinc-500 font-mono">
                         {done}/{full}
                         {locked > 0 && (
-                          <span className="text-zinc-600 ml-1">· 🔒{locked}</span>
+                          <span className="text-zinc-400 ml-1">· 🔒{locked}</span>
                         )}
                       </span>
                     </div>
@@ -173,13 +173,13 @@ function Home() {
         <section className="pt-2">
           <button
             onClick={reset}
-            className="text-[10px] uppercase tracking-widest text-zinc-600 hover:text-destructive transition-colors"
+            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-destructive transition-colors"
           >
             Reset all progress
           </button>
         </section>
       </main>
-      <footer className="py-6 text-center text-[10px] text-zinc-700 uppercase tracking-widest">
+      <footer className="py-6 text-center text-[10px] text-zinc-500 uppercase tracking-widest">
         Built for thumb-driving on the train.
       </footer>
     </div>

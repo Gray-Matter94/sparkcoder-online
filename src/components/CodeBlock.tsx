@@ -65,7 +65,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
             const [before, after] = line.split("{{SLOT}}");
             return (
               <div key={i} className="flex flex-wrap items-center gap-x-1">
-                <span className="text-zinc-600 select-none mr-3">{num}</span>
+                <span className="text-zinc-400 select-none mr-3">{num}</span>
                 <span>
                   {highlight(before).map((t, j) => (
                     <span key={j} className={t.c}>{t.t}</span>
@@ -86,7 +86,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
           }
           return (
             <div key={i} className="flex">
-              <span className="text-zinc-600 select-none mr-3">{num}</span>
+              <span className="text-zinc-400 select-none mr-3">{num}</span>
               <span>
                 {highlight(line).map((t, j) => (
                   <Fragment key={j}>
