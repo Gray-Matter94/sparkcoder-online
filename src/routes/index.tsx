@@ -109,7 +109,9 @@ function Home() {
           </h2>
           <div className="grid grid-cols-1 gap-3">
             {CATEGORIES.map((c) => {
-              const qs = QUESTIONS.filter((q) => q.category === c.id);
+              const allQs = QUESTIONS.filter((q) => q.category === c.id);
+              const qs = allQs.filter((q) => q.level <= tier.maxLevel);
+              const locked = allQs.length - qs.length;
               const done = qs.filter((q) => progress.solved[q.id]).length;
               const full = qs.length;
               const ringColor =
@@ -141,6 +143,9 @@ function Home() {
                       </h3>
                       <span className="text-[10px] text-zinc-500 font-mono">
                         {done}/{full}
+                        {locked > 0 && (
+                          <span className="text-zinc-600 ml-1">· 🔒{locked}</span>
+                        )}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground truncate">{c.blurb}</p>
