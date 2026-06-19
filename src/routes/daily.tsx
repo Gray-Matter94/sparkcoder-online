@@ -8,6 +8,7 @@ import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
 import type { Option, SimulatorOutput } from "@/lib/questions";
 import { CATEGORIES } from "@/lib/questions";
+import { getCurrentTier } from "@/lib/difficulty";
 
 export const Route = createFileRoute("/daily")({
   head: () => ({
@@ -47,7 +48,8 @@ function Daily() {
     const dur = (picked.correct ? q.correctSim : picked.feedback.sim).logs.length * 280 + 400;
     setTimeout(() => {
       if (picked.correct) {
-        const xp = Math.max(20, 50 - wrongAttempts.length * 10);
+        const tier = getCurrentTier(progress);
+        const xp = Math.round(Math.max(20, 50 - wrongAttempts.length * 10) * tier.xpMultiplier);
         award(q.id, xp);
         markDailyChallenge(q.id);
         setStatus("right");
