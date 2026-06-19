@@ -81,6 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Arcade-style ServiceNow scripting interview puzzles with a live simulator." },
       { name: "theme-color", content: "#09090b" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "ScriptArcade" },
       { name: "twitter:card", content: "summary" },
       { property: "og:title", content: "ScriptArcade — ServiceNow Scripting Practice" },
       { name: "twitter:title", content: "ScriptArcade — ServiceNow Scripting Practice" },
@@ -96,6 +97,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "ScriptArcade",
+              url: "https://service-spark-coder.lovable.app",
+            },
+            {
+              "@type": "WebSite",
+              name: "ScriptArcade",
+              url: "https://service-spark-coder.lovable.app",
+              description: "Arcade-style ServiceNow scripting interview puzzles with a live simulator.",
+            },
+          ],
+        }),
       },
     ],
   }),

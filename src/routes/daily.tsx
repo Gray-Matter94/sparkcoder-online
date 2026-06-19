@@ -20,7 +20,14 @@ export const Route = createFileRoute("/daily")({
           "Today's ServiceNow scripting challenge. Solve it to extend your streak and lock in a daily reward.",
       },
       { property: "og:title", content: "Daily Challenge — ScriptArcade" },
+      {
+        property: "og:description",
+        content:
+          "One curated ServiceNow scripting puzzle a day. Bonus XP, streak protection, and an instant teach-back if you miss.",
+      },
+      { property: "og:url", content: "https://service-spark-coder.lovable.app/daily" },
     ],
+    links: [{ rel: "canonical", href: "https://service-spark-coder.lovable.app/daily" }],
   }),
   component: Daily,
 });

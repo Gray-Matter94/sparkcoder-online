@@ -22,7 +22,9 @@ export const Route = createFileRoute("/")({
         content:
           "Arcade-style ServiceNow scripting puzzles with a live instance simulator and built-in coach.",
       },
+      { property: "og:url", content: "https://service-spark-coder.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://service-spark-coder.lovable.app/" }],
   }),
   component: Home,
 });
