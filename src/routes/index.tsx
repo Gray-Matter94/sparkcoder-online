@@ -3,6 +3,8 @@ import { CATEGORIES, QUESTIONS } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { BadgesPanel } from "@/components/BadgesPanel";
+import { DifficultyCard } from "@/components/DifficultyCard";
+import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
 
 export const Route = createFileRoute("/")({
@@ -94,6 +96,8 @@ function Home() {
             </div>
           </div>
         </Link>
+
+        <DifficultyCard progress={progress} />
 
         <BadgesPanel progress={progress} />
 
