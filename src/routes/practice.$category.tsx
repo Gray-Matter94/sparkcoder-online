@@ -168,7 +168,7 @@ function Practice() {
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
           {lockedCount > 0 && (
-            <p className="text-[10px] text-zinc-600 font-mono">
+            <p className="text-[10px] text-zinc-400 font-mono">
               🔒 {lockedCount} harder puzzle{lockedCount === 1 ? "" : "s"} locked
               {nextTier ? ` — reach ${nextTier.emoji} ${nextTier.name} to unlock` : ""}.
             </p>
