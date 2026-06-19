@@ -3,6 +3,8 @@ import { CATEGORIES, QUESTIONS } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { BadgesPanel } from "@/components/BadgesPanel";
+import { DifficultyCard } from "@/components/DifficultyCard";
+import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
 
 export const Route = createFileRoute("/")({
@@ -27,8 +29,10 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { progress, reset } = useProgress();
-  const total = QUESTIONS.length;
-  const solved = Object.keys(progress.solved).length;
+  const tier = getCurrentTier(progress);
+  const unlockedQuestions = QUESTIONS.filter((q) => q.level <= tier.maxLevel);
+  const total = unlockedQuestions.length;
+  const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
   const daily = getDailyChallenge();
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
@@ -95,6 +99,8 @@ function Home() {
           </div>
         </Link>
 
+        <DifficultyCard progress={progress} />
+
         <BadgesPanel progress={progress} />
 
         <section className="space-y-3">
@@ -103,7 +109,9 @@ function Home() {
           </h2>
           <div className="grid grid-cols-1 gap-3">
             {CATEGORIES.map((c) => {
-              const qs = QUESTIONS.filter((q) => q.category === c.id);
+              const allQs = QUESTIONS.filter((q) => q.category === c.id);
+              const qs = allQs.filter((q) => q.level <= tier.maxLevel);
+              const locked = allQs.length - qs.length;
               const done = qs.filter((q) => progress.solved[q.id]).length;
               const full = qs.length;
               const ringColor =
@@ -135,6 +143,9 @@ function Home() {
                       </h3>
                       <span className="text-[10px] text-zinc-500 font-mono">
                         {done}/{full}
+                        {locked > 0 && (
+                          <span className="text-zinc-600 ml-1">· 🔒{locked}</span>
+                        )}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground truncate">{c.blurb}</p>

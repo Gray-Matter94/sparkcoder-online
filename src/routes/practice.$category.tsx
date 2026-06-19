@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
 import { useProgress } from "@/lib/progress";
+import { getCurrentTier, getNextTier } from "@/lib/difficulty";
 import { StatsBar } from "@/components/StatsBar";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
@@ -33,8 +34,15 @@ function Practice() {
   const meta = CATEGORIES.find((c) => c.id === (category as Category));
   if (!meta) throw notFound();
 
-  const questions = useMemo(() => questionsFor(category as Category), [category]);
   const { progress, award } = useProgress();
+  const tier = useMemo(() => getCurrentTier(progress), [progress]);
+  const nextTier = useMemo(() => getNextTier(progress), [progress]);
+  const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
+  const questions = useMemo(
+    () => allQuestions.filter((q) => q.level <= tier.maxLevel),
+    [allQuestions, tier.maxLevel]
+  );
+  const lockedCount = allQuestions.length - questions.length;
 
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<Option | null>(null);
@@ -84,7 +92,8 @@ function Practice() {
     setTimeout(() => {
       if (picked.correct) {
         const baseXp = 30;
-        const xp = Math.max(10, baseXp - wrongAttempts.length * 10);
+        const raw = Math.max(10, baseXp - wrongAttempts.length * 10);
+        const xp = Math.round(raw * tier.xpMultiplier);
         award(q.id, xp);
         setStatus("right");
       } else {
@@ -126,15 +135,24 @@ function Practice() {
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-5 pb-[460px]">
         <div className="space-y-1.5 animate-fade-in">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-widest text-primary font-bold">
-              {meta.name} · Level {q.level}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-widest text-primary font-bold truncate">
+              {meta.name} · Lv {q.level}
             </span>
-            <span className="text-[10px] text-zinc-500 font-mono">
-              {index + 1} / {questions.length}
-            </span>
+            <div className="flex items-center gap-1.5 text-[10px] font-mono shrink-0">
+              <span className="px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/30 text-accent">
+                {tier.emoji} {tier.name} · ×{tier.xpMultiplier.toFixed(2)}
+              </span>
+              <span className="text-zinc-500">{index + 1}/{questions.length}</span>
+            </div>
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
+          {lockedCount > 0 && (
+            <p className="text-[10px] text-zinc-600 font-mono">
+              🔒 {lockedCount} harder puzzle{lockedCount === 1 ? "" : "s"} locked
+              {nextTier ? ` — reach ${nextTier.emoji} ${nextTier.name} to unlock` : ""}.
+            </p>
+          )}
         </div>
 
         <CodeBlock
