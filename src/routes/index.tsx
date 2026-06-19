@@ -29,8 +29,10 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { progress, reset } = useProgress();
-  const total = QUESTIONS.length;
-  const solved = Object.keys(progress.solved).length;
+  const tier = getCurrentTier(progress);
+  const unlockedQuestions = QUESTIONS.filter((q) => q.level <= tier.maxLevel);
+  const total = unlockedQuestions.length;
+  const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
   const daily = getDailyChallenge();
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
