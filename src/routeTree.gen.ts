@@ -10,13 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
+import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyRoute = DailyRouteImport.update({
@@ -34,37 +41,68 @@ const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
   path: '/practice/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnTopicRoute = LearnTopicRouteImport.update({
+  id: '/$topic',
+  path: '/$topic',
+  getParentRoute: () => LearnRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/learn': typeof LearnRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/learn': typeof LearnRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daily': typeof DailyRoute
+  '/learn': typeof LearnRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/practice/$category': typeof PracticeCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
+  fullPaths:
+    | '/'
+    | '/daily'
+    | '/learn'
+    | '/sitemap.xml'
+    | '/learn/$topic'
+    | '/practice/$category'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
-  id: '__root__' | '/' | '/daily' | '/sitemap.xml' | '/practice/$category'
+  to:
+    | '/'
+    | '/daily'
+    | '/learn'
+    | '/sitemap.xml'
+    | '/learn/$topic'
+    | '/practice/$category'
+  id:
+    | '__root__'
+    | '/'
+    | '/daily'
+    | '/learn'
+    | '/sitemap.xml'
+    | '/learn/$topic'
+    | '/practice/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyRoute: typeof DailyRoute
+  LearnRoute: typeof LearnRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
 }
@@ -76,6 +114,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily': {
@@ -99,12 +144,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticeCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$topic': {
+      id: '/learn/$topic'
+      path: '/$topic'
+      fullPath: '/learn/$topic'
+      preLoaderRoute: typeof LearnTopicRouteImport
+      parentRoute: typeof LearnRoute
+    }
   }
 }
+
+interface LearnRouteChildren {
+  LearnTopicRoute: typeof LearnTopicRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnTopicRoute: LearnTopicRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyRoute: DailyRoute,
+  LearnRoute: LearnRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
 }

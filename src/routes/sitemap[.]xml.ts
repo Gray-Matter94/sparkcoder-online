@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { CATEGORIES } from "@/lib/questions";
+import { TOPICS } from "@/lib/glossary";
 
 const BASE_URL = "https://service-spark-coder.lovable.app";
 
@@ -17,10 +18,16 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/daily", changefreq: "daily", priority: "0.9" },
+          { path: "/learn", changefreq: "weekly", priority: "0.8" },
           ...CATEGORIES.map((c) => ({
             path: `/practice/${c.id}`,
             changefreq: "weekly" as const,
             priority: "0.8",
+          })),
+          ...TOPICS.map((t) => ({
+            path: `/learn/${t.id}`,
+            changefreq: "weekly" as const,
+            priority: "0.7",
           })),
         ];
 
