@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, QUESTIONS } from "@/lib/questions";
-import { useProgress } from "@/lib/progress";
+import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { BadgesPanel } from "@/components/BadgesPanel";
+import { getDailyChallenge } from "@/lib/daily";
 
 export const Route = createFileRoute("/")({
   head: () => ({
