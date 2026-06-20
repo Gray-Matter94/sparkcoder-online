@@ -44,13 +44,22 @@ function TopicPage() {
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-5 pb-20">
         <div className="rounded-2xl overflow-hidden border-2 border-border bg-panel animate-fade-in">
           <div className="relative aspect-[2/1] bg-zinc-900">
-            <img
-              src={meta.image}
-              alt={`${meta.name} illustration`}
-              width={768}
-              height={384}
-              className="size-full object-cover opacity-90"
-            />
+            {meta.image ? (
+              <img
+                src={meta.image}
+                alt={`${meta.name} illustration`}
+                width={768}
+                height={384}
+                className="size-full object-cover opacity-90"
+              />
+            ) : (
+              <div
+                aria-hidden
+                className="size-full flex items-center justify-center bg-gradient-to-br from-accent/30 via-secondary/10 to-primary/20"
+              >
+                <span className="text-[140px] leading-none opacity-50">{meta.emoji}</span>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-panel/95 via-panel/30 to-transparent" />
             <div className="absolute bottom-3 left-4 right-4">
               <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
