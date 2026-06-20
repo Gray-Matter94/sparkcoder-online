@@ -41,7 +41,7 @@ test.describe("AngularJS track — switcher", () => {
     // Confirm baseline tagline (SN Dev) is rendered before interacting,
     // proving the switcher's reactive subtree is fully hydrated.
     await expect(
-      page.getByText(/server scripts, gliderecord, business rules/i),
+      page.getByText(/server scripts, gliderecord, business rules/i).first(),
     ).toBeVisible();
 
     const tab = page.getByRole("tab", { name: /angularjs/i });
@@ -51,7 +51,7 @@ test.describe("AngularJS track — switcher", () => {
     // Assert the UI-level outcome (tagline swap) rather than the aria attribute,
     // which can race with hydration on the SSR'd switcher.
     await expect(
-      page.getByText(/scopes, directives, services, digest cycle/i),
+      page.getByText(/scopes, directives, services, digest cycle/i).first(),
     ).toBeVisible();
   });
 
@@ -61,12 +61,12 @@ test.describe("AngularJS track — switcher", () => {
     await page.goto("/");
     await waitForHydration(page);
     await expect(
-      page.getByText(/scopes, directives, services, digest cycle/i),
+      page.getByText(/scopes, directives, services, digest cycle/i).first(),
     ).toBeVisible();
     await page.reload();
     await waitForHydration(page);
     await expect(
-      page.getByText(/scopes, directives, services, digest cycle/i),
+      page.getByText(/scopes, directives, services, digest cycle/i).first(),
     ).toBeVisible();
   });
 });
