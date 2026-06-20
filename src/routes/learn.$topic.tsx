@@ -178,11 +178,52 @@ function Quiz({
   const [misses, setMisses] = useState<Record<number, number>>({});
   const recordedRunRef = useRef<string | null>(null);
 
+  const allSections =
+    questions.length === 0 ? [] : sectionsFor(topic, questions.length);
+
+  // Build per-section stats for the current run (used by Weakest topics + SRS).
+  function sectionStats() {
+    const playedSet = new Set(order);
+    return allSections.map((s, i) => {
+      const start = allSections.slice(0, i).reduce((a, x) => a + x.count, 0);
+      const end = start + s.count;
+      let attempted = 0;
+      let missed = 0;
+      for (let qi = start; qi < end; qi++) {
+        if (!playedSet.has(qi)) continue;
+        attempted++;
+        if (misses[qi] !== undefined) missed++;
+      }
+      return { section: s, sectionIdx: i, attempted, missed };
+    });
+  }
+
+  // Record SRS reviews exactly once per finished run.
+  useEffect(() => {
+    if (status !== "done") {
+      recordedRunRef.current = null;
+      return;
+    }
+    const runId = `${topic}:${reviewMode ? "review" : "full"}:${order.join(",")}`;
+    if (recordedRunRef.current === runId) return;
+    recordedRunRef.current = runId;
+    const reviews = sectionStats()
+      .filter((s) => s.attempted > 0)
+      .map((s) => ({
+        topic,
+        sectionIdx: s.sectionIdx,
+        label: s.section.label,
+        icon: s.section.icon,
+        attempted: s.attempted,
+        missRate: s.missed / s.attempted,
+      }));
+    if (reviews.length > 0) recordSrs(reviews);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, topic, reviewMode, order]);
+
   if (questions.length === 0) {
     return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
   }
-
-  const allSections = sectionsFor(topic, questions.length);
 
   if (status === "done") {
     const pct = Math.round((score / order.length) * 100);
