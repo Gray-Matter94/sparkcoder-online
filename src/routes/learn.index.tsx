@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TOPICS } from "@/lib/glossary";
-import { useProgress } from "@/lib/progress";
+import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 
 export const Route = createFileRoute("/learn/")({
@@ -48,7 +48,61 @@ function Learn() {
           </p>
         </section>
 
+        {(() => {
+          const today = todayStr();
+          const entries = Object.values(progress.srs ?? {})
+            .map((e) => ({ ...e, delta: daysBetween(today, e.due) }))
+            .filter((e) => e.delta <= 1)
+            .sort((a, b) => a.delta - b.delta || a.topic.localeCompare(b.topic));
+          if (entries.length === 0) return null;
+          return (
+            <section className="space-y-2 animate-fade-in" aria-label="Spaced repetition — due soon">
+              <h2 className="font-display tracking-wider text-sm uppercase text-foreground/80">
+                ⏰ Due for review
+              </h2>
+              <ul className="rounded-2xl border-2 border-primary/30 bg-primary/5 divide-y divide-border/60 overflow-hidden">
+                {entries.slice(0, 6).map((e) => {
+                  const t = TOPICS.find((x) => x.id === e.topic);
+                  const label =
+                    e.delta < 0
+                      ? `Overdue ${-e.delta}d`
+                      : e.delta === 0
+                        ? "Today"
+                        : "Tomorrow";
+                  const tone =
+                    e.delta <= 0
+                      ? "text-destructive border-destructive/40 bg-destructive/10"
+                      : "text-accent border-accent/40 bg-accent/10";
+                  return (
+                    <li key={`${e.topic}:${e.sectionIdx}`}>
+                      <Link
+                        to="/learn/$topic"
+                        params={{ topic: e.topic }}
+                        className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-background/40 transition-colors"
+                      >
+                        <div className="min-w-0">
+                          <div className="text-[13px] font-display tracking-wide text-foreground/90 truncate">
+                            {e.icon && <span aria-hidden className="mr-1">{e.icon}</span>}
+                            {e.label}
+                          </div>
+                          <div className="text-[10px] font-mono text-muted-foreground">
+                            {t?.emoji} {t?.name ?? e.topic} · interval {e.interval}d
+                          </div>
+                        </div>
+                        <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md border shrink-0 ${tone}`}>
+                          {label}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          );
+        })()}
+
         <section className="space-y-3">
+
           {TOPICS.map((t) => (
             <Link
               key={t.id}

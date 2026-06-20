@@ -3,6 +3,20 @@ import { supabase } from "@/integrations/supabase/client";
 
 const KEY = "snscript_progress_v2";
 
+export interface SrsEntry {
+  topic: string;
+  sectionIdx: number;
+  label: string;
+  icon?: string;
+  interval: number; // days
+  ease: number; // 1.3 – 2.8
+  due: string; // YYYY-MM-DD
+  lastReviewed: string; // YYYY-MM-DD
+  reviews: number;
+  lapses: number;
+  lastMissRate: number; // 0-1
+}
+
 export interface Progress {
   xp: number;
   streak: number;
@@ -13,6 +27,8 @@ export interface Progress {
   activeDays: Record<string, true>; // date -> practiced
   weeklyBadges: Record<string, true>; // ISO week key -> earned
   dailyChallenges: Record<string, string>; // date -> questionId completed
+  /** Spaced repetition schedule, keyed by `${topic}:${sectionIdx}`. */
+  srs: Record<string, SrsEntry>;
 }
 
 const empty: Progress = {
@@ -25,6 +41,7 @@ const empty: Progress = {
   activeDays: {},
   weeklyBadges: {},
   dailyChallenges: {},
+  srs: {},
 };
 
 function read(): Progress {
@@ -52,6 +69,14 @@ function write(p: Progress) {
 
 /** Merge two progress snapshots, taking the most generous of each field. */
 function merge(a: Progress, b: Progress): Progress {
+  // For SRS, keep the most recently reviewed entry per key.
+  const srs: Record<string, SrsEntry> = { ...a.srs };
+  for (const [k, v] of Object.entries(b.srs ?? {})) {
+    const existing = srs[k];
+    if (!existing || (v.lastReviewed ?? "") > (existing.lastReviewed ?? "")) {
+      srs[k] = v;
+    }
+  }
   return {
     xp: Math.max(a.xp, b.xp),
     streak: Math.max(a.streak, b.streak),
@@ -63,11 +88,78 @@ function merge(a: Progress, b: Progress): Progress {
     activeDays: { ...a.activeDays, ...b.activeDays },
     weeklyBadges: { ...a.weeklyBadges, ...b.weeklyBadges },
     dailyChallenges: { ...a.dailyChallenges, ...b.dailyChallenges },
+    srs,
   };
 }
 
 export function todayStr(d: Date = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+export function addDays(dateStr: string, days: number): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + days);
+  return todayStr(dt);
+}
+
+export function daysBetween(a: string, b: string): number {
+  const [ay, am, ad] = a.split("-").map(Number);
+  const [by, bm, bd] = b.split("-").map(Number);
+  const da = new Date(ay, am - 1, ad).getTime();
+  const db = new Date(by, bm - 1, bd).getTime();
+  return Math.round((db - da) / 86400000);
+}
+
+export interface SrsReviewInput {
+  topic: string;
+  sectionIdx: number;
+  label: string;
+  icon?: string;
+  missRate: number; // 0-1
+  attempted: number;
+}
+
+/** SM-2 inspired scheduler. Returns the next entry given the prior. */
+export function scheduleNext(prev: SrsEntry | undefined, input: SrsReviewInput): SrsEntry {
+  const today = todayStr();
+  const baseEase = prev?.ease ?? 2.3;
+  const reviews = (prev?.reviews ?? 0) + 1;
+  let lapses = prev?.lapses ?? 0;
+  let ease = baseEase;
+  let interval: number;
+
+  if (input.missRate >= 0.5) {
+    // Failed — relearn tomorrow.
+    ease = Math.max(1.3, baseEase - 0.2);
+    interval = 1;
+    lapses++;
+  } else if (input.missRate > 0) {
+    ease = Math.max(1.3, baseEase - 0.1);
+    if (reviews <= 1) interval = 2;
+    else if (reviews === 2) interval = 4;
+    else interval = Math.max(1, Math.round((prev?.interval ?? 1) * ease * (1 - input.missRate * 0.5)));
+  } else {
+    // Clean run.
+    ease = Math.min(2.8, baseEase + 0.15);
+    if (reviews <= 1) interval = 3;
+    else if (reviews === 2) interval = 7;
+    else interval = Math.max(1, Math.round((prev?.interval ?? 1) * ease));
+  }
+
+  return {
+    topic: input.topic,
+    sectionIdx: input.sectionIdx,
+    label: input.label,
+    icon: input.icon,
+    interval,
+    ease,
+    due: addDays(today, interval),
+    lastReviewed: today,
+    reviews,
+    lapses,
+    lastMissRate: input.missRate,
+  };
 }
 
 function yesterdayStr() {
@@ -223,11 +315,30 @@ export function useProgress() {
     [queueCloud],
   );
 
+  const recordSrs = useCallback(
+    (reviews: SrsReviewInput[]) => {
+      if (reviews.length === 0) return;
+      setProgress((prev) => {
+        const srs = { ...prev.srs };
+        for (const r of reviews) {
+          if (r.attempted === 0) continue;
+          const key = `${r.topic}:${r.sectionIdx}`;
+          srs[key] = scheduleNext(srs[key], r);
+        }
+        const next: Progress = { ...prev, srs };
+        write(next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const reset = useCallback(() => {
     write(empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge };
+  return { progress, award, reset, markDailyChallenge, recordSrs };
 }

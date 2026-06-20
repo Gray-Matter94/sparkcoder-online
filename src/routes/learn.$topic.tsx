@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TOPICS, termsFor, type TopicId } from "@/lib/glossary";
 import { quizFor, sectionsFor, sectionForIndex } from "@/lib/quizzes";
-import { useProgress } from "@/lib/progress";
+import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 
 export const Route = createFileRoute("/learn/$topic")({
@@ -164,6 +164,7 @@ function Quiz({
   topic: TopicId;
   onOpenGlossary?: () => void;
 }) {
+  const { progress, recordSrs } = useProgress();
   // `order` is the list of question indices to play through.
   // Default = full quiz; switches to a subset when reviewing missed questions.
   const [order, setOrder] = useState<number[]>(() => questions.map((_, i) => i));
@@ -175,12 +176,54 @@ function Quiz({
   const [detailsOpen, setDetailsOpen] = useState(true);
   /** Map of original question index -> the wrong option the user picked. */
   const [misses, setMisses] = useState<Record<number, number>>({});
+  const recordedRunRef = useRef<string | null>(null);
+
+  const allSections =
+    questions.length === 0 ? [] : sectionsFor(topic, questions.length);
+
+  // Build per-section stats for the current run (used by Weakest topics + SRS).
+  function sectionStats() {
+    const playedSet = new Set(order);
+    return allSections.map((s, i) => {
+      const start = allSections.slice(0, i).reduce((a, x) => a + x.count, 0);
+      const end = start + s.count;
+      let attempted = 0;
+      let missed = 0;
+      for (let qi = start; qi < end; qi++) {
+        if (!playedSet.has(qi)) continue;
+        attempted++;
+        if (misses[qi] !== undefined) missed++;
+      }
+      return { section: s, sectionIdx: i, attempted, missed };
+    });
+  }
+
+  // Record SRS reviews exactly once per finished run.
+  useEffect(() => {
+    if (status !== "done") {
+      recordedRunRef.current = null;
+      return;
+    }
+    const runId = `${topic}:${reviewMode ? "review" : "full"}:${order.join(",")}`;
+    if (recordedRunRef.current === runId) return;
+    recordedRunRef.current = runId;
+    const reviews = sectionStats()
+      .filter((s) => s.attempted > 0)
+      .map((s) => ({
+        topic,
+        sectionIdx: s.sectionIdx,
+        label: s.section.label,
+        icon: s.section.icon,
+        attempted: s.attempted,
+        missRate: s.missed / s.attempted,
+      }));
+    if (reviews.length > 0) recordSrs(reviews);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, topic, reviewMode, order]);
 
   if (questions.length === 0) {
     return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
   }
-
-  const allSections = sectionsFor(topic, questions.length);
 
   if (status === "done") {
     const pct = Math.round((score / order.length) * 100);
@@ -355,6 +398,76 @@ function Quiz({
             </section>
           );
         })()}
+
+        {/* Spaced repetition schedule — upcoming reviews for this topic. */}
+        {(() => {
+          const today = todayStr();
+          const topicEntries = Object.values(progress.srs ?? {})
+            .filter((e) => e.topic === topic)
+            .sort((a, b) => a.due.localeCompare(b.due));
+          if (topicEntries.length === 0) return null;
+
+          function dueLabel(due: string): { text: string; tone: "due" | "soon" | "later" } {
+            const delta = daysBetween(today, due);
+            if (delta <= 0) return { text: delta === 0 ? "Due today" : `Overdue by ${-delta}d`, tone: "due" };
+            if (delta === 1) return { text: "Tomorrow", tone: "soon" };
+            if (delta <= 3) return { text: `In ${delta} days`, tone: "soon" };
+            return { text: `In ${delta} days`, tone: "later" };
+          }
+
+          return (
+            <section className="space-y-3" aria-label="Spaced repetition schedule">
+              <div className="flex items-baseline justify-between gap-2">
+                <h3 className="font-display tracking-wider text-sm uppercase text-foreground/80">
+                  Spaced repetition schedule
+                </h3>
+                <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+                  {TOPICS.find((t) => t.id === topic)?.name ?? topic}
+                </span>
+              </div>
+              <div className="rounded-xl border-2 border-primary/30 bg-primary/5 overflow-hidden">
+                <p className="px-4 pt-3 pb-2 text-[12px] text-foreground/75 leading-relaxed">
+                  Misses shorten the interval, clean runs stretch it. Come back when a milestone is due.
+                </p>
+                <ul className="divide-y divide-border/60">
+                  {topicEntries.map((e) => {
+                    const { text, tone } = dueLabel(e.due);
+                    const toneClass =
+                      tone === "due"
+                        ? "text-destructive border-destructive/40 bg-destructive/10"
+                        : tone === "soon"
+                          ? "text-accent border-accent/40 bg-accent/10"
+                          : "text-muted-foreground border-border bg-panel";
+                    return (
+                      <li
+                        key={`${e.topic}:${e.sectionIdx}`}
+                        className="flex items-center justify-between gap-3 px-4 py-2.5"
+                      >
+                        <div className="min-w-0">
+                          <div className="text-[13px] font-display tracking-wide text-foreground/90 truncate">
+                            {e.icon && <span aria-hidden className="mr-1">{e.icon}</span>}
+                            {e.label}
+                          </div>
+                          <div className="text-[10px] font-mono text-muted-foreground">
+                            interval {e.interval}d · ease {e.ease.toFixed(2)} · {e.reviews} review{e.reviews === 1 ? "" : "s"}
+                            {e.lapses > 0 ? ` · ${e.lapses} lapse${e.lapses === 1 ? "" : "s"}` : ""}
+                          </div>
+                        </div>
+                        <span
+                          className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md border shrink-0 ${toneClass}`}
+                        >
+                          {text}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+          );
+        })()}
+
+
 
         {hasMisses && (
           <section className="space-y-3" aria-label="Missed questions by milestone">
