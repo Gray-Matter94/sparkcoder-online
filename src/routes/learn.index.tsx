@@ -3,7 +3,7 @@ import { TOPICS } from "@/lib/glossary";
 import { useProgress } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 
-export const Route = createFileRoute("/learn")({
+export const Route = createFileRoute("/learn/")({
   head: () => ({
     meta: [
       { title: "ServiceNow Glossary & Quizzes — SparkCoder" },
