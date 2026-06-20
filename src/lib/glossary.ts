@@ -71,6 +71,15 @@ const SN_DEV_TOPICS: Topic[] = [
     blurb:
       "Almost every real-world ServiceNow project talks to something else — Active Directory, Jira, AWS, SAP. Know the patterns and you'll never be stuck.",
   },
+  {
+    id: "scenario-based",
+    name: "Scenario-Based Questions",
+    tagline: "Architectural decisions & complex troubleshooting.",
+    emoji: "🧩",
+    track: "servicenow-dev",
+    blurb:
+      "The hardest ServiceNow interview round: open-ended scenarios where panels probe how you reason about design trade-offs, debug nasty production issues, and choose between business rules, flows, scripted REST, and integration patterns.",
+  },
 ];
 
 export interface Term {
@@ -115,6 +124,16 @@ const SN_DEV_TERMS: Term[] = [
   { topic: "integration", term: "MID Server", short: "A Java agent inside the customer's network.", long: "Bridges ServiceNow (cloud) to on-prem systems for Discovery, Orchestration, and integrations that can't reach the public internet." },
   { topic: "integration", term: "Import Set", short: "Staging area for bulk data loads.", long: "Data lands on an import set table, then a Transform Map shapes and pushes it to the target table (e.g. user, cmdb_ci_server) with coalesce keys." },
   { topic: "integration", term: "Transform Map", short: "Field-by-field mapping from import set → target.", long: "Defines source-to-target field mapping, scripts, and coalesce rules. Onbefore/onafter scripts let you reshape data during the import." },
+
+  // Scenario-based
+  { topic: "scenario-based", term: "Business Rule vs Flow", short: "When to script server-side vs use Flow Designer.", long: "Use a business rule for tight, synchronous, table-level logic (validation, derived fields, abort). Use a Flow for multi-step orchestration, approvals, integrations, and anything a non-developer should maintain. Mixing both on the same table is the #1 source of duplicated logic in interview scenarios." },
+  { topic: "scenario-based", term: "Performance Triage", short: "Slow form / slow list — where to look first.", long: "Check the slow query log, then onLoad/onChange client scripts, then display business rules, then dot-walked reference fields without indexes. Interviewers expect you to name the order, not just the tools." },
+  { topic: "scenario-based", term: "Failed Integration", short: "Inbound REST request returns 500 — debug path.", long: "Start with the Scripted REST API's transaction log, then the system log for unhandled exceptions, then payload validation, then ACLs on the target table. Always mention idempotency: can the sender safely retry?" },
+  { topic: "scenario-based", term: "Update Set Conflict", short: "Two devs change the same business rule.", long: "Last commit wins on import. Resolve by previewing the update set, accepting/skipping per record, and re-testing. Long-term fix: smaller, scoped update sets and a branch-per-story workflow." },
+  { topic: "scenario-based", term: "Data Model Decision", short: "Extend a table vs add a reference field.", long: "Extend when the new record IS-A parent (Incident extends Task). Reference when it HAS-A relationship (Incident references Caller). Getting this wrong forces painful migrations later — a classic senior-developer interview probe." },
+  { topic: "scenario-based", term: "Scoped vs Global", short: "Where should this customization live?", long: "Scoped apps for anything you'll ship, version, or hand off. Global only for cross-app utilities or legacy work. Scenario answer: explain the trade-off in cross-scope access and the API restrictions scoped apps impose." },
+  { topic: "scenario-based", term: "ACL Debugging", short: "User can't see a record they should.", long: "Enable security debug, walk the ACL evaluation order (table → field → row), check role inheritance, and verify the condition / script blocks. Mention impersonation as your first reproduction step." },
+  { topic: "scenario-based", term: "Async vs Sync Business Rule", short: "When does timing matter?", long: "Use async for non-blocking work like notifications, integrations, and analytics. Sync (before/after) for anything that must complete in the same transaction. Common interview trap: async rules can't reliably modify the current record before save." },
 ];
 
 import { ADMIN_TOPICS, ADMIN_TERMS } from "./content/admin";

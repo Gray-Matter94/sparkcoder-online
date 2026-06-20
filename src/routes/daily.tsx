@@ -25,9 +25,9 @@ export const Route = createFileRoute("/daily")({
         content:
           "One curated ServiceNow scripting puzzle a day. Bonus XP, streak protection, and an instant teach-back if you miss.",
       },
-      { property: "og:url", content: "https://service-spark-coder.lovable.app/daily" },
+      { property: "og:url", content: "https://sparkcoder.online/daily" },
     ],
-    links: [{ rel: "canonical", href: "https://service-spark-coder.lovable.app/daily" }],
+    links: [{ rel: "canonical", href: "https://sparkcoder.online/daily" }],
   }),
   component: Daily,
 });

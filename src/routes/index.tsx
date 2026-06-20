@@ -18,15 +18,15 @@ export const Route = createFileRoute("/")({
         content:
           "Practice ServiceNow scripting interview questions on the go. Interactive code puzzles, colorful simulator output, instant teaching when you slip.",
       },
-      { property: "og:title", content: "SparkCoder — ServiceNow Scripting Practice" },
+      { property: "og:title", content: "SparkCoder — ServiceNow Scripting Interview Practice" },
       {
         property: "og:description",
         content:
           "Arcade-style ServiceNow scripting puzzles with a live instance simulator and built-in coach.",
       },
-      { property: "og:url", content: "https://service-spark-coder.lovable.app/" },
+      { property: "og:url", content: "https://sparkcoder.online/" },
     ],
-    links: [{ rel: "canonical", href: "https://service-spark-coder.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://sparkcoder.online/" }],
   }),
   component: Home,
 });
@@ -66,9 +66,12 @@ function Home() {
             {meta.emoji} {meta.name}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
-            SCRIPT YOUR
-            <br />
-            WAY <span className={accentText}>IN.</span>
+            <span className="sr-only">ServiceNow Scripting Interview Practice — </span>
+            <span aria-hidden="true">
+              SCRIPT YOUR
+              <br />
+              WAY <span className={accentText}>IN.</span>
+            </span>
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
             {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
@@ -97,9 +100,9 @@ function Home() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <h3 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
+                <h2 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
                   DAILY CHALLENGE
-                </h3>
+                </h2>
                 <span className="text-[10px] text-zinc-500 font-mono">
                   {dailyDone ? "DONE" : "+50 XP"}
                 </span>
@@ -122,9 +125,9 @@ function Home() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="font-display text-lg tracking-wide text-secondary">
+                <h2 className="font-display text-lg tracking-wide text-secondary">
                   LEARN & QUIZ
-                </h3>
+                </h2>
                 <span className="text-[10px] text-muted-foreground font-mono">GLOSSARY + QUIZ</span>
               </div>
               <p className="text-xs text-muted-foreground truncate">
