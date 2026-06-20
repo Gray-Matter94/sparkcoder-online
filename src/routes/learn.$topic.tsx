@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { TOPICS, termsFor, type TopicId } from "@/lib/glossary";
-import { quizFor } from "@/lib/quizzes";
+import { quizFor, sectionsFor, sectionForIndex } from "@/lib/quizzes";
 import { useProgress } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 
@@ -87,7 +87,7 @@ function TopicPage() {
           </button>
         </div>
 
-        {mode === "learn" ? <Glossary terms={terms} /> : <Quiz key={meta.id} questions={quiz} />}
+        {mode === "learn" ? <Glossary terms={terms} /> : <Quiz key={meta.id} questions={quiz} topic={meta.id} />}
 
         <div className="pt-2">
           <Link
@@ -143,7 +143,7 @@ function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
 
 type QuizStatus = "picking" | "answered" | "done";
 
-function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
+function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; topic: TopicId }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [status, setStatus] = useState<QuizStatus>("picking");
@@ -206,9 +206,12 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
   const answered = status === "answered" ? idx + 1 : idx;
   const progressPct = Math.round((answered / questions.length) * 100);
 
+  const sections = sectionsFor(topic, questions.length);
+  const current = sectionForIndex(sections, idx);
+
   return (
     <div className="space-y-4 animate-fade-in">
-      <div className="space-y-1.5" aria-label="Quiz progress">
+      <div className="space-y-2" aria-label="Quiz progress">
         <div className="flex items-center justify-between text-[10px] font-mono">
           <span className="text-muted-foreground uppercase tracking-widest">
             Question {idx + 1} / {questions.length}
@@ -217,17 +220,70 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
             Score: {score} / {questions.length}
           </span>
         </div>
+
+        {current && (
+          <div className="flex items-center justify-between gap-2 text-[11px]">
+            <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-accent/10 border border-accent/30 text-accent font-display tracking-wider uppercase">
+              {current.section.icon && <span aria-hidden>{current.section.icon}</span>}
+              <span>{current.section.label}</span>
+            </span>
+            <span className="text-muted-foreground font-mono">
+              {current.positionInSection + 1} / {current.section.count} · Milestone {current.sectionIdx + 1}/{sections.length}
+            </span>
+          </div>
+        )}
+
         <div
-          className="h-2 w-full rounded-full bg-panel border border-border overflow-hidden"
+          className="relative h-2 w-full rounded-full bg-panel border border-border overflow-hidden"
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={progressPct}
+          aria-valuetext={current ? `${current.section.label}, question ${current.positionInSection + 1} of ${current.section.count}` : undefined}
         >
           <div
             className="h-full bg-primary transition-all duration-300 ease-out"
             style={{ width: `${progressPct}%` }}
           />
+          {sections.slice(0, -1).map((_, i) => {
+            const cumulative = sections.slice(0, i + 1).reduce((s, x) => s + x.count, 0);
+            const left = (cumulative / questions.length) * 100;
+            return (
+              <span
+                key={i}
+                aria-hidden
+                className="absolute top-0 bottom-0 w-px bg-background/80"
+                style={{ left: `${left}%` }}
+              />
+            );
+          })}
+        </div>
+
+        <div className="flex gap-1" aria-hidden>
+          {sections.map((s, i) => {
+            const state =
+              i < (current?.sectionIdx ?? 0)
+                ? "done"
+                : i === current?.sectionIdx
+                  ? "active"
+                  : "upcoming";
+            return (
+              <div
+                key={i}
+                title={s.label}
+                className={`flex-1 text-[9px] font-display tracking-wider uppercase text-center py-0.5 rounded-sm truncate ${
+                  state === "done"
+                    ? "text-primary/70"
+                    : state === "active"
+                      ? "text-accent"
+                      : "text-muted-foreground/50"
+                }`}
+                style={{ flexGrow: s.count }}
+              >
+                {s.icon} {s.label}
+              </div>
+            );
+          })}
         </div>
       </div>
       <h2 className="text-base sm:text-lg font-bold leading-snug">{q.question}</h2>

@@ -141,3 +141,72 @@ export function quizFor(topic: TopicId): QuizQuestion[] {
   const tail = shuffleQ(merged.slice(handcrafted.length), seed);
   return [...head, ...tail];
 }
+
+export interface QuizSection {
+  label: string;
+  /** Emoji or short icon shown beside the label. */
+  icon?: string;
+  /** Number of questions in this section. */
+  count: number;
+}
+
+/**
+ * Per-topic milestone breakdown. Sections are consumed in order; if the
+ * total `count` is less than the quiz length, a trailing "Bonus round"
+ * section absorbs the remainder.
+ */
+const SECTION_PLAN: Record<TopicId, QuizSection[]> = {
+  platform: [
+    { label: "Core concepts", icon: "🧱", count: 2 },
+    { label: "Data model", icon: "🗂️", count: 2 },
+  ],
+  itsm: [
+    { label: "Incident & Problem", icon: "🚨", count: 2 },
+    { label: "Change & Request", icon: "📝", count: 2 },
+  ],
+  cmdb: [
+    { label: "CI relationships", icon: "🔗", count: 2 },
+    { label: "Discovery & CSDM", icon: "🛰️", count: 2 },
+  ],
+  flow: [
+    { label: "Flow Designer basics", icon: "⚡", count: 2 },
+    { label: "Spokes & reuse", icon: "🔌", count: 2 },
+  ],
+  integration: [
+    { label: "REST & inbound APIs", icon: "🌐", count: 2 },
+    { label: "MID Server & imports", icon: "🔁", count: 2 },
+  ],
+};
+
+export function sectionsFor(topic: TopicId, total: number): QuizSection[] {
+  const base = SECTION_PLAN[topic] ?? [];
+  const planned = base.reduce((s, x) => s + x.count, 0);
+  if (planned >= total) {
+    // Trim trailing sections if quiz shrank.
+    const out: QuizSection[] = [];
+    let remaining = total;
+    for (const s of base) {
+      if (remaining <= 0) break;
+      const c = Math.min(s.count, remaining);
+      out.push({ ...s, count: c });
+      remaining -= c;
+    }
+    return out;
+  }
+  return [...base, { label: "Bonus round", icon: "🎁", count: total - planned }];
+}
+
+export function sectionForIndex(
+  sections: QuizSection[],
+  idx: number,
+): { section: QuizSection; sectionIdx: number; positionInSection: number } | null {
+  let acc = 0;
+  for (let i = 0; i < sections.length; i++) {
+    const s = sections[i];
+    if (idx < acc + s.count) {
+      return { section: s, sectionIdx: i, positionInSection: idx - acc };
+    }
+    acc += s.count;
+  }
+  return null;
+}
