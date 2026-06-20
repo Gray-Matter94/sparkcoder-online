@@ -148,6 +148,7 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
   const [picked, setPicked] = useState<number | null>(null);
   const [status, setStatus] = useState<QuizStatus>("picking");
   const [score, setScore] = useState(0);
+  const [detailsOpen, setDetailsOpen] = useState(true);
 
   if (questions.length === 0) {
     return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
