@@ -87,7 +87,19 @@ function TopicPage() {
           </button>
         </div>
 
-        {mode === "learn" ? <Glossary terms={terms} /> : <Quiz key={meta.id} questions={quiz} topic={meta.id} />}
+        {mode === "learn" ? (
+          <Glossary terms={terms} />
+        ) : (
+          <Quiz
+            key={meta.id}
+            questions={quiz}
+            topic={meta.id}
+            onOpenGlossary={() => {
+              setMode("learn");
+              if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        )}
 
         <div className="pt-2">
           <Link
@@ -143,7 +155,15 @@ function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
 
 type QuizStatus = "picking" | "answered" | "done";
 
-function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; topic: TopicId }) {
+function Quiz({
+  questions,
+  topic,
+  onOpenGlossary,
+}: {
+  questions: ReturnType<typeof quizFor>;
+  topic: TopicId;
+  onOpenGlossary?: () => void;
+}) {
   // `order` is the list of question indices to play through.
   // Default = full quiz; switches to a subset when reviewing missed questions.
   const [order, setOrder] = useState<number[]>(() => questions.map((_, i) => i));
@@ -231,6 +251,110 @@ function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; top
             </button>
           </div>
         </div>
+
+        {/* Weakest milestones — per-section miss rate across this run. */}
+        {(() => {
+          const playedSet = new Set(order);
+          const stats = allSections
+            .map((s, i) => {
+              const start = allSections.slice(0, i).reduce((a, x) => a + x.count, 0);
+              const end = start + s.count;
+              let attempted = 0;
+              let missed = 0;
+              for (let qi = start; qi < end; qi++) {
+                if (!playedSet.has(qi)) continue;
+                attempted++;
+                if (misses[qi] !== undefined) missed++;
+              }
+              return {
+                section: s,
+                attempted,
+                missed,
+                rate: attempted > 0 ? missed / attempted : 0,
+              };
+            })
+            .filter((x) => x.attempted > 0 && x.missed > 0)
+            .sort((a, b) => b.rate - a.rate || b.missed - a.missed)
+            .slice(0, 3);
+
+          if (stats.length === 0) return null;
+
+          const worstRate = stats[0].rate;
+          const headline =
+            worstRate >= 0.66
+              ? "Big gap here — start with the glossary, then re-quiz."
+              : worstRate >= 0.34
+                ? "A few rough edges to smooth out before the next round."
+                : "Mostly solid — knock out these stragglers next.";
+
+          return (
+            <section className="space-y-3" aria-label="Weakest milestones">
+              <h3 className="font-display tracking-wider text-sm uppercase text-foreground/80">
+                Weakest topics — practice next
+              </h3>
+              <div className="rounded-xl border-2 border-accent/30 bg-accent/5 p-4 space-y-3">
+                <p className="text-[13px] text-foreground/85 leading-relaxed">{headline}</p>
+                <ul className="space-y-2.5">
+                  {stats.map((s, i) => {
+                    const pctMissed = Math.round(s.rate * 100);
+                    const tip =
+                      s.rate >= 0.66
+                        ? `Re-read the ${s.section.label.toLowerCase()} entries in the glossary, then retry.`
+                        : s.rate >= 0.34
+                          ? `Skim ${s.section.label.toLowerCase()} terms and run the daily challenge.`
+                          : `Quick refresher on ${s.section.label.toLowerCase()} should close the gap.`;
+                    return (
+                      <li
+                        key={i}
+                        className="rounded-lg border border-border bg-panel p-3 space-y-1.5"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-display tracking-wider uppercase text-accent">
+                            {s.section.icon && <span aria-hidden>{s.section.icon}</span>}
+                            {s.section.label}
+                          </span>
+                          <span className="text-[10px] font-mono text-destructive">
+                            {s.missed}/{s.attempted} missed · {pctMissed}%
+                          </span>
+                        </div>
+                        <div
+                          className="h-1.5 w-full rounded-full bg-background/60 overflow-hidden"
+                          role="progressbar"
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={pctMissed}
+                          aria-label={`${s.section.label} miss rate`}
+                        >
+                          <div
+                            className="h-full bg-destructive/80"
+                            style={{ width: `${pctMissed}%` }}
+                          />
+                        </div>
+                        <p className="text-[12px] text-foreground/75 leading-relaxed">{tip}</p>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {onOpenGlossary && (
+                    <button
+                      onClick={onOpenGlossary}
+                      className="h-10 px-4 bg-accent text-accent-foreground font-display tracking-wider text-xs rounded-lg shadow-[0_3px_0_rgba(0,0,0,0.4)] active:translate-y-0.5 active:shadow-none"
+                    >
+                      📖 OPEN GLOSSARY
+                    </button>
+                  )}
+                  <Link
+                    to="/daily"
+                    className="h-10 px-4 inline-flex items-center bg-panel border-2 border-border text-foreground/85 font-display tracking-wider text-xs rounded-lg hover:border-accent/40 transition-colors"
+                  >
+                    🗓️ DAILY CHALLENGE
+                  </Link>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
 
         {hasMisses && (
           <section className="space-y-3" aria-label="Missed questions by milestone">
