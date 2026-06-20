@@ -122,9 +122,10 @@ test.describe("AngularJS track — simulator interaction", () => {
     for (let i = 0; i < totalOptions; i++) {
       const candidate = enabledOptions.first();
       if ((await candidate.count()) === 0) break;
-      // Fixed simulator dock can overlap lower options; bypass hit-test.
-      await candidate.click({ force: true });
-      // Wait for React to register the pick (Run becomes enabled).
+      // Native click via JS — bypasses both pointer-event interception from the
+      // fixed dock and any flaky synthetic-event delivery, while still routing
+      // through React's onClick handler.
+      await candidate.evaluate((el) => (el as HTMLButtonElement).click());
       await expect(runBtn).toBeEnabled();
       await runBtn.click();
 
