@@ -121,7 +121,7 @@ function Daily() {
                         : "border-border bg-panel hover:border-accent/40"
                   } ${disabled ? "cursor-not-allowed" : ""}`}
                 >
-                  <code className={`text-xs sm:text-sm font-mono ${isPicked ? "text-accent" : "text-zinc-200"}`}>
+                  <code className={`text-xs sm:text-sm font-mono ${isPicked ? "text-accent" : "text-foreground/90"}`}>
                     {o.text}
                   </code>
                   <div

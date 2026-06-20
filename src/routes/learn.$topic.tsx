@@ -61,7 +61,7 @@ function TopicPage() {
               </h1>
             </div>
           </div>
-          <p className="p-4 text-sm text-zinc-300 leading-relaxed">{meta.blurb}</p>
+          <p className="p-4 text-sm text-foreground/85 leading-relaxed">{meta.blurb}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2 sticky top-0 z-30 bg-background/95 backdrop-blur-xl py-2">
@@ -70,7 +70,7 @@ function TopicPage() {
             className={`h-11 rounded-xl font-display tracking-wider text-sm transition-all ${
               mode === "learn"
                 ? "bg-accent text-accent-foreground shadow-[0_4px_0_rgba(0,0,0,0.4)]"
-                : "bg-panel border-2 border-border text-zinc-300"
+                : "bg-panel border-2 border-border text-foreground/85"
             }`}
           >
             📖 GLOSSARY
@@ -80,7 +80,7 @@ function TopicPage() {
             className={`h-11 rounded-xl font-display tracking-wider text-sm transition-all ${
               mode === "quiz"
                 ? "bg-primary text-primary-foreground shadow-[0_4px_0_var(--color-primary-deep)]"
-                : "bg-panel border-2 border-border text-zinc-300"
+                : "bg-panel border-2 border-border text-foreground/85"
             }`}
           >
             🎯 QUIZ ({quiz.length})
@@ -92,7 +92,7 @@ function TopicPage() {
         <div className="pt-2">
           <Link
             to="/learn"
-            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-accent transition-colors"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-accent transition-colors"
           >
             ← All topics
           </Link>
@@ -119,10 +119,10 @@ function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
             >
               <div className="min-w-0">
                 <div className="font-display tracking-wide text-base text-accent">{t.term}</div>
-                <div className="text-xs text-zinc-300 mt-0.5">{t.short}</div>
+                <div className="text-xs text-foreground/85 mt-0.5">{t.short}</div>
               </div>
               <span
-                className={`text-zinc-400 text-lg transition-transform shrink-0 ${
+                className={`text-muted-foreground text-lg transition-transform shrink-0 ${
                   isOpen ? "rotate-180" : ""
                 }`}
               >
@@ -130,7 +130,7 @@ function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
               </span>
             </button>
             {isOpen && (
-              <div className="px-3.5 pb-3.5 -mt-1 text-[13px] text-zinc-300 leading-relaxed border-t border-border/60 pt-3">
+              <div className="px-3.5 pb-3.5 -mt-1 text-[13px] text-foreground/85 leading-relaxed border-t border-border/60 pt-3">
                 {t.long}
               </div>
             )}
@@ -150,7 +150,7 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
   const [score, setScore] = useState(0);
 
   if (questions.length === 0) {
-    return <p className="text-sm text-zinc-400">No quiz questions yet for this topic.</p>;
+    return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
   }
 
   if (status === "done") {
@@ -161,7 +161,7 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
         <h2 className="font-display text-3xl tracking-tight">
           {score} / {questions.length}
         </h2>
-        <p className="text-sm text-zinc-300">
+        <p className="text-sm text-foreground/85">
           {pct >= 75
             ? "Sharp. You'd survive the interview round."
             : pct >= 50
@@ -205,7 +205,7 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between text-[10px] font-mono">
-        <span className="text-zinc-400 uppercase tracking-widest">
+        <span className="text-muted-foreground uppercase tracking-widest">
           Question {idx + 1} / {questions.length}
         </span>
         <span className="text-primary">Score: {score}</span>
@@ -230,7 +230,7 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
                     ? "border-destructive bg-destructive/10 text-destructive line-through"
                     : selected
                       ? "border-accent bg-accent/5 text-accent"
-                      : "border-border bg-panel text-zinc-200 hover:border-accent/40"
+                      : "border-border bg-panel text-foreground/90 hover:border-accent/40"
               }`}
             >
               <span className="font-mono text-[10px] opacity-70">{String.fromCharCode(65 + i)}</span>
@@ -246,14 +246,14 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
         <div
           className={`p-3.5 rounded-xl border-2 text-sm ${
             isCorrect
-              ? "border-primary/40 bg-primary/5 text-zinc-200"
-              : "border-destructive/40 bg-destructive/5 text-zinc-200"
+              ? "border-primary/40 bg-primary/5 text-foreground/90"
+              : "border-destructive/40 bg-destructive/5 text-foreground/90"
           }`}
         >
           <div className="font-display tracking-wide mb-1">
             {isCorrect ? "✓ CORRECT" : "✗ NOT QUITE"}
           </div>
-          <p className="text-[13px] leading-relaxed text-zinc-300">{q.explain}</p>
+          <p className="text-[13px] leading-relaxed text-foreground/85">{q.explain}</p>
         </div>
       )}
 

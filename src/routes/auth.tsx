@@ -79,7 +79,7 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="p-4 flex items-center justify-between border-b border-border">
-        <Link to="/" className="text-xs text-zinc-400 hover:text-foreground transition-colors">
+        <Link to="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
           ← Home
         </Link>
         <span className="text-[10px] text-zinc-500 uppercase tracking-widest">

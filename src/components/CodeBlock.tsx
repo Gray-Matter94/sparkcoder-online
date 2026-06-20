@@ -14,22 +14,22 @@ const APIS =
 
 function highlight(line: string) {
   // very small, naive highlighter — order matters
-  const tokens: { t: string; c: string }[] = [{ t: line, c: "text-zinc-200" }];
+  const tokens: { t: string; c: string }[] = [{ t: line, c: "text-foreground/90" }];
   function split(re: RegExp, cls: string) {
     const out: { t: string; c: string }[] = [];
     for (const tok of tokens) {
-      if (tok.c !== "text-zinc-200") { out.push(tok); continue; }
+      if (tok.c !== "text-foreground/90") { out.push(tok); continue; }
       let last = 0;
       const s = tok.t;
       const r = new RegExp(re.source, re.flags);
       let m: RegExpExecArray | null;
       while ((m = r.exec(s)) !== null) {
-        if (m.index > last) out.push({ t: s.slice(last, m.index), c: "text-zinc-200" });
+        if (m.index > last) out.push({ t: s.slice(last, m.index), c: "text-foreground/90" });
         out.push({ t: m[0], c: cls });
         last = m.index + m[0].length;
         if (m.index === r.lastIndex) r.lastIndex++;
       }
-      if (last < s.length) out.push({ t: s.slice(last), c: "text-zinc-200" });
+      if (last < s.length) out.push({ t: s.slice(last), c: "text-foreground/90" });
     }
     tokens.splice(0, tokens.length, ...out);
   }
@@ -65,7 +65,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
             const [before, after] = line.split("{{SLOT}}");
             return (
               <div key={i} className="flex flex-wrap items-center gap-x-1">
-                <span className="text-zinc-400 select-none mr-3">{num}</span>
+                <span className="text-muted-foreground select-none mr-3">{num}</span>
                 <span>
                   {highlight(before).map((t, j) => (
                     <span key={j} className={t.c}>{t.t}</span>
@@ -86,7 +86,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
           }
           return (
             <div key={i} className="flex">
-              <span className="text-zinc-400 select-none mr-3">{num}</span>
+              <span className="text-muted-foreground select-none mr-3">{num}</span>
               <span>
                 {highlight(line).map((t, j) => (
                   <Fragment key={j}>

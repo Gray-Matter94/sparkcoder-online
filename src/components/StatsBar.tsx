@@ -10,7 +10,7 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
         {back ? (
           <Link
             to="/"
-            className="text-xs text-zinc-400 hover:text-foreground transition-colors flex items-center gap-1"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
             ← Home
           </Link>
