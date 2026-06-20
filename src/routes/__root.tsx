@@ -80,6 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "ScriptArcade — ServiceNow Scripting Practice" },
       { name: "description", content: "Arcade-style ServiceNow scripting interview puzzles with a live simulator." },
       { name: "theme-color", content: "#09090b" },
+      { name: "google-site-verification", content: "maZpmXx90JgZ8mSegFII_U3YDKEn03Bn6nanxlrJ528" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "ScriptArcade" },
       { name: "twitter:card", content: "summary" },
