@@ -546,6 +546,10 @@ function scriptIncludesPool(): Question[] {
 
 /* ------------------------------------------------------------------ */
 
+import { adminGeneratedQuestions } from "./content/admin-gen";
+import { javaGeneratedQuestions } from "./content/java-gen";
+import { angularGeneratedQuestions } from "./content/angular-gen";
+
 let cache: Question[] | null = null;
 export function generatedQuestions(): Question[] {
   if (cache) return cache;
@@ -555,6 +559,9 @@ export function generatedQuestions(): Question[] {
     ...clientScriptsPool(),
     ...glideAjaxPool(),
     ...scriptIncludesPool(),
+    ...adminGeneratedQuestions(),
+    ...javaGeneratedQuestions(),
+    ...angularGeneratedQuestions(),
   ];
   return cache;
 }
