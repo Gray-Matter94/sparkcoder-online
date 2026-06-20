@@ -19,22 +19,75 @@ export interface QuizQuestion {
 
 export const QUIZZES: QuizQuestion[] = [
   // Platform
-  { id: "p1", topic: "platform", question: "Which scope should new custom applications use?", options: ["Global", "Scoped (custom)", "System", "ITIL"], correctIndex: 1, explain: "Scoped apps isolate artifacts and prevent name collisions. Global is the legacy unrestricted namespace." },
-  { id: "p2", topic: "platform", question: "What does dot-walking let you do?", options: ["Run SQL JOINs manually", "Traverse reference fields without a JOIN", "Walk through update sets", "Step through scripts line-by-line"], correctIndex: 1, explain: "Dot-walking traverses reference fields automatically, e.g. incident.caller_id.manager.email." },
-  { id: "p3", topic: "platform", question: "Update Sets capture which of these?", options: ["Configuration records only", "Data records only", "Both config and data", "Attachments only"], correctIndex: 0, explain: "Update Sets ship configuration (business rules, UI policies, etc.). For data you need data imports or fix scripts." },
-  { id: "p4", topic: "platform", question: "Incident extends which table?", options: ["cmdb_ci", "sys_user", "task", "sys_metadata"], correctIndex: 2, explain: "Incident extends Task, so it inherits state, assigned_to, sys_id, etc." },
+  {
+    id: "p1", topic: "platform",
+    question: "Which scope should new custom applications use?",
+    options: ["Global", "Scoped (custom)", "System", "ITIL"],
+    correctIndex: 1,
+    explain: "Scoped apps isolate artifacts and prevent name collisions. Global is the legacy unrestricted namespace.",
+    whyCorrect: "A scoped application gets its own namespace (e.g. x_acme_myapp), its own roles, and explicit cross-scope access rules. That isolation is what makes apps safe to ship to other instances and to the Store.",
+    whyWrong: {
+      0: "Global has no namespace boundary, so two teams can clobber each other's business rules, script includes, and table names. ServiceNow has been steering custom work out of Global since the Geneva release.",
+      2: "‘System’ isn't a user-selectable scope — those are platform-owned artifacts like sys_user and sys_metadata. You can't put custom apps there.",
+      3: "ITIL is a role, not a scope. It controls what records a user can see, not where your app's code lives.",
+    },
+    learnMore: [
+      "Scoped apps default to ‘Restricted’ for cross-scope reads/writes — you opt in per script include or table.",
+      "Application files in a scoped app travel via the Application Repository, not Update Sets.",
+    ],
+  },
+  {
+    id: "p2", topic: "platform",
+    question: "What does dot-walking let you do?",
+    options: ["Run SQL JOINs manually", "Traverse reference fields without a JOIN", "Walk through update sets", "Step through scripts line-by-line"],
+    correctIndex: 1,
+    explain: "Dot-walking traverses reference fields automatically, e.g. incident.caller_id.manager.email.",
+    whyCorrect: "When a field is a reference (foreign key), GlideRecord and the form engine resolve the join transparently. `gr.caller_id.manager.email` issues the lookups under the hood so you can write business logic without hand-rolling joins.",
+    whyWrong: {
+      0: "You never write SQL JOINs in ServiceNow — the platform abstracts the database. GlideRecord + dot-walking is the supported path.",
+      2: "Update sets are tracked through the Local Update Sets module, not by ‘walking’ them.",
+      3: "Stepping through scripts is the Script Debugger. Dot-walking is a data-access pattern.",
+    },
+    learnMore: [
+      "Each dot-walk hop is an extra query — mind hot loops; use GlideAggregate or a database view for heavy joins.",
+      "On a form, dot-walked fields appear with a small reference icon and are read-only by default.",
+    ],
+  },
+  {
+    id: "p3", topic: "platform",
+    question: "Update Sets capture which of these?",
+    options: ["Configuration records only", "Data records only", "Both config and data", "Attachments only"],
+    correctIndex: 0,
+    explain: "Update Sets ship configuration (business rules, UI policies, etc.). For data you need data imports or fix scripts.",
+    whyCorrect: "Update Sets track changes to records flagged with the ‘sys_metadata’ marker — business rules, UI policies, client scripts, tables, ACLs. Those artifacts make up an application's configuration.",
+    whyWrong: {
+      1: "Operational data (incidents, users, CIs) is intentionally excluded. Moving data uses Import Sets, XML exports, or fix scripts.",
+      2: "Mixing data into update sets is a classic anti-pattern — promotions become non-repeatable and overwrite live records in higher environments.",
+      3: "Attachments to config records can ride along, but attachments alone aren't what update sets exist for.",
+    },
+    learnMore: [
+      "Always run ‘Preview Update Set’ before committing — it surfaces collisions and lets you skip individual updates.",
+      "Batch update sets to chain related changes and commit in one ordered pass.",
+    ],
+  },
+  {
+    id: "p4", topic: "platform",
+    question: "Incident extends which table?",
+    options: ["cmdb_ci", "sys_user", "task", "sys_metadata"],
+    correctIndex: 2,
+    explain: "Incident extends Task, so it inherits state, assigned_to, sys_id, etc.",
+    whyCorrect: "Task is the abstract parent for any record that represents work — Incident, Problem, Change, RITM, SCTASK. That's why they share workflow fields (state, assignment_group, work_notes, SLA hooks).",
+    whyWrong: {
+      0: "cmdb_ci is the root of Configuration Items — servers and apps, not work records.",
+      1: "sys_user is the people table. Incidents reference users via caller_id, but they don't extend it.",
+      3: "sys_metadata is the parent of configuration artifacts (business rules, UI policies) — platform plumbing, not business data.",
+    },
+    learnMore: [
+      "Querying `task` returns Incidents, Problems, Changes, etc. — handy for ‘all my work’ dashboards.",
+      "Custom work tables should also extend Task so they inherit assignment, SLA, and notifications for free.",
+    ],
+  },
 
-  // ITSM
-  { id: "i1", topic: "itsm", question: "Priority on an incident is calculated from…", options: ["Impact × Urgency", "Severity × Caller VIP", "Assignment Group × State", "SLA timer"], correctIndex: 0, explain: "Out of the box, Priority = Impact × Urgency via a Priority Lookup Rules table." },
-  { id: "i2", topic: "itsm", question: "What's the primary goal of Problem Management?", options: ["Restore service fast", "Prevent recurrence by finding root cause", "Approve risky changes", "Fulfill catalog requests"], correctIndex: 1, explain: "Incident restores service; Problem prevents the next incident by addressing root cause." },
-  { id: "i3", topic: "itsm", question: "Which change type is pre-approved and low risk?", options: ["Normal", "Emergency", "Standard", "Latent"], correctIndex: 2, explain: "Standard changes follow a pre-approved template (e.g. password reset). Normal needs CAB; Emergency is fast-tracked." },
-  { id: "i4", topic: "itsm", question: "What does RITM stand for?", options: ["Requested IT Module", "Requested Item", "Routed Incident Ticket Manager", "Resource IT Management"], correctIndex: 1, explain: "A Request (REQ) contains one or more Requested Items (RITM), which spawn Catalog Tasks (SCTASK)." },
-
-  // CMDB
-  { id: "c1", topic: "cmdb", question: "Which table stores CI-to-CI relationships?", options: ["cmdb_ci", "cmdb_rel_ci", "cmdb_rel_type", "cmdb_ci_relationship"], correctIndex: 1, explain: "cmdb_rel_ci stores parent / child / type for every relationship between CIs." },
-  { id: "c2", topic: "cmdb", question: "What populates the CMDB automatically?", options: ["Import Sets", "Discovery (with a MID Server)", "Flow Designer", "Business Rules"], correctIndex: 1, explain: "Discovery probes the network via a MID Server and creates/updates CIs based on identification rules." },
-  { id: "c3", topic: "cmdb", question: "CSDM stands for…", options: ["Cloud Service Data Model", "Common Service Data Model", "Configuration Standard Data Map", "Customer Service Data Manager"], correctIndex: 1, explain: "CSDM is the prescriptive blueprint for organizing CIs across Foundation, Design, Build, and Manage domains." },
-  { id: "c4", topic: "cmdb", question: "A Linux server CI lives on which class table?", options: ["cmdb_ci", "cmdb_ci_server", "cmdb_ci_linux_server", "cmdb_ci_computer"], correctIndex: 2, explain: "Each CI sits on the most specific class table; cmdb_ci_linux_server extends cmdb_ci_server which extends cmdb_ci." },
 
   // Flow
   { id: "f1", topic: "flow", question: "Flow Designer replaced which tool for most new automations?", options: ["Workflow Editor", "GlideRecord", "Update Set Editor", "Performance Analytics"], correctIndex: 0, explain: "Flow Designer is the modern, low-code replacement for the legacy Workflow Editor." },
