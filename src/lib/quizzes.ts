@@ -180,6 +180,8 @@ const SECTION_PLAN: Record<string, QuizSection[]> = {
     { label: "REST & inbound APIs", icon: "🌐", count: 2 },
     { label: "MID Server & imports", icon: "🔁", count: 2 },
   ],
+  ...ADMIN_SECTIONS,
+  ...JAVA_SECTIONS,
 };
 
 export function sectionsFor(topic: TopicId, total: number): QuizSection[] {
