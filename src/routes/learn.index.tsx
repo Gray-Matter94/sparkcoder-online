@@ -27,7 +27,8 @@ export const Route = createFileRoute("/learn/")({
 });
 
 function Learn() {
-  const { progress } = useProgress();
+  const { progress, track } = useProgress();
+  const visibleTopics = topicsForTrack(track);
 
   return (
     <div className="min-h-screen flex flex-col">
