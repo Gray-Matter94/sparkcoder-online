@@ -1,7 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTrack, type TrackId } from "./tracks";
 
-const KEY = "snscript_progress_v2";
+const BASE_KEY = "snscript_progress_v3";
+/** Per-track local storage key. The legacy v2 key migrates into the default track. */
+function keyFor(track: TrackId) {
+  return `${BASE_KEY}:${track}`;
+}
 
 export interface SrsEntry {
   topic: string;
@@ -44,15 +49,25 @@ const empty: Progress = {
   srs: {},
 };
 
-function read(): Progress {
+function read(track: TrackId): Progress {
   if (typeof window === "undefined") return empty;
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(keyFor(track));
     if (!raw) {
-      const old = localStorage.getItem("snscript_progress_v1");
-      if (old) {
-        const parsed = JSON.parse(old);
-        return { ...empty, ...parsed };
+      // Migrate legacy single-track storage into the default track.
+      if (track === "servicenow-dev") {
+        const v2 = localStorage.getItem("snscript_progress_v2");
+        if (v2) {
+          const parsed = JSON.parse(v2);
+          const migrated = { ...empty, ...parsed };
+          localStorage.setItem(keyFor(track), JSON.stringify(migrated));
+          return migrated;
+        }
+        const v1 = localStorage.getItem("snscript_progress_v1");
+        if (v1) {
+          const parsed = JSON.parse(v1);
+          return { ...empty, ...parsed };
+        }
       }
       return empty;
     }
@@ -62,10 +77,11 @@ function read(): Progress {
   }
 }
 
-function write(p: Progress) {
+function write(track: TrackId, p: Progress) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(p));
+  localStorage.setItem(keyFor(track), JSON.stringify(p));
 }
+
 
 /** Merge two progress snapshots, taking the most generous of each field. */
 function merge(a: Progress, b: Progress): Progress {
