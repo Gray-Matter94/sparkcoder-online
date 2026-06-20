@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { Progress } from "@/lib/progress";
+import { useAuth, signOut } from "@/hooks/useAuth";
+import { useState, useRef, useEffect } from "react";
 
 export function StatsBar({ progress, back }: { progress: Progress; back?: boolean }) {
   return (
@@ -28,11 +30,77 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
           <span className="font-bold text-sm">{progress.xp.toLocaleString()} XP</span>
         </div>
       </div>
-      {!back && (
-        <span className="text-[10px] text-zinc-500 uppercase tracking-widest hidden sm:block">
-          ServiceNow Scripting
-        </span>
-      )}
+      <AuthButton />
     </header>
+  );
+}
+
+function AuthButton() {
+  const { user, loading } = useAuth();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  if (loading) {
+    return <div className="size-8 rounded-full bg-panel border border-border animate-pulse" />;
+  }
+
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        className="text-[10px] font-display tracking-widest px-3 py-2 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+      >
+        SIGN IN
+      </Link>
+    );
+  }
+
+  const name =
+    (user.user_metadata?.display_name as string | undefined) ??
+    user.email?.split("@")[0] ??
+    "Player";
+  const initial = name.charAt(0).toUpperCase();
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Account menu"
+        className="size-9 rounded-full bg-primary/15 border-2 border-primary text-primary font-display flex items-center justify-center hover:bg-primary/25 transition-colors"
+      >
+        {initial}
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-52 rounded-xl border border-border bg-panel shadow-xl z-50 overflow-hidden">
+          <div className="px-3 py-2.5 border-b border-border">
+            <div className="text-[10px] uppercase tracking-widest text-zinc-500">
+              Signed in as
+            </div>
+            <div className="text-sm font-semibold truncate">{name}</div>
+            <div className="text-[11px] text-zinc-500 truncate">{user.email}</div>
+          </div>
+          <button
+            onClick={async () => {
+              setOpen(false);
+              await signOut();
+            }}
+            className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            Sign out
+          </button>
+          <div className="px-3 py-2 text-[10px] text-zinc-600 border-t border-border">
+            Progress auto-syncs to the cloud.
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
