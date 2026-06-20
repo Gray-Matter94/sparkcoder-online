@@ -6,13 +6,13 @@ import { StatsBar } from "@/components/StatsBar";
 export const Route = createFileRoute("/learn")({
   head: () => ({
     meta: [
-      { title: "ServiceNow Glossary & Quizzes — ScriptArcade" },
+      { title: "ServiceNow Glossary & Quizzes — SparkCoder" },
       {
         name: "description",
         content:
           "Learn ServiceNow concepts with illustrated definitions and topic quizzes — Platform, ITSM, CMDB, Flow Designer, Integrations.",
       },
-      { property: "og:title", content: "ServiceNow Glossary & Quizzes — ScriptArcade" },
+      { property: "og:title", content: "ServiceNow Glossary & Quizzes — SparkCoder" },
       {
         property: "og:description",
         content:

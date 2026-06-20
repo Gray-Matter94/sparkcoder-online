@@ -10,13 +10,13 @@ import { getDailyChallenge } from "@/lib/daily";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ScriptArcade — ServiceNow Scripting Interview Practice" },
+      { title: "SparkCoder — ServiceNow Scripting Interview Practice" },
       {
         name: "description",
         content:
           "Practice ServiceNow scripting interview questions on the go. Interactive code puzzles, colorful simulator output, instant teaching when you slip.",
       },
-      { property: "og:title", content: "ScriptArcade — ServiceNow Scripting Practice" },
+      { property: "og:title", content: "SparkCoder — ServiceNow Scripting Practice" },
       {
         property: "og:description",
         content:

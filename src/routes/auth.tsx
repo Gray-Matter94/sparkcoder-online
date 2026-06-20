@@ -8,8 +8,8 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign in — ScriptArcade" },
-      { name: "description", content: "Sign in or create a ScriptArcade account to save your XP, streaks, and solved puzzles across devices." },
+      { title: "Sign in — SparkCoder" },
+      { name: "description", content: "Sign in or create a SparkCoder account to save your XP, streaks, and solved puzzles across devices." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -83,7 +83,7 @@ function AuthPage() {
           ← Home
         </Link>
         <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
-          ScriptArcade
+          SparkCoder
         </span>
       </header>
 
