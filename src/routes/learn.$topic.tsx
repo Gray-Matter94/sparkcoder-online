@@ -422,7 +422,7 @@ function Quiz({
                   Spaced repetition schedule
                 </h3>
                 <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                  {meta?.name}
+                  {TOPICS.find((t) => t.id === topic)?.name ?? topic}
                 </span>
               </div>
               <div className="rounded-xl border-2 border-primary/30 bg-primary/5 overflow-hidden">
