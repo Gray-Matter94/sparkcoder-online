@@ -12,7 +12,7 @@ const rowClass: Record<string, string> = {
   ok: "bg-primary/10 text-primary",
   warn: "bg-accent/10 text-accent",
   bad: "bg-destructive/10 text-destructive",
-  dim: "opacity-40",
+  dim: "opacity-70",
 };
 
 interface Props {
