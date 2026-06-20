@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TOPICS } from "@/lib/glossary";
+import { TOPICS, topicsForTrack } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { TrackSwitcher } from "@/components/TrackSwitcher";
 
 export const Route = createFileRoute("/learn/")({
   head: () => ({
@@ -26,13 +27,16 @@ export const Route = createFileRoute("/learn/")({
 });
 
 function Learn() {
-  const { progress } = useProgress();
+  const { progress, track } = useProgress();
+  const visibleTopics = topicsForTrack(track);
 
   return (
     <div className="min-h-screen flex flex-col">
       <StatsBar progress={progress} back />
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-6">
+        <TrackSwitcher />
+
         <section className="space-y-2 animate-fade-in">
           <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
             Knowledge Vault
@@ -43,10 +47,11 @@ function Learn() {
             <span className="text-accent">LINGO.</span>
           </h1>
           <p className="text-sm text-foreground/85">
-            Pick a topic to skim the glossary and run a 4-question quiz. Quizzes mark the topic as
+            Pick a topic to skim the glossary and run a quiz. Quizzes mark the topic as
             studied — no XP, no streak pressure.
           </p>
         </section>
+
 
         {(() => {
           const today = todayStr();
@@ -103,7 +108,7 @@ function Learn() {
 
         <section className="space-y-3">
 
-          {TOPICS.map((t) => (
+          {visibleTopics.map((t) => (
             <Link
               key={t.id}
               to="/learn/$topic"
@@ -111,14 +116,23 @@ function Learn() {
               className="block rounded-2xl border-2 border-border bg-panel overflow-hidden hover:border-accent/50 transition-all active:translate-y-0.5"
             >
               <div className="relative aspect-[3/2] bg-zinc-900 overflow-hidden">
-                <img
-                  src={t.image}
-                  alt={`${t.name} concept illustration`}
-                  loading="lazy"
-                  width={768}
-                  height={512}
-                  className="size-full object-cover opacity-80"
-                />
+                {t.image ? (
+                  <img
+                    src={t.image}
+                    alt={`${t.name} concept illustration`}
+                    loading="lazy"
+                    width={768}
+                    height={512}
+                    className="size-full object-cover opacity-80"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="size-full flex items-center justify-center bg-gradient-to-br from-accent/30 via-secondary/10 to-primary/20"
+                  >
+                    <span className="text-[120px] leading-none opacity-50">{t.emoji}</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/40 to-transparent" />
                 <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between gap-3">
                   <div>

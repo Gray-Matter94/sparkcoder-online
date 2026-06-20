@@ -1,9 +1,7 @@
-export type Category =
-  | "gliderecord"
-  | "business-rules"
-  | "client-scripts"
-  | "glideajax"
-  | "script-includes";
+import type { TrackId } from "./tracks";
+
+/** Category id is now a free string so each track can contribute its own set. */
+export type Category = string;
 
 export interface CategoryMeta {
   id: Category;
@@ -11,14 +9,16 @@ export interface CategoryMeta {
   emoji: string;
   blurb: string;
   color: string; // tailwind color class fragment for accents
+  /** Which practice track this category belongs to. */
+  track: TrackId;
 }
 
-export const CATEGORIES: CategoryMeta[] = [
-  { id: "gliderecord", name: "GlideRecord", emoji: "🗃️", blurb: "Server-side DB queries", color: "primary" },
-  { id: "business-rules", name: "Business Rules", emoji: "⚙️", blurb: "Before/After/Async logic", color: "accent" },
-  { id: "client-scripts", name: "Client Scripts", emoji: "🖱️", blurb: "onLoad / onChange / onSubmit", color: "secondary" },
-  { id: "glideajax", name: "GlideAjax", emoji: "📡", blurb: "Client → Server calls", color: "primary" },
-  { id: "script-includes", name: "Script Includes", emoji: "📦", blurb: "Reusable server libraries", color: "accent" },
+const SN_DEV_CATEGORIES: CategoryMeta[] = [
+  { id: "gliderecord", name: "GlideRecord", emoji: "🗃️", blurb: "Server-side DB queries", color: "primary", track: "servicenow-dev" },
+  { id: "business-rules", name: "Business Rules", emoji: "⚙️", blurb: "Before/After/Async logic", color: "accent", track: "servicenow-dev" },
+  { id: "client-scripts", name: "Client Scripts", emoji: "🖱️", blurb: "onLoad / onChange / onSubmit", color: "secondary", track: "servicenow-dev" },
+  { id: "glideajax", name: "GlideAjax", emoji: "📡", blurb: "Client → Server calls", color: "primary", track: "servicenow-dev" },
+  { id: "script-includes", name: "Script Includes", emoji: "📦", blurb: "Reusable server libraries", color: "accent", track: "servicenow-dev" },
 ];
 
 export interface Option {
@@ -665,6 +665,26 @@ export const QUESTIONS: Question[] = [
 ];
 
 import { generatedQuestionsFor } from "./question-generator";
+import { ADMIN_CATEGORIES, ADMIN_QUESTIONS } from "./content/admin";
+import { JAVA_CATEGORIES, JAVA_QUESTIONS } from "./content/java";
+
+/** All categories across every practice track. */
+export const CATEGORIES: CategoryMeta[] = [
+  ...SN_DEV_CATEGORIES,
+  ...ADMIN_CATEGORIES,
+  ...JAVA_CATEGORIES,
+];
+
+/** Add hand-crafted questions for the new tracks to the master list. */
+QUESTIONS.push(...ADMIN_QUESTIONS, ...JAVA_QUESTIONS);
+
+export function categoriesForTrack(track: TrackId): CategoryMeta[] {
+  return CATEGORIES.filter((c) => c.track === track);
+}
+
+export function categoryTrack(catId: Category): TrackId | undefined {
+  return CATEGORIES.find((c) => c.id === catId)?.track;
+}
 
 // Stable seeded shuffle so the order varies per category without changing each render.
 function shuffle<T>(arr: T[], seed: number): T[] {
@@ -695,3 +715,4 @@ export function questionsFor(cat: Category): Question[] {
   const tail = shuffle(merged.slice(handcrafted.length), seed);
   return [...head, ...tail];
 }
+

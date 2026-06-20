@@ -114,6 +114,10 @@ export const QUIZZES: QuizQuestion[] = [
 ];
 
 import { generatedQuizzesFor } from "./quiz-generator";
+import { ADMIN_QUIZZES, ADMIN_SECTIONS } from "./content/admin";
+import { JAVA_QUIZZES, JAVA_SECTIONS } from "./content/java";
+
+QUIZZES.push(...ADMIN_QUIZZES, ...JAVA_QUIZZES);
 
 function shuffleQ<T>(arr: T[], seed: number): T[] {
   const out = arr.slice();
@@ -155,7 +159,7 @@ export interface QuizSection {
  * total `count` is less than the quiz length, a trailing "Bonus round"
  * section absorbs the remainder.
  */
-const SECTION_PLAN: Record<TopicId, QuizSection[]> = {
+const SECTION_PLAN: Record<string, QuizSection[]> = {
   platform: [
     { label: "Core concepts", icon: "🧱", count: 2 },
     { label: "Data model", icon: "🗂️", count: 2 },
@@ -176,6 +180,8 @@ const SECTION_PLAN: Record<TopicId, QuizSection[]> = {
     { label: "REST & inbound APIs", icon: "🌐", count: 2 },
     { label: "MID Server & imports", icon: "🔁", count: 2 },
   ],
+  ...ADMIN_SECTIONS,
+  ...JAVA_SECTIONS,
 };
 
 export function sectionsFor(topic: TopicId, total: number): QuizSection[] {

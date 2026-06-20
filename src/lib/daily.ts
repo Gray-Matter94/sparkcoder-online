@@ -1,5 +1,6 @@
-import { QUESTIONS, type Question } from "./questions";
+import { QUESTIONS, type Question, categoryTrack } from "./questions";
 import { todayStr } from "./progress";
+import type { TrackId } from "./tracks";
 
 /** Deterministic hash from a string. */
 function hash(str: string): number {
@@ -11,9 +12,12 @@ function hash(str: string): number {
   return h >>> 0;
 }
 
-/** Pick today's challenge — deterministic per day. */
-export function getDailyChallenge(date: Date = new Date()): Question {
-  const key = todayStr(date);
-  const idx = hash(key) % QUESTIONS.length;
-  return QUESTIONS[idx];
+/** Pick today's challenge — deterministic per (day, track). */
+export function getDailyChallenge(track: TrackId = "servicenow-dev", date: Date = new Date()): Question {
+  const pool = QUESTIONS.filter((q) => categoryTrack(q.category) === track);
+  const list = pool.length > 0 ? pool : QUESTIONS;
+  const key = `${todayStr(date)}:${track}`;
+  const idx = hash(key) % list.length;
+  return list[idx];
 }
+

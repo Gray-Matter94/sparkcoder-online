@@ -3,25 +3,31 @@ import itsmImg from "@/assets/learn-itsm.jpg";
 import cmdbImg from "@/assets/learn-cmdb.jpg";
 import flowImg from "@/assets/learn-flow.jpg";
 import integrationImg from "@/assets/learn-integration.jpg";
+import type { TrackId } from "./tracks";
 
-export type TopicId = "platform" | "itsm" | "cmdb" | "flow" | "integration";
+/** Free-string topic id so each track can contribute its own topics. */
+export type TopicId = string;
 
 export interface Topic {
   id: TopicId;
   name: string;
   tagline: string;
   emoji: string;
-  image: string;
+  /** Optional hero image; tracks without bespoke art render an emoji+gradient. */
+  image?: string;
   blurb: string;
+  /** Which practice track this topic belongs to. */
+  track: TrackId;
 }
 
-export const TOPICS: Topic[] = [
+const SN_DEV_TOPICS: Topic[] = [
   {
     id: "platform",
     name: "Platform Basics",
     tagline: "The Now Platform — apps, tables, UI.",
     emoji: "🧱",
     image: platformImg,
+    track: "servicenow-dev",
     blurb:
       "ServiceNow is a cloud platform-as-a-service (PaaS). Every record lives in a table, every screen is a form, and every piece of logic is configurable. Master the building blocks before the magic.",
   },
@@ -31,6 +37,7 @@ export const TOPICS: Topic[] = [
     tagline: "Incident, Problem, Change, Request.",
     emoji: "🎫",
     image: itsmImg,
+    track: "servicenow-dev",
     blurb:
       "IT Service Management is the flagship suite — the four core processes (Incident, Problem, Change, Request) that interview panels grill you on first.",
   },
@@ -40,6 +47,7 @@ export const TOPICS: Topic[] = [
     tagline: "Configuration items and their relationships.",
     emoji: "🗂️",
     image: cmdbImg,
+    track: "servicenow-dev",
     blurb:
       "The Configuration Management Database is the single source of truth for everything in your environment — servers, apps, services, and how they connect.",
   },
@@ -49,6 +57,7 @@ export const TOPICS: Topic[] = [
     tagline: "Low-code automation and workflows.",
     emoji: "🌊",
     image: flowImg,
+    track: "servicenow-dev",
     blurb:
       "Flow Designer is ServiceNow's modern, no-code automation tool. It replaced Workflow Editor for most new automations and integrates cleanly with IntegrationHub.",
   },
@@ -58,6 +67,7 @@ export const TOPICS: Topic[] = [
     tagline: "REST, SOAP, IntegrationHub, MID Server.",
     emoji: "🔌",
     image: integrationImg,
+    track: "servicenow-dev",
     blurb:
       "Almost every real-world ServiceNow project talks to something else — Active Directory, Jira, AWS, SAP. Know the patterns and you'll never be stuck.",
   },
@@ -70,7 +80,7 @@ export interface Term {
   long: string;
 }
 
-export const TERMS: Term[] = [
+const SN_DEV_TERMS: Term[] = [
   // Platform
   { topic: "platform", term: "Instance", short: "Your dedicated ServiceNow tenant.", long: "Each customer (and each dev / test / prod environment) gets its own URL like company.service-now.com. Code and data live inside the instance — there's no shared codebase across customers." },
   { topic: "platform", term: "Table", short: "A database table — every record lives in one.", long: "Tables can extend each other (Incident extends Task extends... ). Dot-walking lets you traverse references like incident.caller_id.email without a JOIN." },
@@ -107,6 +117,20 @@ export const TERMS: Term[] = [
   { topic: "integration", term: "Transform Map", short: "Field-by-field mapping from import set → target.", long: "Defines source-to-target field mapping, scripts, and coalesce rules. Onbefore/onafter scripts let you reshape data during the import." },
 ];
 
+import { ADMIN_TOPICS, ADMIN_TERMS } from "./content/admin";
+import { JAVA_TOPICS, JAVA_TERMS } from "./content/java";
+
+export const TOPICS: Topic[] = [...SN_DEV_TOPICS, ...ADMIN_TOPICS, ...JAVA_TOPICS];
+export const TERMS: Term[] = [...SN_DEV_TERMS, ...ADMIN_TERMS, ...JAVA_TERMS];
+
 export function termsFor(topic: TopicId): Term[] {
   return TERMS.filter((t) => t.topic === topic);
+}
+
+export function topicsForTrack(track: TrackId): Topic[] {
+  return TOPICS.filter((t) => t.track === track);
+}
+
+export function topicTrack(topicId: TopicId): TrackId | undefined {
+  return TOPICS.find((t) => t.id === topicId)?.track;
 }

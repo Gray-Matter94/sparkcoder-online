@@ -1,7 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTrack, type TrackId } from "./tracks";
 
-const KEY = "snscript_progress_v2";
+const BASE_KEY = "snscript_progress_v3";
+/** Per-track local storage key. The legacy v2 key migrates into the default track. */
+function keyFor(track: TrackId) {
+  return `${BASE_KEY}:${track}`;
+}
 
 export interface SrsEntry {
   topic: string;
@@ -44,15 +49,25 @@ const empty: Progress = {
   srs: {},
 };
 
-function read(): Progress {
+function read(track: TrackId): Progress {
   if (typeof window === "undefined") return empty;
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(keyFor(track));
     if (!raw) {
-      const old = localStorage.getItem("snscript_progress_v1");
-      if (old) {
-        const parsed = JSON.parse(old);
-        return { ...empty, ...parsed };
+      // Migrate legacy single-track storage into the default track.
+      if (track === "servicenow-dev") {
+        const v2 = localStorage.getItem("snscript_progress_v2");
+        if (v2) {
+          const parsed = JSON.parse(v2);
+          const migrated = { ...empty, ...parsed };
+          localStorage.setItem(keyFor(track), JSON.stringify(migrated));
+          return migrated;
+        }
+        const v1 = localStorage.getItem("snscript_progress_v1");
+        if (v1) {
+          const parsed = JSON.parse(v1);
+          return { ...empty, ...parsed };
+        }
       }
       return empty;
     }
@@ -62,10 +77,11 @@ function read(): Progress {
   }
 }
 
-function write(p: Progress) {
+function write(track: TrackId, p: Progress) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(p));
+  localStorage.setItem(keyFor(track), JSON.stringify(p));
 }
+
 
 /** Merge two progress snapshots, taking the most generous of each field. */
 function merge(a: Progress, b: Progress): Progress {
@@ -188,29 +204,56 @@ export function activeDaysThisWeek(activeDays: Record<string, true>, today: Date
 
 export const WEEKLY_BADGE_THRESHOLD = 3;
 
-async function pushCloud(userId: string, p: Progress) {
+interface CloudShape {
+  tracks?: Record<string, Progress>;
+  // legacy: a single Progress at the root (mapped to servicenow-dev)
+  xp?: number;
+  solved?: Record<string, boolean>;
+}
+
+async function pushCloud(userId: string, track: TrackId, p: Progress) {
   try {
+    // Read existing row so we don't blow away other tracks.
+    const { data } = await supabase
+      .from("user_progress")
+      .select("data")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const current = (data?.data as CloudShape | undefined) ?? {};
+    const tracks: Record<string, Progress> = { ...(current.tracks ?? {}) };
+    // Migrate legacy root-Progress into servicenow-dev once.
+    if (!current.tracks && current.xp !== undefined) {
+      tracks["servicenow-dev"] = { ...empty, ...(current as unknown as Progress) };
+    }
+    tracks[track] = p;
     await supabase
       .from("user_progress")
-      .upsert({ user_id: userId, data: p as never }, { onConflict: "user_id" });
+      .upsert({ user_id: userId, data: { tracks } as never }, { onConflict: "user_id" });
   } catch (e) {
     console.warn("[progress] cloud sync failed", e);
   }
 }
 
 export function useProgress() {
+  const [track] = useTrack();
   const [progress, setProgress] = useState<Progress>(empty);
   const userIdRef = useRef<string | null>(null);
+  const trackRef = useRef<TrackId>(track);
   const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Initial local load + subscribe to auth changes to pull/push cloud
+  // Reload local progress whenever the active track changes.
   useEffect(() => {
-    setProgress(read());
+    trackRef.current = track;
+    setProgress(read(track));
+  }, [track]);
 
+  // Auth subscription — pull cloud for the *current* track, merge with local.
+  useEffect(() => {
     let mounted = true;
 
     async function syncFromCloud(uid: string) {
-      const local = read();
+      const t = trackRef.current;
+      const local = read(t);
       const { data, error } = await supabase
         .from("user_progress")
         .select("data")
@@ -221,12 +264,17 @@ export function useProgress() {
         console.warn("[progress] cloud load failed", error);
         return;
       }
-      const cloud = (data?.data as Progress | undefined) ?? empty;
-      const merged = merge({ ...empty, ...cloud }, local);
-      write(merged);
-      setProgress(merged);
-      // push merged back so cloud reflects local additions
-      void pushCloud(uid, merged);
+      const raw = (data?.data as CloudShape | undefined) ?? {};
+      let cloud: Progress = empty;
+      if (raw.tracks && raw.tracks[t]) {
+        cloud = { ...empty, ...raw.tracks[t] };
+      } else if (!raw.tracks && raw.xp !== undefined && t === "servicenow-dev") {
+        cloud = { ...empty, ...(raw as unknown as Progress) };
+      }
+      const merged = merge(cloud, local);
+      write(t, merged);
+      if (trackRef.current === t) setProgress(merged);
+      void pushCloud(uid, t, merged);
     }
 
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
@@ -245,14 +293,15 @@ export function useProgress() {
       mounted = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [track]);
 
-  // Debounced push when progress changes for signed-in users
+  // Debounced cloud push for signed-in users.
   const queueCloud = useCallback((p: Progress) => {
     const uid = userIdRef.current;
     if (!uid) return;
+    const t = trackRef.current;
     if (syncTimer.current) clearTimeout(syncTimer.current);
-    syncTimer.current = setTimeout(() => void pushCloud(uid, p), 600);
+    syncTimer.current = setTimeout(() => void pushCloud(uid, t, p), 600);
   }, []);
 
   const award = useCallback(
@@ -290,7 +339,7 @@ export function useProgress() {
           activeDays,
           weeklyBadges,
         };
-        write(next);
+        write(trackRef.current, next);
         queueCloud(next);
         return next;
       });
@@ -307,7 +356,7 @@ export function useProgress() {
           ...prev,
           dailyChallenges: { ...prev.dailyChallenges, [today]: questionId },
         };
-        write(next);
+        write(trackRef.current, next);
         queueCloud(next);
         return next;
       });
@@ -326,7 +375,7 @@ export function useProgress() {
           srs[key] = scheduleNext(srs[key], r);
         }
         const next: Progress = { ...prev, srs };
-        write(next);
+        write(trackRef.current, next);
         queueCloud(next);
         return next;
       });
@@ -335,10 +384,11 @@ export function useProgress() {
   );
 
   const reset = useCallback(() => {
-    write(empty);
+    write(trackRef.current, empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge, recordSrs };
+  return { progress, award, reset, markDailyChallenge, recordSrs, track };
 }
+

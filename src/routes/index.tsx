@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, QUESTIONS } from "@/lib/questions";
+import { CATEGORIES, QUESTIONS, categoriesForTrack } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { BadgesPanel } from "@/components/BadgesPanel";
 import { DifficultyCard } from "@/components/DifficultyCard";
+import { TrackSwitcher } from "@/components/TrackSwitcher";
 import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
+import { trackMeta } from "@/lib/tracks";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,15 +32,21 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { progress, reset } = useProgress();
+  const { progress, reset, track } = useProgress();
   const tier = getCurrentTier(progress);
-  const unlockedQuestions = QUESTIONS.filter((q) => q.level <= tier.maxLevel);
+  const trackCategories = categoriesForTrack(track);
+  const trackCategoryIds = new Set(trackCategories.map((c) => c.id));
+  const trackQuestions = QUESTIONS.filter((q) => trackCategoryIds.has(q.category));
+  const unlockedQuestions = trackQuestions.filter((q) => q.level <= tier.maxLevel);
   const total = unlockedQuestions.length;
   const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
-  const daily = getDailyChallenge();
+  const daily = getDailyChallenge(track);
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
   const dailyDone = !!progress.dailyChallenges[todayStr()];
+  const meta = trackMeta(track);
+  const accentText =
+    meta.accent === "primary" ? "text-primary" : meta.accent === "accent" ? "text-accent" : "text-secondary";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,18 +59,19 @@ function Home() {
       </div>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-8">
+        <TrackSwitcher />
+
         <section className="space-y-3 animate-fade-in">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
-            Interview Arcade
+          <span className={`text-[10px] uppercase tracking-[0.25em] font-bold ${accentText}`}>
+            {meta.emoji} {meta.name}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
             SCRIPT YOUR
             <br />
-            WAY <span className="text-primary">IN.</span>
+            WAY <span className={accentText}>IN.</span>
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-            Bite-size ServiceNow scripting puzzles. Tap a block, run the script, watch the
-            instance simulator react. Get it wrong? The system teaches you why — in detail.
+            {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
           </p>
         </section>
 
@@ -71,6 +80,7 @@ function Home() {
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
           <Stat label="Solved" value={`${solved}/${total}`} accent="secondary" />
         </section>
+
 
         <Link
           to="/daily"
@@ -115,7 +125,7 @@ function Home() {
                 <h3 className="font-display text-lg tracking-wide text-secondary">
                   LEARN & QUIZ
                 </h3>
-                <span className="text-[10px] text-muted-foreground font-mono">5 TOPICS</span>
+                <span className="text-[10px] text-muted-foreground font-mono">GLOSSARY + QUIZ</span>
               </div>
               <p className="text-xs text-muted-foreground truncate">
                 ServiceNow glossary + topic quizzes with illustrations.
@@ -134,7 +144,7 @@ function Home() {
             Choose a module
           </h2>
           <div className="grid grid-cols-1 gap-3">
-            {CATEGORIES.map((c) => {
+            {trackCategories.map((c) => {
               const allQs = QUESTIONS.filter((q) => q.category === c.id);
               const qs = allQs.filter((q) => q.level <= tier.maxLevel);
               const locked = allQs.length - qs.length;
