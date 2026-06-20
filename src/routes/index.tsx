@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, QUESTIONS, categoriesForTrack, categoryTrack } from "@/lib/questions";
+import { CATEGORIES, QUESTIONS, categoriesForTrack } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { BadgesPanel } from "@/components/BadgesPanel";
