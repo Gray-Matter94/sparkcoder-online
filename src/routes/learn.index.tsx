@@ -108,7 +108,7 @@ function Learn() {
 
         <section className="space-y-3">
 
-          {TOPICS.map((t) => (
+          {visibleTopics.map((t) => (
             <Link
               key={t.id}
               to="/learn/$topic"
@@ -116,14 +116,23 @@ function Learn() {
               className="block rounded-2xl border-2 border-border bg-panel overflow-hidden hover:border-accent/50 transition-all active:translate-y-0.5"
             >
               <div className="relative aspect-[3/2] bg-zinc-900 overflow-hidden">
-                <img
-                  src={t.image}
-                  alt={`${t.name} concept illustration`}
-                  loading="lazy"
-                  width={768}
-                  height={512}
-                  className="size-full object-cover opacity-80"
-                />
+                {t.image ? (
+                  <img
+                    src={t.image}
+                    alt={`${t.name} concept illustration`}
+                    loading="lazy"
+                    width={768}
+                    height={512}
+                    className="size-full object-cover opacity-80"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="size-full flex items-center justify-center bg-gradient-to-br from-accent/30 via-secondary/10 to-primary/20"
+                  >
+                    <span className="text-[120px] leading-none opacity-50">{t.emoji}</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/40 to-transparent" />
                 <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between gap-3">
                   <div>
