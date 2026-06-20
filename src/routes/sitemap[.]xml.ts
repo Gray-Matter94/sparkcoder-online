@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 
-const BASE_URL = "https://service-spark-coder.lovable.app";
+const BASE_URL = "https://sparkcoder.online";
 
 interface SitemapEntry {
   path: string;
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/daily", changefreq: "daily", priority: "0.9" },
           { path: "/learn", changefreq: "weekly", priority: "0.8" },
+          { path: "/auth", changefreq: "monthly", priority: "0.3" },
           ...CATEGORIES.map((c) => ({
             path: `/practice/${c.id}`,
             changefreq: "weekly" as const,
