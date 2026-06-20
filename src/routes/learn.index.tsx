@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TOPICS } from "@/lib/glossary";
+import { TOPICS, topicsForTrack } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { TrackSwitcher } from "@/components/TrackSwitcher";
 
 export const Route = createFileRoute("/learn/")({
   head: () => ({
