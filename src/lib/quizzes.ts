@@ -41,6 +41,31 @@ export const QUIZZES: QuizQuestion[] = [
   { id: "n4", topic: "integration", question: "Which is the inbound REST endpoint mechanism?", options: ["REST Message", "Scripted REST API", "Outbound Web Service", "MID Server Probe"], correctIndex: 1, explain: "Scripted REST APIs expose /api/<namespace>/<api>/<resource> with a server script you control." },
 ];
 
+import { generatedQuizzesFor } from "./quiz-generator";
+
+function shuffleQ<T>(arr: T[], seed: number): T[] {
+  const out = arr.slice();
+  let s = seed || 1;
+  for (let i = out.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const j = Math.floor((s / 233280) * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 export function quizFor(topic: TopicId): QuizQuestion[] {
-  return QUIZZES.filter((q) => q.topic === topic);
+  const handcrafted = QUIZZES.filter((q) => q.topic === topic);
+  const generated = generatedQuizzesFor(topic);
+  const seen = new Set<string>();
+  const merged: QuizQuestion[] = [];
+  for (const q of [...handcrafted, ...generated]) {
+    if (seen.has(q.id)) continue;
+    seen.add(q.id);
+    merged.push(q);
+  }
+  const seed = topic.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const head = merged.slice(0, handcrafted.length);
+  const tail = shuffleQ(merged.slice(handcrafted.length), seed);
+  return [...head, ...tail];
 }

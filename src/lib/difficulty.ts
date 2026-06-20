@@ -17,7 +17,7 @@ export const TIERS: Tier[] = [
     emoji: "🍼",
     name: "Script Kiddo",
     tagline: "Still typing `var` like it's 2011.",
-    maxLevel: 1,
+    maxLevel: 2,
     xpMultiplier: 1,
     badgesRequired: 0,
     color: "primary",
