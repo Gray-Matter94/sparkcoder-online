@@ -32,15 +32,21 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { progress, reset } = useProgress();
+  const { progress, reset, track } = useProgress();
   const tier = getCurrentTier(progress);
-  const unlockedQuestions = QUESTIONS.filter((q) => q.level <= tier.maxLevel);
+  const trackCategories = categoriesForTrack(track);
+  const trackCategoryIds = new Set(trackCategories.map((c) => c.id));
+  const trackQuestions = QUESTIONS.filter((q) => trackCategoryIds.has(q.category));
+  const unlockedQuestions = trackQuestions.filter((q) => q.level <= tier.maxLevel);
   const total = unlockedQuestions.length;
   const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
   const pct = total ? Math.round((solved / total) * 100) : 0;
-  const daily = getDailyChallenge();
+  const daily = getDailyChallenge(track);
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
   const dailyDone = !!progress.dailyChallenges[todayStr()];
+  const meta = trackMeta(track);
+  const accentText =
+    meta.accent === "primary" ? "text-primary" : meta.accent === "accent" ? "text-accent" : "text-secondary";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -53,18 +59,19 @@ function Home() {
       </div>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-8">
+        <TrackSwitcher />
+
         <section className="space-y-3 animate-fade-in">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
-            Interview Arcade
+          <span className={`text-[10px] uppercase tracking-[0.25em] font-bold ${accentText}`}>
+            {meta.emoji} {meta.name}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
             SCRIPT YOUR
             <br />
-            WAY <span className="text-primary">IN.</span>
+            WAY <span className={accentText}>IN.</span>
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-            Bite-size ServiceNow scripting puzzles. Tap a block, run the script, watch the
-            instance simulator react. Get it wrong? The system teaches you why — in detail.
+            {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
           </p>
         </section>
 
@@ -73,6 +80,7 @@ function Home() {
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
           <Stat label="Solved" value={`${solved}/${total}`} accent="secondary" />
         </section>
+
 
         <Link
           to="/daily"
