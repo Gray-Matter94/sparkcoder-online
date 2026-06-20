@@ -264,51 +264,66 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
 
       {status === "answered" && (
         <div
-          className={`p-4 rounded-xl border-2 text-sm space-y-3 ${
+          className={`rounded-xl border-2 text-sm overflow-hidden ${
             isCorrect
               ? "border-primary/40 bg-primary/5"
               : "border-destructive/40 bg-destructive/5"
           }`}
         >
-          <div className="font-display tracking-wide text-foreground/90">
-            {isCorrect ? "✓ CORRECT" : "✗ NOT QUITE"}
-          </div>
-
-          <p className="text-[13px] leading-relaxed text-foreground/85">{q.explain}</p>
-
-          {q.whyCorrect && (
-            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
-              <div className="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">
-                Why “{q.options[q.correctIndex]}” is right
-              </div>
-              <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyCorrect}</p>
+          <button
+            onClick={() => setDetailsOpen((v) => !v)}
+            className="w-full p-4 flex items-center justify-between gap-3 text-left"
+          >
+            <div className="font-display tracking-wide text-foreground/90">
+              {isCorrect ? "✓ CORRECT" : "✗ NOT QUITE"}
             </div>
-          )}
+            <span
+              className={`text-muted-foreground text-lg transition-transform shrink-0 ${
+                detailsOpen ? "rotate-180" : ""
+              }`}
+            >
+              ▾
+            </span>
+          </button>
 
-          {!isCorrect && picked !== null && q.whyWrong?.[picked] && (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
-              <div className="text-[10px] uppercase tracking-widest text-destructive font-bold mb-1">
-                Why “{q.options[picked]}” misses
-              </div>
-              <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyWrong[picked]}</p>
-            </div>
-          )}
+          {detailsOpen && (
+            <div className="px-4 pb-4 space-y-3">
+              <p className="text-[13px] leading-relaxed text-foreground/85">{q.explain}</p>
 
-          {q.learnMore && q.learnMore.length > 0 && (
-            <div className="rounded-lg border border-border bg-panel/60 p-3">
-              <div className="text-[10px] uppercase tracking-widest text-accent font-bold mb-1.5">
-                Go deeper
-              </div>
-              <ul className="space-y-1.5 text-[13px] leading-relaxed text-foreground/85 list-disc pl-4 marker:text-accent">
-                {q.learnMore.map((tip, i) => (
-                  <li key={i}>{tip}</li>
-                ))}
-              </ul>
+              {q.whyCorrect && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+                  <div className="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">
+                    Why "{q.options[q.correctIndex]}" is right
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyCorrect}</p>
+                </div>
+              )}
+
+              {!isCorrect && picked !== null && q.whyWrong?.[picked] && (
+                <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+                  <div className="text-[10px] uppercase tracking-widest text-destructive font-bold mb-1">
+                    Why "{q.options[picked]}" misses
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyWrong[picked]}</p>
+                </div>
+              )}
+
+              {q.learnMore && q.learnMore.length > 0 && (
+                <div className="rounded-lg border border-border bg-panel/60 p-3">
+                  <div className="text-[10px] uppercase tracking-widest text-accent font-bold mb-1.5">
+                    Go deeper
+                  </div>
+                  <ul className="space-y-1.5 text-[13px] leading-relaxed text-foreground/85 list-disc pl-4 marker:text-accent">
+                    {q.learnMore.map((tip, i) => (
+                      <li key={i}>{tip}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
-
 
       {status === "picking" ? (
         <button
