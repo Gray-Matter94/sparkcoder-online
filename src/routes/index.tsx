@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, QUESTIONS } from "@/lib/questions";
+import { CATEGORIES, QUESTIONS, categoriesForTrack, categoryTrack } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { BadgesPanel } from "@/components/BadgesPanel";
 import { DifficultyCard } from "@/components/DifficultyCard";
+import { TrackSwitcher } from "@/components/TrackSwitcher";
 import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
+import { trackMeta } from "@/lib/tracks";
 
 export const Route = createFileRoute("/")({
   head: () => ({
