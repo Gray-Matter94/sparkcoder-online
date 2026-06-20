@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const KEY = "snscript_progress_v2";
 
@@ -31,7 +32,6 @@ function read(): Progress {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) {
-      // try to migrate from v1
       const old = localStorage.getItem("snscript_progress_v1");
       if (old) {
         const parsed = JSON.parse(old);
@@ -48,6 +48,22 @@ function read(): Progress {
 function write(p: Progress) {
   if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify(p));
+}
+
+/** Merge two progress snapshots, taking the most generous of each field. */
+function merge(a: Progress, b: Progress): Progress {
+  return {
+    xp: Math.max(a.xp, b.xp),
+    streak: Math.max(a.streak, b.streak),
+    lastPlayed:
+      (a.lastPlayed ?? "") > (b.lastPlayed ?? "") ? a.lastPlayed : b.lastPlayed,
+    solved: { ...a.solved, ...b.solved },
+    sessions: Math.max(a.sessions, b.sessions),
+    sessionBadges: Math.max(a.sessionBadges, b.sessionBadges),
+    activeDays: { ...a.activeDays, ...b.activeDays },
+    weeklyBadges: { ...a.weeklyBadges, ...b.weeklyBadges },
+    dailyChallenges: { ...a.dailyChallenges, ...b.dailyChallenges },
+  };
 }
 
 export function todayStr(d: Date = new Date()) {
@@ -70,7 +86,6 @@ export function weekKey(d: Date = new Date()) {
   return `${t.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
 }
 
-/** Count active days in the current ISO week */
 export function activeDaysThisWeek(activeDays: Record<string, true>, today: Date = new Date()): number {
   const wk = weekKey(today);
   return Object.keys(activeDays).filter((d) => {
@@ -79,71 +94,140 @@ export function activeDaysThisWeek(activeDays: Record<string, true>, today: Date
   }).length;
 }
 
-export const WEEKLY_BADGE_THRESHOLD = 3; // active days per week to earn
+export const WEEKLY_BADGE_THRESHOLD = 3;
+
+async function pushCloud(userId: string, p: Progress) {
+  try {
+    await supabase
+      .from("user_progress")
+      .upsert({ user_id: userId, data: p as never }, { onConflict: "user_id" });
+  } catch (e) {
+    console.warn("[progress] cloud sync failed", e);
+  }
+}
 
 export function useProgress() {
   const [progress, setProgress] = useState<Progress>(empty);
+  const userIdRef = useRef<string | null>(null);
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Initial local load + subscribe to auth changes to pull/push cloud
   useEffect(() => {
     setProgress(read());
-  }, []);
 
-  const award = useCallback((questionId: string, xp: number) => {
-    setProgress((prev) => {
-      const today = todayStr();
-      const alreadySolved = prev.solved[questionId];
-      const gained = alreadySolved ? Math.floor(xp / 3) : xp;
+    let mounted = true;
 
-      let streak = prev.streak;
-      if (prev.lastPlayed !== today) {
-        streak = prev.lastPlayed === yesterdayStr() ? streak + 1 : 1;
-      } else if (streak === 0) {
-        streak = 1;
+    async function syncFromCloud(uid: string) {
+      const local = read();
+      const { data, error } = await supabase
+        .from("user_progress")
+        .select("data")
+        .eq("user_id", uid)
+        .maybeSingle();
+      if (!mounted) return;
+      if (error) {
+        console.warn("[progress] cloud load failed", error);
+        return;
       }
+      const cloud = (data?.data as Progress | undefined) ?? empty;
+      const merged = merge({ ...empty, ...cloud }, local);
+      write(merged);
+      setProgress(merged);
+      // push merged back so cloud reflects local additions
+      void pushCloud(uid, merged);
+    }
 
-      const sessions = prev.sessions + 1;
-      const sessionBadges = Math.floor(sessions / 5);
-
-      const activeDays = { ...prev.activeDays, [today]: true as const };
-      const weeklyBadges = { ...prev.weeklyBadges };
-      const days = activeDaysThisWeek(activeDays);
-      if (days >= WEEKLY_BADGE_THRESHOLD) {
-        weeklyBadges[weekKey()] = true;
-      }
-
-      const next: Progress = {
-        ...prev,
-        xp: prev.xp + gained,
-        streak,
-        lastPlayed: today,
-        solved: { ...prev.solved, [questionId]: true },
-        sessions,
-        sessionBadges,
-        activeDays,
-        weeklyBadges,
-      };
-      write(next);
-      return next;
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      const uid = session?.user?.id ?? null;
+      userIdRef.current = uid;
+      if (uid) void syncFromCloud(uid);
     });
+
+    supabase.auth.getSession().then(({ data }) => {
+      const uid = data.session?.user?.id ?? null;
+      userIdRef.current = uid;
+      if (uid) void syncFromCloud(uid);
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
-  const markDailyChallenge = useCallback((questionId: string) => {
-    setProgress((prev) => {
-      const today = todayStr();
-      if (prev.dailyChallenges[today]) return prev;
-      const next: Progress = {
-        ...prev,
-        dailyChallenges: { ...prev.dailyChallenges, [today]: questionId },
-      };
-      write(next);
-      return next;
-    });
+  // Debounced push when progress changes for signed-in users
+  const queueCloud = useCallback((p: Progress) => {
+    const uid = userIdRef.current;
+    if (!uid) return;
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => void pushCloud(uid, p), 600);
   }, []);
+
+  const award = useCallback(
+    (questionId: string, xp: number) => {
+      setProgress((prev) => {
+        const today = todayStr();
+        const alreadySolved = prev.solved[questionId];
+        const gained = alreadySolved ? Math.floor(xp / 3) : xp;
+
+        let streak = prev.streak;
+        if (prev.lastPlayed !== today) {
+          streak = prev.lastPlayed === yesterdayStr() ? streak + 1 : 1;
+        } else if (streak === 0) {
+          streak = 1;
+        }
+
+        const sessions = prev.sessions + 1;
+        const sessionBadges = Math.floor(sessions / 5);
+
+        const activeDays = { ...prev.activeDays, [today]: true as const };
+        const weeklyBadges = { ...prev.weeklyBadges };
+        const days = activeDaysThisWeek(activeDays);
+        if (days >= WEEKLY_BADGE_THRESHOLD) {
+          weeklyBadges[weekKey()] = true;
+        }
+
+        const next: Progress = {
+          ...prev,
+          xp: prev.xp + gained,
+          streak,
+          lastPlayed: today,
+          solved: { ...prev.solved, [questionId]: true },
+          sessions,
+          sessionBadges,
+          activeDays,
+          weeklyBadges,
+        };
+        write(next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
+  const markDailyChallenge = useCallback(
+    (questionId: string) => {
+      setProgress((prev) => {
+        const today = todayStr();
+        if (prev.dailyChallenges[today]) return prev;
+        const next: Progress = {
+          ...prev,
+          dailyChallenges: { ...prev.dailyChallenges, [today]: questionId },
+        };
+        write(next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
 
   const reset = useCallback(() => {
     write(empty);
     setProgress(empty);
-  }, []);
+    queueCloud(empty);
+  }, [queueCloud]);
 
   return { progress, award, reset, markDailyChallenge };
 }
