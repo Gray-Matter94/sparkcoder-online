@@ -168,7 +168,7 @@ function Practice() {
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
           {lockedCount > 0 && (
-            <p className="text-[10px] text-zinc-400 font-mono">
+            <p className="text-[10px] text-muted-foreground font-mono">
               🔒 {lockedCount} harder puzzle{lockedCount === 1 ? "" : "s"} locked
               {nextTier ? ` — reach ${nextTier.emoji} ${nextTier.name} to unlock` : ""}.
             </p>
@@ -204,7 +204,7 @@ function Practice() {
                         : "border-border bg-panel hover:border-primary/40"
                   } ${disabled ? "cursor-not-allowed" : ""}`}
                 >
-                  <code className={`text-xs sm:text-sm font-mono ${isPicked ? "text-primary" : "text-zinc-200"}`}>
+                  <code className={`text-xs sm:text-sm font-mono ${isPicked ? "text-primary" : "text-foreground/90"}`}>
                     {o.text}
                   </code>
                   <div

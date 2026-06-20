@@ -115,7 +115,7 @@ function Home() {
                 <h3 className="font-display text-lg tracking-wide text-secondary">
                   LEARN & QUIZ
                 </h3>
-                <span className="text-[10px] text-zinc-400 font-mono">5 TOPICS</span>
+                <span className="text-[10px] text-muted-foreground font-mono">5 TOPICS</span>
               </div>
               <p className="text-xs text-muted-foreground truncate">
                 ServiceNow glossary + topic quizzes with illustrations.
@@ -170,7 +170,7 @@ function Home() {
                       <span className="text-[10px] text-zinc-500 font-mono">
                         {done}/{full}
                         {locked > 0 && (
-                          <span className="text-zinc-400 ml-1">· 🔒{locked}</span>
+                          <span className="text-muted-foreground ml-1">· 🔒{locked}</span>
                         )}
                       </span>
                     </div>
@@ -197,7 +197,7 @@ function Home() {
         <section className="pt-2">
           <button
             onClick={reset}
-            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-destructive transition-colors"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
           >
             Reset all progress
           </button>

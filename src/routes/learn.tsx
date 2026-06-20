@@ -42,7 +42,7 @@ function Learn() {
             <br />
             <span className="text-accent">LINGO.</span>
           </h1>
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-foreground/85">
             Pick a topic to skim the glossary and run a 4-question quiz. Quizzes mark the topic as
             studied — no XP, no streak pressure.
           </p>
@@ -71,7 +71,7 @@ function Learn() {
                     <div className="font-display text-2xl tracking-tight leading-none">
                       {t.emoji} {t.name.toUpperCase()}
                     </div>
-                    <div className="text-[11px] text-zinc-300 mt-1">{t.tagline}</div>
+                    <div className="text-[11px] text-foreground/85 mt-1">{t.tagline}</div>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-1 rounded-md border border-accent/40 text-accent shrink-0">
                     OPEN →
