@@ -120,6 +120,14 @@ test.describe("AngularJS track — simulator interaction", () => {
 
   test("pick → run reaches a correct answer (full happy path)", async ({ page }) => {
     await page.goto("/practice/ng-scope");
+    // Ensure React has hydrated before interacting — SSR markup is identical
+    // to post-hydration markup here, so we probe for the React fiber.
+    await page.waitForLoadState("networkidle");
+    await page.waitForFunction(() => {
+      const el = document.querySelector("main button");
+      return !!el && Object.keys(el).some((k) => k.startsWith("__reactProps"));
+    });
+
 
     const runBtn = page.getByRole("button", { name: /run script/i });
     // Re-query enabled options each iteration so disabled wrong picks are skipped.
