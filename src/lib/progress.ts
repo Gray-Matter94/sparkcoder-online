@@ -315,11 +315,30 @@ export function useProgress() {
     [queueCloud],
   );
 
+  const recordSrs = useCallback(
+    (reviews: SrsReviewInput[]) => {
+      if (reviews.length === 0) return;
+      setProgress((prev) => {
+        const srs = { ...prev.srs };
+        for (const r of reviews) {
+          if (r.attempted === 0) continue;
+          const key = `${r.topic}:${r.sectionIdx}`;
+          srs[key] = scheduleNext(srs[key], r);
+        }
+        const next: Progress = { ...prev, srs };
+        write(next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const reset = useCallback(() => {
     write(empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge };
+  return { progress, award, reset, markDailyChallenge, recordSrs };
 }
