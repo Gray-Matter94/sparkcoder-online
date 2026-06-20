@@ -6,8 +6,16 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
+  /** Short summary shown right after answering. */
   explain: string;
+  /** Optional richer breakdown rendered below `explain`. */
+  whyCorrect?: string;
+  /** Per-option pitfalls — keyed by option index. Shown when the user picks that wrong option. */
+  whyWrong?: Record<number, string>;
+  /** Short bullets with deeper context, gotchas, or follow-up reading prompts. */
+  learnMore?: string[];
 }
+
 
 export const QUIZZES: QuizQuestion[] = [
   // Platform
