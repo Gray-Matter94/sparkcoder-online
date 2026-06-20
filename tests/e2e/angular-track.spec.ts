@@ -25,12 +25,21 @@ async function seedAngularTrack(page: Page) {
   });
 }
 
-/** Wait until React has hydrated the switcher (any tab has aria-selected=true). */
+/**
+ * Wait until React has hydrated. SSR already emits aria-selected on tabs, so
+ * we probe for the React fiber props key — only present after hydration attaches
+ * event listeners. Without this, clicks land on un-hydrated DOM and are lost.
+ */
 async function waitForHydration(page: Page) {
+  await page.waitForLoadState("networkidle");
   await page.waitForFunction(
-    () => !!document.querySelector('[role="tab"][aria-selected="true"]'),
+    () => {
+      const el = document.querySelector('[role="tab"]');
+      if (!el) return false;
+      return Object.keys(el).some((k) => k.startsWith("__reactProps"));
+    },
     null,
-    { timeout: 10_000 },
+    { timeout: 15_000 },
   );
 }
 
