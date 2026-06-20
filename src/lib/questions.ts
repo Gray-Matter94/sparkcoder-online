@@ -664,6 +664,34 @@ export const QUESTIONS: Question[] = [
   },
 ];
 
+import { generatedQuestionsFor } from "./question-generator";
+
+// Stable seeded shuffle so the order varies per category without changing each render.
+function shuffle<T>(arr: T[], seed: number): T[] {
+  const out = arr.slice();
+  let s = seed || 1;
+  for (let i = out.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const j = Math.floor((s / 233280) * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 export function questionsFor(cat: Category): Question[] {
-  return QUESTIONS.filter((q) => q.category === cat);
+  const handcrafted = QUESTIONS.filter((q) => q.category === cat);
+  const generated = generatedQuestionsFor(cat);
+  // De-dup by id, hand-crafted first so those teaching moments lead.
+  const seen = new Set<string>();
+  const merged: Question[] = [];
+  for (const q of [...handcrafted, ...generated]) {
+    if (seen.has(q.id)) continue;
+    seen.add(q.id);
+    merged.push(q);
+  }
+  // Keep hand-crafted ones up-front, shuffle the generated tail by category seed
+  const seed = cat.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const head = merged.slice(0, handcrafted.length);
+  const tail = shuffle(merged.slice(handcrafted.length), seed);
+  return [...head, ...tail];
 }
