@@ -90,7 +90,7 @@ function gliderecordPool(): Question[] {
 
   // Template A: pick the right loop construct on a variety of tables
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 8; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -123,7 +123,7 @@ function gliderecordPool(): Question[] {
 
   // Template B: addQuery + update
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 7; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const stateNum = pick(STATE_NUMS, i + k);
       out.push(makeQuestion({
@@ -156,7 +156,7 @@ function gliderecordPool(): Question[] {
 
   // Template C: gr.get vs query+next
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 10; k++) {
       seq++;
       out.push(makeQuestion({
         id: `gen-gr-get-${seq}`,
@@ -182,7 +182,7 @@ function gliderecordPool(): Question[] {
 
   // Template D: setLimit
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 10; k++) {
       seq++;
       const limit = 1 + ((i + k) % 50);
       out.push(makeQuestion({
@@ -211,7 +211,7 @@ function gliderecordPool(): Question[] {
 
   // Template E: orderBy
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 10; k++) {
       seq++;
       out.push(makeQuestion({
         id: `gen-gr-order-${seq}`,
@@ -247,7 +247,7 @@ function businessRulesPool(): Question[] {
   let seq = 0;
 
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 8; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -275,7 +275,7 @@ function businessRulesPool(): Question[] {
   });
 
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 8; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -305,7 +305,7 @@ function businessRulesPool(): Question[] {
 
   // current vs previous detection
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 6; k++) {
+    for (let k = 0; k < 10; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -345,7 +345,7 @@ function clientScriptsPool(): Question[] {
 
   // onChange guard
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 8; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -373,7 +373,7 @@ function clientScriptsPool(): Question[] {
 
   // Setting field mandatory
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 7; k++) {
+    for (let k = 0; k < 12; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({
@@ -401,7 +401,7 @@ function clientScriptsPool(): Question[] {
 
   // Reading reference fields
   TABLES.forEach((tbl, i) => {
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < 10; k++) {
       seq++;
       const field = pick(REF_FIELDS, i + k);
       out.push(makeQuestion({
@@ -441,7 +441,7 @@ function glideAjaxPool(): Question[] {
   const includeNames = ["UserUtils", "AccountUtils", "RegionUtils", "ApprovalUtils", "PricingUtils", "InventoryUtils", "OrgChartUtils", "TicketUtils"];
 
   includeNames.forEach((inc, i) => {
-    for (let k = 0; k < 25; k++) {
+    for (let k = 0; k < 64; k++) {
       seq++;
       const method = ["getManagerName", "getRegion", "getCount", "getPrice", "getOwner", "getNextApprover"][k % 6];
       out.push(makeQuestion({
@@ -481,7 +481,7 @@ function scriptIncludesPool(): Question[] {
   const names = ["UserUtils", "AccountUtils", "RegionUtils", "ApprovalUtils", "PricingUtils", "InventoryUtils", "OrgChartUtils", "TicketUtils", "AssetUtils", "NotifyUtils"];
 
   names.forEach((inc, i) => {
-    for (let k = 0; k < 20; k++) {
+    for (let k = 0; k < 30; k++) {
       seq++;
       out.push(makeQuestion({
         id: `gen-si-extend-${seq}`,
@@ -509,7 +509,7 @@ function scriptIncludesPool(): Question[] {
 
   // server-only helper pattern
   names.forEach((inc, i) => {
-    for (let k = 0; k < 15; k++) {
+    for (let k = 0; k < 21; k++) {
       seq++;
       const field = pick(STRING_FIELDS, i + k);
       out.push(makeQuestion({

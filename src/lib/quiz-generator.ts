@@ -81,7 +81,7 @@ function platformPool(): QuizQuestion[] {
   const out: QuizQuestion[] = [];
   let seq = 0;
   // Variation: parent-table questions
-  for (let rep = 0; rep < 40; rep++) {
+  for (let rep = 0; rep < 50; rep++) {
     PLATFORM_TABLE_FACTS.forEach((f, i) => {
       seq++;
       out.push(build({
@@ -96,7 +96,7 @@ function platformPool(): QuizQuestion[] {
     });
   }
   // Variation: scope facts
-  for (let rep = 0; rep < 200; rep++) {
+  for (let rep = 0; rep < 340; rep++) {
     PLATFORM_SCOPE_FACTS.forEach((f, i) => {
       seq++;
       out.push(build({
@@ -304,7 +304,7 @@ const FLOW_POOL = [
 function flowPool(): QuizQuestion[] {
   const out: QuizQuestion[] = [];
   let seq = 0;
-  for (let rep = 0; rep < 200; rep++) {
+  for (let rep = 0; rep < 340; rep++) {
     FLOW_FACTS.forEach((f, i) => {
       seq++;
       out.push(build({
@@ -354,7 +354,7 @@ const INTEG_POOL = [
 function integPool(): QuizQuestion[] {
   const out: QuizQuestion[] = [];
   let seq = 0;
-  for (let rep = 0; rep < 200; rep++) {
+  for (let rep = 0; rep < 340; rep++) {
     INTEG_FACTS.forEach((f, i) => {
       seq++;
       out.push(build({
