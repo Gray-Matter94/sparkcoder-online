@@ -112,20 +112,21 @@ test.describe("AngularJS track — simulator interaction", () => {
   test("pick → run reaches a correct answer (full happy path)", async ({ page }) => {
     await page.goto("/practice/ng-scope");
 
-    const options = page.locator("main button:has(code)");
-    const total = await options.count();
-    expect(total).toBeGreaterThan(0);
+    const runBtn = page.getByRole("button", { name: /run script/i });
+    // Re-query enabled options each iteration so disabled wrong picks are skipped.
+    const enabledOptions = page.locator("main button:has(code):not([disabled])");
+    const totalOptions = await page.locator("main button:has(code)").count();
+    expect(totalOptions).toBeGreaterThan(0);
 
-    // Iterate options until "NEXT PUZZLE" / "FINISH MODULE" appears
-    // (correct answer reached) — bounded by option count.
     let reachedRight = false;
-    for (let i = 0; i < total; i++) {
-      const candidate = options.nth(i);
-      if (await candidate.isDisabled()) continue;
-      // The fixed simulator dock can overlap the lower options; bypass the
-      // hit-test rather than fighting the layout — we're testing logic, not z-order.
+    for (let i = 0; i < totalOptions; i++) {
+      const candidate = enabledOptions.first();
+      if ((await candidate.count()) === 0) break;
+      // Fixed simulator dock can overlap lower options; bypass hit-test.
       await candidate.click({ force: true });
-      await page.getByRole("button", { name: /run script/i }).click();
+      // Wait for React to register the pick (Run becomes enabled).
+      await expect(runBtn).toBeEnabled();
+      await runBtn.click();
 
       const next = page.getByRole("button", {
         name: /next puzzle|finish module|try again/i,
@@ -137,7 +138,6 @@ test.describe("AngularJS track — simulator interaction", () => {
         reachedRight = true;
         break;
       }
-      // Dismiss "TRY AGAIN" and continue with the next option.
       await next.click();
     }
 
