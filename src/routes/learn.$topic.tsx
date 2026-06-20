@@ -636,7 +636,7 @@ function Quiz({
                       ? "text-primary/70"
                       : state === "active"
                         ? "text-accent"
-                        : "text-muted-foreground/50"
+                        : "text-muted-foreground"
                   }`}
                   style={{ flexGrow: s.count }}
                 >
