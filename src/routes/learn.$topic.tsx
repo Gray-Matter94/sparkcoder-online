@@ -263,18 +263,51 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
 
       {status === "answered" && (
         <div
-          className={`p-3.5 rounded-xl border-2 text-sm ${
+          className={`p-4 rounded-xl border-2 text-sm space-y-3 ${
             isCorrect
-              ? "border-primary/40 bg-primary/5 text-foreground/90"
-              : "border-destructive/40 bg-destructive/5 text-foreground/90"
+              ? "border-primary/40 bg-primary/5"
+              : "border-destructive/40 bg-destructive/5"
           }`}
         >
-          <div className="font-display tracking-wide mb-1">
+          <div className="font-display tracking-wide text-foreground/90">
             {isCorrect ? "✓ CORRECT" : "✗ NOT QUITE"}
           </div>
+
           <p className="text-[13px] leading-relaxed text-foreground/85">{q.explain}</p>
+
+          {q.whyCorrect && (
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+              <div className="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">
+                Why “{q.options[q.correctIndex]}” is right
+              </div>
+              <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyCorrect}</p>
+            </div>
+          )}
+
+          {!isCorrect && picked !== null && q.whyWrong?.[picked] && (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+              <div className="text-[10px] uppercase tracking-widest text-destructive font-bold mb-1">
+                Why “{q.options[picked]}” misses
+              </div>
+              <p className="text-[13px] leading-relaxed text-foreground/85">{q.whyWrong[picked]}</p>
+            </div>
+          )}
+
+          {q.learnMore && q.learnMore.length > 0 && (
+            <div className="rounded-lg border border-border bg-panel/60 p-3">
+              <div className="text-[10px] uppercase tracking-widest text-accent font-bold mb-1.5">
+                Go deeper
+              </div>
+              <ul className="space-y-1.5 text-[13px] leading-relaxed text-foreground/85 list-disc pl-4 marker:text-accent">
+                {q.learnMore.map((tip, i) => (
+                  <li key={i}>{tip}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
+
 
       {status === "picking" ? (
         <button
