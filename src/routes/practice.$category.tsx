@@ -16,9 +16,9 @@ export const Route = createFileRoute("/practice/$category")({
     const description = `Solve interactive ${name} puzzles from real ServiceNow scripting interviews — pick the right block, run it in the simulator, and get coached the moment you miss.`;
     return {
       meta: [
-        { title: `${name} Puzzles — ScriptArcade` },
+        { title: `${name} Puzzles — SparkCoder` },
         { name: "description", content: description },
-        { property: "og:title", content: `${name} Puzzles — ScriptArcade` },
+        { property: "og:title", content: `${name} Puzzles — SparkCoder` },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
       ],
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/practice/$category")({
             url,
             isPartOf: {
               "@type": "WebSite",
-              name: "ScriptArcade",
+              name: "SparkCoder",
               url: "https://service-spark-coder.lovable.app",
             },
             about: { "@type": "Thing", name: `ServiceNow ${name}` },

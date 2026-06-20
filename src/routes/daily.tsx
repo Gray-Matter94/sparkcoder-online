@@ -13,13 +13,13 @@ import { getCurrentTier } from "@/lib/difficulty";
 export const Route = createFileRoute("/daily")({
   head: () => ({
     meta: [
-      { title: "Daily Challenge — ScriptArcade" },
+      { title: "Daily Challenge — SparkCoder" },
       {
         name: "description",
         content:
           "Today's ServiceNow scripting challenge. Solve it to extend your streak and lock in a daily reward.",
       },
-      { property: "og:title", content: "Daily Challenge — ScriptArcade" },
+      { property: "og:title", content: "Daily Challenge — SparkCoder" },
       {
         property: "og:description",
         content:

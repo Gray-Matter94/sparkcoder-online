@@ -1,8 +1,8 @@
-# ScriptArcade
+# SparkCoder
 
 > Arcade-style practice app for ServiceNow scripting interview questions, with interactive code puzzles, a colorful simulator-style output, and instant in-context teaching when you make a mistake.
 
-ScriptArcade turns ServiceNow scripting prep into a mobile-friendly game. Pick a module (GlideRecord, Business Rules, Client Scripts, GlideAjax, Script Includes), drop the right block into the code, and watch a simulated instance respond. Built-in difficulty tiers, weekly badges, streaks, and a daily challenge keep practice consistent.
+SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a module (GlideRecord, Business Rules, Client Scripts, GlideAjax, Script Includes), drop the right block into the code, and watch a simulated instance respond. Built-in difficulty tiers, weekly badges, streaks, and a daily challenge keep practice consistent.
 
 ## Pages
 
