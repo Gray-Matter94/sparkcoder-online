@@ -144,7 +144,7 @@ function Home() {
             Choose a module
           </h2>
           <div className="grid grid-cols-1 gap-3">
-            {CATEGORIES.map((c) => {
+            {trackCategories.map((c) => {
               const allQs = QUESTIONS.filter((q) => q.category === c.id);
               const qs = allQs.filter((q) => q.level <= tier.maxLevel);
               const locked = allQs.length - qs.length;
