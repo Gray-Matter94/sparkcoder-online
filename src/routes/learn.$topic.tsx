@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TOPICS, termsFor, type TopicId } from "@/lib/glossary";
 import { quizFor, sectionsFor, sectionForIndex } from "@/lib/quizzes";
-import { useProgress } from "@/lib/progress";
+import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 
 export const Route = createFileRoute("/learn/$topic")({
@@ -164,6 +164,7 @@ function Quiz({
   topic: TopicId;
   onOpenGlossary?: () => void;
 }) {
+  const { progress, recordSrs } = useProgress();
   // `order` is the list of question indices to play through.
   // Default = full quiz; switches to a subset when reviewing missed questions.
   const [order, setOrder] = useState<number[]>(() => questions.map((_, i) => i));
@@ -175,6 +176,7 @@ function Quiz({
   const [detailsOpen, setDetailsOpen] = useState(true);
   /** Map of original question index -> the wrong option the user picked. */
   const [misses, setMisses] = useState<Record<number, number>>({});
+  const recordedRunRef = useRef<string | null>(null);
 
   if (questions.length === 0) {
     return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
