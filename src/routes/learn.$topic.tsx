@@ -202,13 +202,32 @@ function Quiz({ questions }: { questions: ReturnType<typeof quizFor> }) {
     }
   }
 
+  const answered = status === "answered" ? idx + 1 : idx;
+  const progressPct = Math.round((answered / questions.length) * 100);
+
   return (
     <div className="space-y-4 animate-fade-in">
-      <div className="flex items-center justify-between text-[10px] font-mono">
-        <span className="text-muted-foreground uppercase tracking-widest">
-          Question {idx + 1} / {questions.length}
-        </span>
-        <span className="text-primary">Score: {score}</span>
+      <div className="space-y-1.5" aria-label="Quiz progress">
+        <div className="flex items-center justify-between text-[10px] font-mono">
+          <span className="text-muted-foreground uppercase tracking-widest">
+            Question {idx + 1} / {questions.length}
+          </span>
+          <span className="text-primary uppercase tracking-widest">
+            Score: {score} / {questions.length}
+          </span>
+        </div>
+        <div
+          className="h-2 w-full rounded-full bg-panel border border-border overflow-hidden"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progressPct}
+        >
+          <div
+            className="h-full bg-primary transition-all duration-300 ease-out"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
       </div>
       <h2 className="text-base sm:text-lg font-bold leading-snug">{q.question}</h2>
 
