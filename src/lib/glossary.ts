@@ -3,16 +3,21 @@ import itsmImg from "@/assets/learn-itsm.jpg";
 import cmdbImg from "@/assets/learn-cmdb.jpg";
 import flowImg from "@/assets/learn-flow.jpg";
 import integrationImg from "@/assets/learn-integration.jpg";
+import type { TrackId } from "./tracks";
 
-export type TopicId = "platform" | "itsm" | "cmdb" | "flow" | "integration";
+/** Free-string topic id so each track can contribute its own topics. */
+export type TopicId = string;
 
 export interface Topic {
   id: TopicId;
   name: string;
   tagline: string;
   emoji: string;
-  image: string;
+  /** Optional hero image; tracks without bespoke art render an emoji+gradient. */
+  image?: string;
   blurb: string;
+  /** Which practice track this topic belongs to. */
+  track: TrackId;
 }
 
 export const TOPICS: Topic[] = [
