@@ -36,8 +36,8 @@ type Status = "picking" | "running" | "wrong" | "right";
 
 function Daily() {
   const navigate = useNavigate();
-  const { progress, award, markDailyChallenge } = useProgress();
-  const q = useMemo(() => getDailyChallenge(), []);
+  const { progress, award, markDailyChallenge, track } = useProgress();
+  const q = useMemo(() => getDailyChallenge(track), [track]);
   const today = todayStr();
   const alreadyDone = !!progress.dailyChallenges[today];
 
