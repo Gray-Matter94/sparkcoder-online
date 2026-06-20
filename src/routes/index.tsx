@@ -125,7 +125,7 @@ function Home() {
                 <h3 className="font-display text-lg tracking-wide text-secondary">
                   LEARN & QUIZ
                 </h3>
-                <span className="text-[10px] text-muted-foreground font-mono">5 TOPICS</span>
+                <span className="text-[10px] text-muted-foreground font-mono">GLOSSARY + QUIZ</span>
               </div>
               <p className="text-xs text-muted-foreground truncate">
                 ServiceNow glossary + topic quizzes with illustrations.
