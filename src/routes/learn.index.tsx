@@ -35,6 +35,8 @@ function Learn() {
       <StatsBar progress={progress} back />
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-6">
+        <TrackSwitcher />
+
         <section className="space-y-2 animate-fade-in">
           <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
             Knowledge Vault
@@ -45,10 +47,11 @@ function Learn() {
             <span className="text-accent">LINGO.</span>
           </h1>
           <p className="text-sm text-foreground/85">
-            Pick a topic to skim the glossary and run a 4-question quiz. Quizzes mark the topic as
+            Pick a topic to skim the glossary and run a quiz. Quizzes mark the topic as
             studied — no XP, no streak pressure.
           </p>
         </section>
+
 
         {(() => {
           const today = todayStr();
