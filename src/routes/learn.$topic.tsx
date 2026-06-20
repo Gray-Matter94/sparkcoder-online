@@ -144,57 +144,158 @@ function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
 type QuizStatus = "picking" | "answered" | "done";
 
 function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; topic: TopicId }) {
+  // `order` is the list of question indices to play through.
+  // Default = full quiz; switches to a subset when reviewing missed questions.
+  const [order, setOrder] = useState<number[]>(() => questions.map((_, i) => i));
+  const [reviewMode, setReviewMode] = useState(false);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [status, setStatus] = useState<QuizStatus>("picking");
   const [score, setScore] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(true);
+  /** Map of original question index -> the wrong option the user picked. */
+  const [misses, setMisses] = useState<Record<number, number>>({});
 
   if (questions.length === 0) {
     return <p className="text-sm text-muted-foreground">No quiz questions yet for this topic.</p>;
   }
 
+  const allSections = sectionsFor(topic, questions.length);
+
   if (status === "done") {
-    const pct = Math.round((score / questions.length) * 100);
+    const pct = Math.round((score / order.length) * 100);
+    const missedIndices = Object.keys(misses).map((n) => Number(n));
+    // Group missed questions by milestone section.
+    const grouped = allSections.map((s, i) => {
+      const sectionStart = allSections.slice(0, i).reduce((a, x) => a + x.count, 0);
+      const sectionEnd = sectionStart + s.count;
+      const items = missedIndices.filter((qi) => qi >= sectionStart && qi < sectionEnd);
+      return { section: s, items };
+    });
+    const hasMisses = missedIndices.length > 0;
+
+    function retryMissed() {
+      const next = [...missedIndices].sort((a, b) => a - b);
+      setOrder(next);
+      setReviewMode(true);
+      setMisses({});
+      setIdx(0);
+      setPicked(null);
+      setStatus("picking");
+      setScore(0);
+    }
+
+    function replayAll() {
+      setOrder(questions.map((_, i) => i));
+      setReviewMode(false);
+      setMisses({});
+      setIdx(0);
+      setPicked(null);
+      setStatus("picking");
+      setScore(0);
+    }
+
     return (
-      <div className="text-center p-6 rounded-2xl border-2 border-primary/40 bg-primary/5 space-y-3 animate-fade-in">
-        <div className="text-6xl">{pct >= 75 ? "🏆" : pct >= 50 ? "🎯" : "📚"}</div>
-        <h2 className="font-display text-3xl tracking-tight">
-          {score} / {questions.length}
-        </h2>
-        <p className="text-sm text-foreground/85">
-          {pct >= 75
-            ? "Sharp. You'd survive the interview round."
-            : pct >= 50
-              ? "Solid base — review the glossary and try again."
-              : "Hit the glossary, then come back swinging."}
-        </p>
-        <button
-          onClick={() => {
-            setIdx(0);
-            setPicked(null);
-            setStatus("picking");
-            setScore(0);
-          }}
-          className="h-12 px-6 bg-primary text-primary-foreground font-display tracking-wider rounded-xl shadow-[0_4px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none"
-        >
-          REPLAY QUIZ
-        </button>
+      <div className="space-y-4 animate-fade-in">
+        <div className="text-center p-6 rounded-2xl border-2 border-primary/40 bg-primary/5 space-y-3">
+          <div className="text-6xl">{pct >= 75 ? "🏆" : pct >= 50 ? "🎯" : "📚"}</div>
+          <h2 className="font-display text-3xl tracking-tight">
+            {score} / {order.length}
+          </h2>
+          <p className="text-sm text-foreground/85">
+            {reviewMode
+              ? hasMisses
+                ? "Still some sticky ones — give them another pass."
+                : "Clean sweep on the review. Nicely done."
+              : pct >= 75
+                ? "Sharp. You'd survive the interview round."
+                : pct >= 50
+                  ? "Solid base — review the glossary and try again."
+                  : "Hit the glossary, then come back swinging."}
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-2 justify-center pt-1">
+            {hasMisses && (
+              <button
+                onClick={retryMissed}
+                className="h-12 px-5 bg-accent text-accent-foreground font-display tracking-wider rounded-xl shadow-[0_4px_0_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none"
+              >
+                🔁 RETRY MISSED ({missedIndices.length})
+              </button>
+            )}
+            <button
+              onClick={replayAll}
+              className="h-12 px-5 bg-primary text-primary-foreground font-display tracking-wider rounded-xl shadow-[0_4px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none"
+            >
+              REPLAY FULL QUIZ
+            </button>
+          </div>
+        </div>
+
+        {hasMisses && (
+          <section className="space-y-3" aria-label="Missed questions by milestone">
+            <h3 className="font-display tracking-wider text-sm uppercase text-foreground/80">
+              Review missed — by milestone
+            </h3>
+            {grouped.map(({ section, items }, gi) =>
+              items.length === 0 ? null : (
+                <div
+                  key={gi}
+                  className="rounded-xl border-2 border-border bg-panel overflow-hidden"
+                >
+                  <div className="flex items-center justify-between px-3.5 py-2 bg-accent/5 border-b border-border">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-display tracking-wider uppercase text-accent">
+                      {section.icon && <span aria-hidden>{section.icon}</span>}
+                      {section.label}
+                    </span>
+                    <span className="text-[10px] font-mono text-muted-foreground">
+                      {items.length} missed
+                    </span>
+                  </div>
+                  <ul className="divide-y divide-border/60">
+                    {items.map((qi) => {
+                      const mq = questions[qi];
+                      const wrongIdx = misses[qi];
+                      return (
+                        <li key={qi} className="p-3.5 text-[13px] space-y-1.5">
+                          <div className="font-medium text-foreground/90 leading-snug">
+                            {mq.question}
+                          </div>
+                          <div className="text-destructive line-through">
+                            ✗ {mq.options[wrongIdx]}
+                          </div>
+                          <div className="text-primary">
+                            ✓ {mq.options[mq.correctIndex]}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ),
+            )}
+          </section>
+        )}
       </div>
     );
   }
 
-  const q = questions[idx];
+  const currentQIndex = order[idx];
+  const q = questions[currentQIndex];
   const isCorrect = picked === q.correctIndex;
 
   function submit() {
     if (picked === null) return;
-    if (picked === q.correctIndex) setScore((s) => s + 1);
+    if (picked === q.correctIndex) {
+      setScore((s) => s + 1);
+    } else {
+      setMisses((m) => ({ ...m, [currentQIndex]: picked }));
+    }
     setStatus("answered");
   }
 
   function next() {
-    if (idx + 1 >= questions.length) {
+    if (idx + 1 >= order.length) {
       setStatus("done");
     } else {
       setIdx((i) => i + 1);
@@ -204,20 +305,31 @@ function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; top
   }
 
   const answered = status === "answered" ? idx + 1 : idx;
-  const progressPct = Math.round((answered / questions.length) * 100);
+  const progressPct = Math.round((answered / order.length) * 100);
 
-  const sections = sectionsFor(topic, questions.length);
-  const current = sectionForIndex(sections, idx);
+  // Milestone reflects the original question's section even in review mode.
+  const current = sectionForIndex(allSections, currentQIndex);
 
   return (
     <div className="space-y-4 animate-fade-in">
+      {reviewMode && (
+        <div className="flex items-center justify-between gap-2 rounded-lg border-2 border-accent/40 bg-accent/5 px-3 py-2">
+          <span className="text-[11px] font-display tracking-wider uppercase text-accent">
+            🔁 Review mode · missed questions
+          </span>
+          <span className="text-[10px] font-mono text-muted-foreground">
+            {order.length} to retry
+          </span>
+        </div>
+      )}
+
       <div className="space-y-2" aria-label="Quiz progress">
         <div className="flex items-center justify-between text-[10px] font-mono">
           <span className="text-muted-foreground uppercase tracking-widest">
-            Question {idx + 1} / {questions.length}
+            Question {idx + 1} / {order.length}
           </span>
           <span className="text-primary uppercase tracking-widest">
-            Score: {score} / {questions.length}
+            Score: {score} / {order.length}
           </span>
         </div>
 
@@ -228,7 +340,7 @@ function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; top
               <span>{current.section.label}</span>
             </span>
             <span className="text-muted-foreground font-mono">
-              {current.positionInSection + 1} / {current.section.count} · Milestone {current.sectionIdx + 1}/{sections.length}
+              Milestone {current.sectionIdx + 1}/{allSections.length}
             </span>
           </div>
         )}
@@ -239,52 +351,55 @@ function Quiz({ questions, topic }: { questions: ReturnType<typeof quizFor>; top
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={progressPct}
-          aria-valuetext={current ? `${current.section.label}, question ${current.positionInSection + 1} of ${current.section.count}` : undefined}
+          aria-valuetext={current ? `${current.section.label}, question ${idx + 1} of ${order.length}` : undefined}
         >
           <div
             className="h-full bg-primary transition-all duration-300 ease-out"
             style={{ width: `${progressPct}%` }}
           />
-          {sections.slice(0, -1).map((_, i) => {
-            const cumulative = sections.slice(0, i + 1).reduce((s, x) => s + x.count, 0);
-            const left = (cumulative / questions.length) * 100;
-            return (
-              <span
-                key={i}
-                aria-hidden
-                className="absolute top-0 bottom-0 w-px bg-background/80"
-                style={{ left: `${left}%` }}
-              />
-            );
-          })}
+          {!reviewMode &&
+            allSections.slice(0, -1).map((_, i) => {
+              const cumulative = allSections.slice(0, i + 1).reduce((s, x) => s + x.count, 0);
+              const left = (cumulative / questions.length) * 100;
+              return (
+                <span
+                  key={i}
+                  aria-hidden
+                  className="absolute top-0 bottom-0 w-px bg-background/80"
+                  style={{ left: `${left}%` }}
+                />
+              );
+            })}
         </div>
 
-        <div className="flex gap-1" aria-hidden>
-          {sections.map((s, i) => {
-            const state =
-              i < (current?.sectionIdx ?? 0)
-                ? "done"
-                : i === current?.sectionIdx
-                  ? "active"
-                  : "upcoming";
-            return (
-              <div
-                key={i}
-                title={s.label}
-                className={`flex-1 text-[9px] font-display tracking-wider uppercase text-center py-0.5 rounded-sm truncate ${
-                  state === "done"
-                    ? "text-primary/70"
-                    : state === "active"
-                      ? "text-accent"
-                      : "text-muted-foreground/50"
-                }`}
-                style={{ flexGrow: s.count }}
-              >
-                {s.icon} {s.label}
-              </div>
-            );
-          })}
-        </div>
+        {!reviewMode && (
+          <div className="flex gap-1" aria-hidden>
+            {allSections.map((s, i) => {
+              const state =
+                i < (current?.sectionIdx ?? 0)
+                  ? "done"
+                  : i === current?.sectionIdx
+                    ? "active"
+                    : "upcoming";
+              return (
+                <div
+                  key={i}
+                  title={s.label}
+                  className={`flex-1 text-[9px] font-display tracking-wider uppercase text-center py-0.5 rounded-sm truncate ${
+                    state === "done"
+                      ? "text-primary/70"
+                      : state === "active"
+                        ? "text-accent"
+                        : "text-muted-foreground/50"
+                  }`}
+                  style={{ flexGrow: s.count }}
+                >
+                  {s.icon} {s.label}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       <h2 className="text-base sm:text-lg font-bold leading-snug">{q.question}</h2>
 
