@@ -665,6 +665,26 @@ export const QUESTIONS: Question[] = [
 ];
 
 import { generatedQuestionsFor } from "./question-generator";
+import { ADMIN_CATEGORIES, ADMIN_QUESTIONS } from "./content/admin";
+import { JAVA_CATEGORIES, JAVA_QUESTIONS } from "./content/java";
+
+/** All categories across every practice track. */
+export const CATEGORIES: CategoryMeta[] = [
+  ...SN_DEV_CATEGORIES,
+  ...ADMIN_CATEGORIES,
+  ...JAVA_CATEGORIES,
+];
+
+/** Add hand-crafted questions for the new tracks to the master list. */
+QUESTIONS.push(...ADMIN_QUESTIONS, ...JAVA_QUESTIONS);
+
+export function categoriesForTrack(track: TrackId): CategoryMeta[] {
+  return CATEGORIES.filter((c) => c.track === track);
+}
+
+export function categoryTrack(catId: Category): TrackId | undefined {
+  return CATEGORIES.find((c) => c.id === catId)?.track;
+}
 
 // Stable seeded shuffle so the order varies per category without changing each render.
 function shuffle<T>(arr: T[], seed: number): T[] {
@@ -695,3 +715,4 @@ export function questionsFor(cat: Category): Question[] {
   const tail = shuffle(merged.slice(handcrafted.length), seed);
   return [...head, ...tail];
 }
+
