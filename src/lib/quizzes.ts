@@ -116,8 +116,9 @@ export const QUIZZES: QuizQuestion[] = [
 import { generatedQuizzesFor } from "./quiz-generator";
 import { ADMIN_QUIZZES, ADMIN_SECTIONS } from "./content/admin";
 import { JAVA_QUIZZES, JAVA_SECTIONS } from "./content/java";
+import { ANGULAR_QUIZZES, ANGULAR_SECTIONS } from "./content/angular";
 
-QUIZZES.push(...ADMIN_QUIZZES, ...JAVA_QUIZZES);
+QUIZZES.push(...ADMIN_QUIZZES, ...JAVA_QUIZZES, ...ANGULAR_QUIZZES);
 
 function shuffleQ<T>(arr: T[], seed: number): T[] {
   const out = arr.slice();
@@ -182,6 +183,7 @@ const SECTION_PLAN: Record<string, QuizSection[]> = {
   ],
   ...ADMIN_SECTIONS,
   ...JAVA_SECTIONS,
+  ...ANGULAR_SECTIONS,
 };
 
 export function sectionsFor(topic: TopicId, total: number): QuizSection[] {

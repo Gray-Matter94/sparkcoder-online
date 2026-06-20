@@ -138,9 +138,10 @@ const SN_DEV_TERMS: Term[] = [
 
 import { ADMIN_TOPICS, ADMIN_TERMS } from "./content/admin";
 import { JAVA_TOPICS, JAVA_TERMS } from "./content/java";
+import { ANGULAR_TOPICS, ANGULAR_TERMS } from "./content/angular";
 
-export const TOPICS: Topic[] = [...SN_DEV_TOPICS, ...ADMIN_TOPICS, ...JAVA_TOPICS];
-export const TERMS: Term[] = [...SN_DEV_TERMS, ...ADMIN_TERMS, ...JAVA_TERMS];
+export const TOPICS: Topic[] = [...SN_DEV_TOPICS, ...ADMIN_TOPICS, ...JAVA_TOPICS, ...ANGULAR_TOPICS];
+export const TERMS: Term[] = [...SN_DEV_TERMS, ...ADMIN_TERMS, ...JAVA_TERMS, ...ANGULAR_TERMS];
 
 export function termsFor(topic: TopicId): Term[] {
   return TERMS.filter((t) => t.topic === topic);
