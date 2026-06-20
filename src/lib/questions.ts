@@ -667,16 +667,18 @@ export const QUESTIONS: Question[] = [
 import { generatedQuestionsFor } from "./question-generator";
 import { ADMIN_CATEGORIES, ADMIN_QUESTIONS } from "./content/admin";
 import { JAVA_CATEGORIES, JAVA_QUESTIONS } from "./content/java";
+import { ANGULAR_CATEGORIES, ANGULAR_QUESTIONS } from "./content/angular";
 
 /** All categories across every practice track. */
 export const CATEGORIES: CategoryMeta[] = [
   ...SN_DEV_CATEGORIES,
   ...ADMIN_CATEGORIES,
   ...JAVA_CATEGORIES,
+  ...ANGULAR_CATEGORIES,
 ];
 
 /** Add hand-crafted questions for the new tracks to the master list. */
-QUESTIONS.push(...ADMIN_QUESTIONS, ...JAVA_QUESTIONS);
+QUESTIONS.push(...ADMIN_QUESTIONS, ...JAVA_QUESTIONS, ...ANGULAR_QUESTIONS);
 
 export function categoriesForTrack(track: TrackId): CategoryMeta[] {
   return CATEGORIES.filter((c) => c.track === track);
