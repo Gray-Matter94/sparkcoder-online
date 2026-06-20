@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-export type TrackId = "servicenow-dev" | "servicenow-admin" | "java-dev";
+export type TrackId = "servicenow-dev" | "servicenow-admin" | "java-dev" | "angular-dev";
 
 export interface Track {
   id: TrackId;
@@ -9,7 +9,7 @@ export interface Track {
   tagline: string;
   emoji: string;
   /** Tailwind accent color used by the switcher. */
-  accent: "primary" | "accent" | "secondary";
+  accent: "primary" | "accent" | "secondary" | "destructive";
 }
 
 export const TRACKS: Track[] = [
@@ -36,6 +36,14 @@ export const TRACKS: Track[] = [
     tagline: "Collections, concurrency, Streams, Spring.",
     emoji: "☕",
     accent: "secondary",
+  },
+  {
+    id: "angular-dev",
+    name: "AngularJS Developer",
+    short: "AngularJS",
+    tagline: "Scopes, directives, services, digest cycle.",
+    emoji: "🅰️",
+    accent: "destructive",
   },
 ];
 

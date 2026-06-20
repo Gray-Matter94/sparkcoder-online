@@ -16,7 +16,7 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
       <div
         role="tablist"
         aria-label="Choose a practice track"
-        className="grid grid-cols-3 gap-1.5 p-1.5 rounded-2xl border-2 border-border bg-panel"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 rounded-2xl border-2 border-border bg-panel"
       >
         {TRACKS.map((t) => {
           const isActive = t.id === active;
@@ -25,7 +25,9 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
               ? "border-primary text-primary bg-primary/10"
               : t.accent === "accent"
                 ? "border-accent text-accent bg-accent/10"
-                : "border-secondary text-secondary bg-secondary/10";
+                : t.accent === "destructive"
+                  ? "border-destructive text-destructive bg-destructive/10"
+                  : "border-secondary text-secondary bg-secondary/10";
           return (
             <button
               key={t.id}
