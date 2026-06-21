@@ -534,6 +534,58 @@ export const ANGULAR_TERMS: Term[] = [
   { topic: "ng-services-topic", term: "service", short: "Constructor function, instantiated with `new`.", long: "`app.service('x', function() { this.do = ...; })`. Use when you prefer ES5 class-style. Equivalent expressive power to factory." },
   { topic: "ng-services-topic", term: "provider", short: "Configurable service.", long: "Has a $get function returning the service. Only providers can be injected into app.config() — use when setup must happen before injection (e.g. $httpProvider interceptors)." },
   { topic: "ng-services-topic", term: "$q", short: "Angular's promise library.", long: "$q.defer() / $q.when() / $q.all(). Resolutions auto-trigger a digest, unlike native Promise. Stick to $q in 1.x unless you wrap manually." },
+
+  // ng-core (additional)
+  { topic: "ng-core", term: "ng-app", short: "Bootstrap directive.", long: "Place on <html> or a sub-element. `ng-app=\"myApp\"` auto-bootstraps after DOMContentLoaded; omit value to use the implicit root module." },
+  { topic: "ng-core", term: "controllerAs", short: "Alias the controller on scope.", long: "`ng-controller=\"Ctrl as vm\"` exposes the controller instance as `vm` — avoids primitives-on-$scope and the dot-rule trap." },
+  { topic: "ng-core", term: "Filter", short: "View-side value transformer.", long: "`{{ price | currency }}`. Built-ins: date, filter, orderBy, json, uppercase. Custom: app.filter('foo', fn)." },
+  { topic: "ng-core", term: "ng-repeat", short: "Loop a template over a collection.", long: "Use `track by item.id` to avoid re-rendering everything when the underlying array is replaced." },
+  { topic: "ng-core", term: "ng-if vs ng-show", short: "Remove from DOM vs toggle display.", long: "ng-if creates a new scope and removes the subtree (and its watchers). ng-show just flips CSS." },
+  { topic: "ng-core", term: "ng-model", short: "Two-way bind a form control to scope.", long: "Adds a NgModelController with $parsers/$formatters/$validators pipeline." },
+  { topic: "ng-core", term: "ng-class", short: "Conditional CSS classes.", long: "Object form: `ng-class=\"{active: isOn, 'is-error': hasErr}\"`. Re-evaluated each digest — keep expressions cheap." },
+  { topic: "ng-core", term: "ng-bind / one-time ::", short: "Avoid {{}} flicker; freeze after first value.", long: "`ng-bind=\"name\"` evaluates after compilation. `{{::name}}` deregisters its watcher once value is defined." },
+  { topic: "ng-core", term: "$rootScope", short: "Top scope of the app.", long: "Singleton scope. Useful for cross-cutting events ($broadcast) but easy to abuse — prefer services for shared state." },
+  { topic: "ng-core", term: "angular.bootstrap", short: "Manual app bootstrap.", long: "`angular.bootstrap(document, ['myApp'])`. Use when ng-app can't run (multiple apps on one page, async load)." },
+  { topic: "ng-core", term: "Strict DI (ng-strict-di)", short: "Fail-fast on implicit DI.", long: "Add `ng-strict-di` next to `ng-app` to crash if any service uses implicit (param-name) DI — catches minification bugs early." },
+
+  // ng-digest (additional)
+  { topic: "ng-digest", term: "$digest", short: "Run dirty-checking on this scope down.", long: "Internal mechanism behind two-way binding. $apply triggers it from $rootScope. Direct calls bypass error handling — prefer $apply." },
+  { topic: "ng-digest", term: "$evalAsync", short: "Queue work to run within the current/next digest.", long: "Safer than $timeout(fn, 0) — same-cycle execution where possible; no extra browser turn." },
+  { topic: "ng-digest", term: "$timeout", short: "setTimeout wrapped in $apply.", long: "Use instead of window.setTimeout in Angular code so scope changes are picked up." },
+  { topic: "ng-digest", term: "$interval", short: "setInterval wrapped in $apply.", long: "Returns a promise you can cancel via $interval.cancel. Don't forget to cancel on $destroy." },
+  { topic: "ng-digest", term: "scope.$on('$destroy')", short: "Cleanup hook.", long: "Fires when the scope is torn down (ng-if removed, route changed). Cancel intervals, deregister watchers, detach DOM listeners here." },
+  { topic: "ng-digest", term: "$watch deregistration", short: "Watch returns a function to remove itself.", long: "`var off = scope.$watch(...); off();`. Long-lived watches on dead scopes are a common memory leak." },
+  { topic: "ng-digest", term: "Watcher budget", short: "~2000 watchers per page is the soft ceiling.", long: "Past that, digest times become user-visible. Audit with the Batarang/AngularJS Watchers extension." },
+  { topic: "ng-digest", term: "$applyAsync", short: "Debounce many $apply calls.", long: "$http uses it to coalesce concurrent responses into one digest. Useful for high-frequency async sources." },
+  { topic: "ng-digest", term: "bindToController", short: "Bind isolated scope into controller, not $scope.", long: "With `controllerAs` and `bindToController: true`, directive bindings live on `this` — more testable and modern-friendly." },
+  { topic: "ng-digest", term: "$digest TTL", short: "Default 10 passes before throwing.", long: "infdig error means watchers keep mutating each other. Configure via $rootScopeProvider.digestTtl but fix the cycle first." },
+  { topic: "ng-digest", term: "Prototypal inheritance", short: "Child scopes read up the chain.", long: "Writes to primitives shadow on the child; writes to object properties affect the shared object — basis of the dot rule." },
+
+  // ng-directives-topic (additional)
+  { topic: "ng-directives-topic", term: "scope: true vs false vs {}", short: "Three scope modes.", long: "false: share parent scope. true: child scope (prototypal). {}: isolated scope with bindings." },
+  { topic: "ng-directives-topic", term: "templateUrl", short: "Load directive markup from a URL.", long: "Cached by $templateCache. Bundle templates at build time to avoid extra HTTP round-trips." },
+  { topic: "ng-directives-topic", term: "priority", short: "Order directives on the same element.", long: "Higher priority runs compile first. ng-repeat (1000), ng-if (600), ng-include (400) — built-ins to remember." },
+  { topic: "ng-directives-topic", term: "terminal", short: "Stop processing lower-priority directives.", long: "ng-repeat is terminal — child directives get compiled per item rather than on the template." },
+  { topic: "ng-directives-topic", term: "require", short: "Inject another directive's controller.", long: "`require: '^^myParent'` walks up the DOM. Optional with `?`. Passed as 4th link arg." },
+  { topic: "ng-directives-topic", term: "controller (in directive)", short: "Per-instance API exposed via require.", long: "Use for inter-directive communication (e.g. tabs ↔ tab). Separate from the link function." },
+  { topic: "ng-directives-topic", term: "ng-model controller", short: "$parsers/$formatters/$validators pipeline.", long: "Custom directives that act like inputs require: 'ngModel' and call ngModel.$setViewValue / register $validators." },
+  { topic: "ng-directives-topic", term: "$compile", short: "Service that turns HTML into a linking function.", long: "`$compile(template)(scope)`. Used when you need to add new compiled markup at runtime." },
+  { topic: "ng-directives-topic", term: "Element vs Attribute", short: "Style guide preference.", long: "Elements for components with their own template; attributes for behavior-augmenting directives (like ng-click)." },
+  { topic: "ng-directives-topic", term: "Multi-slot transclusion", short: "Named template slots (1.5+).", long: "`transclude: { header: '?headerSlot' }` lets parent supply multiple chunks — pre-cursor to Angular component slots." },
+  { topic: "ng-directives-topic", term: "Component (.component)", short: "Sugar over restrict:'E', controllerAs, bindToController.", long: "Introduced in 1.5 to ease the Angular 2+ upgrade. Prefer .component over .directive for new UI building blocks." },
+
+  // ng-services-topic (additional)
+  { topic: "ng-services-topic", term: "value", short: "Register a constant-like value.", long: "`app.value('apiBase', '/api')`. Injectable into services and controllers, but NOT into app.config()." },
+  { topic: "ng-services-topic", term: "constant", short: "Register a value usable in config blocks.", long: "Like value but available during the config phase (before run blocks). Common pattern for API URLs and feature flags." },
+  { topic: "ng-services-topic", term: "decorator", short: "Wrap/extend an existing service.", long: "$provide.decorator('$log', function($delegate) { ... }). Returned object replaces the original." },
+  { topic: "ng-services-topic", term: "Array-form DI", short: "Minification-safe injection.", long: "`['$http', function($http) { ... }]`. Or use ng-annotate at build time." },
+  { topic: "ng-services-topic", term: "$injector", short: "The dependency lookup service.", long: "Rarely used directly. `$injector.get('serviceName')` for runtime-conditional lookup." },
+  { topic: "ng-services-topic", term: "config block", short: "Runs during provider injection phase.", long: "`app.config(function($routeProvider) { ... })`. Only providers and constants are injectable here." },
+  { topic: "ng-services-topic", term: "run block", short: "Runs after injector creation.", long: "`app.run(function($rootScope) { ... })`. Use for cross-cutting startup logic (auth bootstrap, global event listeners)." },
+  { topic: "ng-services-topic", term: "$http", short: "Promise-based HTTP service.", long: "Returns an HttpPromise with .success/.error (legacy) and .then. Configurable via $httpProvider in config." },
+  { topic: "ng-services-topic", term: "$resource", short: "REST resource wrapper.", long: "Higher-level than $http; declarative endpoints (`User.get({id})`). Requires the angular-resource module." },
+  { topic: "ng-services-topic", term: "Interceptor", short: "$http request/response middleware.", long: "Register on $httpProvider.interceptors. Common uses: attach auth token, global error handling, retries." },
+  { topic: "ng-services-topic", term: "$cacheFactory", short: "Generic LRU-ish cache.", long: "$http and $templateCache use it. Roll your own keyed cache when you need fine-grained eviction." },
 ];
 
 /* ============== QUIZZES ============== */
