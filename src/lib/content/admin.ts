@@ -587,6 +587,58 @@ export const ADMIN_TERMS: Term[] = [
   { topic: "reporting", term: "Dashboard", short: "A canvas of reports & widgets.", long: "Successor to Homepages. Tabs, drag-and-drop, role-restricted sharing. Built on Responsive Dashboards." },
   { topic: "reporting", term: "Indicator", short: "A Performance Analytics metric collected over time.", long: "Snapshots a number (e.g. 'open P1 incidents') daily/weekly. Powers trend lines and breakdowns." },
   { topic: "reporting", term: "Breakdown", short: "A dimension to slice an indicator by.", long: "E.g. break down 'open P1 incidents' by assignment_group or location. Built once, reused across widgets." },
+
+  // platform-admin (additional)
+  { topic: "platform-admin", term: "Update Set", short: "Bundle of config changes to ship.", long: "Captures business rules, UI policies, scripts, etc. Doesn't include data — use fix scripts or imports for that." },
+  { topic: "platform-admin", term: "Fix Script", short: "One-off server script.", long: "Run once during deployment to migrate/repair data. Captured in an update set for repeatability." },
+  { topic: "platform-admin", term: "Scheduled Job", short: "Server script on a cron schedule.", long: "sysauto_script. Use for cleanup, rollups, integrations. Watch concurrency on overlapping runs." },
+  { topic: "platform-admin", term: "System Log", short: "Central log table (syslog).", long: "gs.info/warn/error write here. Filter by source for your script. Logs rotate by retention policy." },
+  { topic: "platform-admin", term: "Impersonate User", short: "Test as another user without their password.", long: "Always your first repro step for 'I can't see X' tickets. Audited in sys_user_impersonate." },
+  { topic: "platform-admin", term: "Plugin", short: "Optional feature pack you activate.", long: "Some plugins are demo-data-laden — activate on dev first. Check the docs for dependencies." },
+  { topic: "platform-admin", term: "Domain Separation", short: "Logical isolation between tenants.", long: "Premium feature. Records carry sys_domain; visibility/processes scoped per domain. Complex to retrofit." },
+  { topic: "platform-admin", term: "Dictionary", short: "Schema editor for tables/fields.", long: "Add fields, change types, set max length, attributes. Dictionary changes propagate to forms/lists." },
+  { topic: "platform-admin", term: "Form Designer", short: "Per-view form editing.", long: "Form Designer (drag-drop) vs classic Form Layout. Save per view (Default, Self-Service, etc.)." },
+  { topic: "platform-admin", term: "List Control", short: "Per-table list behavior settings.", long: "Toggle 'omit new button', enable inline create, set default sort. Edit via list cog or sys_ui_list_control." },
+  { topic: "platform-admin", term: "Personalize List/Form", short: "End-user view tweaks.", long: "Saved per user; doesn't change others' views. Admins can lock down personalization on sensitive tables." },
+
+  // security-admin (additional)
+  { topic: "security-admin", term: "Elevated Role", short: "Grant security_admin temporarily.", long: "Required to edit certain ACLs and sensitive config. Click 'Elevate Role' in the user menu — audited." },
+  { topic: "security-admin", term: "High Security Plugin", short: "Tightens platform defaults.", long: "Default deny on tables, stricter web service ACLs. Activated on all modern instances." },
+  { topic: "security-admin", term: "Contextual Security", short: "ServiceNow's term for the ACL system.", long: "Layered: table → field → row. ACL evaluation order matters; admin role bypasses table ACLs but not row/field unless 'admin override' is set." },
+  { topic: "security-admin", term: "Cross-Scope Privilege", short: "Allow scopes to call each other's APIs.", long: "sys_scope_privilege. Required when a custom app must read a record in another scope." },
+  { topic: "security-admin", term: "Edge Encryption", short: "Encrypt sensitive fields before they reach SN.", long: "Premium add-on; proxies field values via customer-managed keys. Different from CMK." },
+  { topic: "security-admin", term: "Field-Level Encryption", short: "Encrypt specific fields at rest.", long: "Pre-existing fields encrypted with platform-managed keys. Searchable only via exact match." },
+  { topic: "security-admin", term: "Multi-Factor Auth", short: "MFA via authenticator or email.", long: "Configurable per user/role; integrates with SSO IdPs that handle MFA themselves." },
+  { topic: "security-admin", term: "SAML SSO", short: "Federated login via identity provider.", long: "Configure under Multi-Provider SSO. Match assertions to sys_user.user_name or email." },
+  { topic: "security-admin", term: "User Criteria", short: "Reusable audience for catalog/KB.", long: "Combine roles/groups/users/companies. Attached to catalog items and KB articles to control who sees what." },
+  { topic: "security-admin", term: "Read vs Write ACL", short: "Distinct rules per operation.", long: "An empty Read ACL on a table hides every row; an empty Write ACL prevents updates. Always test both." },
+  { topic: "security-admin", term: "Inherited Roles", short: "Roles containing other roles.", long: "Granting 'itil' also grants its contained roles. Inspect via Role > Contains Roles related list." },
+
+  // catalog-admin (additional)
+  { topic: "catalog-admin", term: "Variable", short: "An input field on a catalog item.", long: "Types: Single-line text, Reference, Select Box, Multi-Row Variable Set, etc. Drives RITM payload." },
+  { topic: "catalog-admin", term: "Multi-Row Variable Set", short: "Grid of repeating rows (MRVS).", long: "Use when users add N similar items (e.g. multiple users to onboard). Stored as JSON." },
+  { topic: "catalog-admin", term: "Catalog Client Script", short: "Browser script on catalog forms.", long: "Use sparingly — Catalog UI Policy covers most show/hide/mandatory needs declaratively." },
+  { topic: "catalog-admin", term: "Order Guide", short: "Wizard that orders multiple items.", long: "Asks shared questions once, then submits several catalog items as one Request." },
+  { topic: "catalog-admin", term: "Catalog Category", short: "Grouping for items in the portal.", long: "Hierarchical; controls navigation. Items can appear in multiple categories." },
+  { topic: "catalog-admin", term: "Catalog Workflow", short: "Legacy fulfillment graph.", long: "Drag-drop activities (Approval, Task). For new items, prefer Flow Designer." },
+  { topic: "catalog-admin", term: "Fulfillment Flow", short: "Flow Designer flow on a catalog item.", long: "Set on the item; runs on RITM insert. Modern replacement for catalog workflows." },
+  { topic: "catalog-admin", term: "Producer Script", short: "Server script on a Record Producer.", long: "Maps variables to fields on the produced record. Runs before insert." },
+  { topic: "catalog-admin", term: "Available For", short: "User criteria on the item.", long: "Controls portal visibility. 'Not Available For' wins on conflict." },
+  { topic: "catalog-admin", term: "Two-Step Checkout", short: "Cart review before submit.", long: "System property enables a cart preview. Off by default for one-click order." },
+  { topic: "catalog-admin", term: "Item Designer", short: "Low-code item authoring tool.", long: "For non-developers to build items; outputs the same sc_cat_item under the hood." },
+
+  // reporting (additional)
+  { topic: "reporting", term: "Pivot Table", short: "Cross-tab report.", long: "Rows × columns × measure. Great for SLA breach counts by group × priority." },
+  { topic: "reporting", term: "Scheduled Report", short: "Email a report on cron.", long: "PDF/CSV/XLSX to users/groups. Watch attachment size limits." },
+  { topic: "reporting", term: "Visualization Types", short: "Chart styles available.", long: "Bar, column, line, area, pie, donut, funnel, heatmap, gauge. Pick by message, not novelty." },
+  { topic: "reporting", term: "Performance Analytics", short: "Trend-style analytics add-on (PA).", long: "Collects daily snapshots into indicator scores; powers KPIs and forecasts. Licensed separately." },
+  { topic: "reporting", term: "Indicator Source", short: "Defines the population for an indicator.", long: "Encoded query against a table; reusable across many indicators." },
+  { topic: "reporting", term: "Scorecard", short: "Detailed view of one indicator over time.", long: "Trend chart, targets, breakdowns, comments. Drilldown from a dashboard widget." },
+  { topic: "reporting", term: "Dashboard Tab", short: "Page within a dashboard.", long: "Each tab has its own canvas of widgets; tabs share filters via Interactive Filters." },
+  { topic: "reporting", term: "Interactive Filter", short: "Dashboard-wide control.", long: "Date range, group, etc. Applies to all matching widgets — no per-report editing." },
+  { topic: "reporting", term: "Report ACL", short: "Who can see/share a report.", long: "report_view/report_publisher roles + sharing on the report record. Audit before sharing PII reports broadly." },
+  { topic: "reporting", term: "DB View", short: "Cross-table join for reporting.", long: "Define a join across tables in System Definition > Database Views. Reports can run against the view." },
+  { topic: "reporting", term: "Visual Task Board", short: "Kanban-style task view.", long: "Built from a filter; cards = records, lanes = field values. Drag to update state." },
 ];
 
 /* ============== QUIZZES ============== */
