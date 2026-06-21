@@ -134,6 +134,75 @@ const SN_DEV_TERMS: Term[] = [
   { topic: "scenario-based", term: "Scoped vs Global", short: "Where should this customization live?", long: "Scoped apps for anything you'll ship, version, or hand off. Global only for cross-app utilities or legacy work. Scenario answer: explain the trade-off in cross-scope access and the API restrictions scoped apps impose." },
   { topic: "scenario-based", term: "ACL Debugging", short: "User can't see a record they should.", long: "Enable security debug, walk the ACL evaluation order (table → field → row), check role inheritance, and verify the condition / script blocks. Mention impersonation as your first reproduction step." },
   { topic: "scenario-based", term: "Async vs Sync Business Rule", short: "When does timing matter?", long: "Use async for non-blocking work like notifications, integrations, and analytics. Sync (before/after) for anything that must complete in the same transaction. Common interview trap: async rules can't reliably modify the current record before save." },
+
+  // --- Platform (additional) ---
+  { topic: "platform", term: "GlideRecord", short: "Server-side query/record API.", long: "Primary way to read/write tables in scripts: new GlideRecord('incident'); gr.addQuery('active', true); gr.query(). Supports dot-walking, encoded queries, and CRUD." },
+  { topic: "platform", term: "GlideAggregate", short: "Group-by/count/sum on the server.", long: "Like GlideRecord but for SUM/COUNT/AVG/MIN/MAX grouped by fields. Far cheaper than looping a GlideRecord in JS." },
+  { topic: "platform", term: "Client Script", short: "Runs in the browser on a form.", long: "Types: onLoad, onChange, onSubmit, onCellEdit. Use g_form, g_user. Avoid GlideRecord here — use GlideAjax." },
+  { topic: "platform", term: "Business Rule", short: "Server-side hook on table operations.", long: "When: before/after/async/display. Use 'before' for validation/derived fields, 'async' for non-blocking work." },
+  { topic: "platform", term: "UI Policy", short: "Declarative show/hide/mandatory/read-only.", long: "Prefer over client scripts for visibility logic — easier to audit, faster to load." },
+  { topic: "platform", term: "Script Include", short: "Reusable server-side library.", long: "Define as a class (Class.create()) or function; call from business rules, scripted REST, GlideAjax (client-callable=true)." },
+  { topic: "platform", term: "Reference Field", short: "Foreign-key column.", long: "Stores sys_id; lookup table set in dictionary. Enables dot-walking like u_request.requested_for.email." },
+  { topic: "platform", term: "Encoded Query", short: "String form of a list filter.", long: "Example: active=true^priority=1^ORpriority=2. Copy from breadcrumb; reuse in scripts via addEncodedQuery." },
+  { topic: "platform", term: "sys_id", short: "32-char GUID for every record.", long: "Primary key across all tables. Always sys_id-based references — never display value." },
+  { topic: "platform", term: "Now Experience UI", short: "Modern UI framework (Workspace, Service Portal).", long: "Built on web components / Seismic. UI Builder is the visual designer; older UI16 still ships for back-of-house pages." },
+
+  // --- ITSM (additional) ---
+  { topic: "itsm", term: "Task table", short: "Parent of incident, problem, change, RITM, sctask.", long: "Shared fields (number, state, assignment_group, priority) live here. Polymorphic queries hit all child tables." },
+  { topic: "itsm", term: "CAB", short: "Change Advisory Board.", long: "Reviews and approves Normal changes. Modeled via change_request workflow and approval records." },
+  { topic: "itsm", term: "Impact vs Urgency", short: "Inputs to priority.", long: "Impact = breadth of effect; Urgency = how time-critical. priority = priorityLookup[impact][urgency]." },
+  { topic: "itsm", term: "Knowledge Article", short: "kb_knowledge record.", long: "Authored in a Knowledge Base, lifecycle Draft→Review→Published. Surfaced via search and contextual KB on incidents." },
+  { topic: "itsm", term: "Major Incident", short: "Highest-impact incident with command process.", long: "Promoted from incident; spins up war-room, comms templates, and post-incident review." },
+  { topic: "itsm", term: "Workflow", short: "Legacy graphical orchestration.", long: "Drag-and-drop activities (Approval, Run Script, Catalog Task). Largely replaced by Flow Designer for new work." },
+  { topic: "itsm", term: "Service Portal", short: "End-user self-service site.", long: "/sp — built on AngularJS widgets. Successor to ESS; precedes Now Experience portals." },
+  { topic: "itsm", term: "Assignment Rule", short: "Auto-route tasks to group/user.", long: "Conditions on the task evaluate at insert/update; sets assignment_group and optionally assigned_to." },
+  { topic: "itsm", term: "OLA / UC", short: "Internal service agreements.", long: "OLA = operational level (between IT teams); UC = underpinning contract (with vendors). Attach to tasks like SLAs." },
+  { topic: "itsm", term: "Change Risk", short: "Calculated risk score for a change.", long: "Risk Assessment questions + Risk Conditions feed the risk field. Drives the approval path." },
+
+  // --- CMDB (additional) ---
+  { topic: "cmdb", term: "Identification Rule", short: "How Discovery decides 'is this CI new or existing?'.", long: "Per CI class: a set of attribute groups checked in order. Misconfigured rules cause duplicate CIs." },
+  { topic: "cmdb", term: "Reconciliation Rule", short: "Which data source can write which fields.", long: "Prevents one source (e.g. Discovery) from overwriting authoritative fields owned by another (e.g. HRSD)." },
+  { topic: "cmdb", term: "Service Map", short: "Top-down dependency map of a business service.", long: "Built by Service Mapping (different from Discovery). Visualizes app→host→network for impact analysis." },
+  { topic: "cmdb", term: "Affected CI", short: "CI linked to a task as impacted.", long: "task_ci m2m. Drives Service Mapping's impact lens and powers change collision detection." },
+  { topic: "cmdb", term: "Health Dashboard", short: "Out-of-box CMDB completeness/correctness KPIs.", long: "Tracks duplicates, staleness, required attributes per class. Use to justify Discovery investments." },
+  { topic: "cmdb", term: "Pattern", short: "Discovery's modern probe definition.", long: "Replaces classic probe/sensor pairs. Authored in Pattern Designer; runs steps with parsing strategies." },
+  { topic: "cmdb", term: "Business Service", short: "What the business consumes (e.g. 'Email').", long: "cmdb_ci_service_business. Maps via CSDM to Application Services (cmdb_ci_service_auto) and CIs underneath." },
+  { topic: "cmdb", term: "Technical Service", short: "What IT delivers (e.g. 'Exchange').", long: "Layer between Business Services and the raw CIs. CSDM enforces this separation." },
+  { topic: "cmdb", term: "Dependency View", short: "Interactive CI relationship visualizer.", long: "Replaced by Service Map for newer instances. Walks cmdb_rel_ci to render impact graphs." },
+  { topic: "cmdb", term: "MID Server Capability", short: "Tag declaring what a MID can do.", long: "ALL, Discovery, Orchestration, REST, JDBC. Probes target capabilities, not specific MIDs, for HA." },
+
+  // --- Flow Designer (additional) ---
+  { topic: "flow", term: "Trigger", short: "What starts a flow.", long: "Record (created/updated/conditional), scheduled, inbound email, REST, service catalog, application." },
+  { topic: "flow", term: "Data Pill", short: "Drag-and-drop output reference.", long: "Outputs from prior steps appear as 'pills' you drop into later inputs — no scripting required." },
+  { topic: "flow", term: "Flow Variable", short: "Mutable value within a flow run.", long: "Defined under Variables; set/used like local variables. Useful for accumulators in loops." },
+  { topic: "flow", term: "Decision Step", short: "Branch on conditions.", long: "Multi-branch with default; cleaner than nested If/Else. Each branch can have its own actions." },
+  { topic: "flow", term: "For Each", short: "Loop over a list output.", long: "Iterates records or arrays; each iteration sees one element. Beware of large lists — use a Subflow for parallel runs." },
+  { topic: "flow", term: "Application", short: "Scope a flow belongs to.", long: "Like all artifacts, flows live in a scoped app. Cross-scope access requires explicit permissions." },
+  { topic: "flow", term: "Action Designer", short: "Tool to author custom actions.", long: "Compose steps (REST, Script, etc.) into a reusable action with typed inputs/outputs." },
+  { topic: "flow", term: "Connection Alias", short: "Indirection for connection records.", long: "Lets you swap dev/test/prod connections without editing the spoke action. Set per environment." },
+  { topic: "flow", term: "Wait For Condition", short: "Pause until a record matches.", long: "Suspends the flow run until a target record meets a condition — used for approvals, async callbacks." },
+  { topic: "flow", term: "Flow Execution Log", short: "Per-run audit trail.", long: "Step-by-step inputs/outputs for debugging. Turn off 'minimum logging' for production performance." },
+
+  // --- Integration (additional) ---
+  { topic: "integration", term: "OAuth Profile", short: "Token-based auth config.", long: "Defines client id/secret, scopes, token URL. Reused by REST Messages and outbound flows." },
+  { topic: "integration", term: "Basic Auth Profile", short: "Username/password auth.", long: "Stored encrypted; referenced by REST/SOAP messages. Avoid for new integrations — prefer OAuth." },
+  { topic: "integration", term: "Inbound Email Action", short: "Server script run on incoming email.", long: "Matches by 'type' (New/Reply/Forward) and conditions; commonly creates/updates incidents." },
+  { topic: "integration", term: "Event", short: "Named signal recorded on sysevent.", long: "Triggers notifications and script actions. gs.eventQueue('event.name', gr, p1, p2)." },
+  { topic: "integration", term: "Notification", short: "Email/SMS template fired by event or record.", long: "Defined on sys_email_notification; uses GlideRecord context for templating." },
+  { topic: "integration", term: "Data Source", short: "Definition of where import data comes from.", long: "JDBC, FTP, file, REST, LDAP. Loads into a staging import set table." },
+  { topic: "integration", term: "Scheduled Import", short: "Cron-driven Data Source pull.", long: "Run a Data Source on a schedule; pairs with a Transform Map to load into target tables." },
+  { topic: "integration", term: "ECC Queue", short: "Job queue between instance and MID Servers.", long: "Output messages = work for MIDs; Input messages = results. Inspect ecc_queue when integrations stall." },
+  { topic: "integration", term: "Web Services Import", short: "Inbound SOAP via WSDL.", long: "Legacy SOAP receiver auto-generated from the table dictionary. Modern alternative: Scripted REST." },
+  { topic: "integration", term: "RESTMessageV2", short: "Script API for outbound REST.", long: "var r = new sn_ws.RESTMessageV2('msg', 'method'); r.execute(). Supports MID Server, ECC, async." },
+
+  // --- Scenario-based (additional) ---
+  { topic: "scenario-based", term: "GlideRecord in a Loop", short: "N+1 query antipattern.", long: "Don't call gr.query() inside another result loop. Use GlideAggregate or a single join-ish query via dot-walked conditions." },
+  { topic: "scenario-based", term: "Long-Running Script", short: "Transaction timeout (default 5 min).", long: "Move heavy work to async business rules, scheduled jobs, or Progress Worker so the UI thread stays free." },
+  { topic: "scenario-based", term: "Catalog vs Record Producer", short: "Form that creates a request vs an arbitrary record.", long: "Use catalog item for fulfillment with SLAs/RITMs; record producer when you just need a typed record (e.g. incident from the portal)." },
+  { topic: "scenario-based", term: "Choosing Scoped vs Global Script Include", short: "Cross-scope access surface.", long: "Scoped script includes need 'Accessible from: All application scopes' + Cross Scope Privileges to be called outside. Global is reachable everywhere but pollutes the namespace." },
+  { topic: "scenario-based", term: "Hard-coded sys_id", short: "Brittleness across instances.", long: "sys_ids of seed records differ per instance. Reference by name/encoded query, or store in sys_properties for lookup." },
+  { topic: "scenario-based", term: "Workflow vs Flow Migration", short: "When to rewrite.", long: "Rewrite when adding new branches, when integration steps are needed, or when the workflow has accumulated unmaintained scripts. Otherwise leave it." },
+  { topic: "scenario-based", term: "Best-Practice Update Set Hygiene", short: "Small, themed, named, peer-reviewed.", long: "One story per update set; capture related test data via fix scripts. Always preview on target and resolve all warnings before commit." },
 ];
 
 import { ADMIN_TOPICS, ADMIN_TERMS } from "./content/admin";
