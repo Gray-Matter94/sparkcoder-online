@@ -565,6 +565,58 @@ export const JAVA_TERMS: Term[] = [
   { topic: "java-spring", term: "@Transactional", short: "Wraps a method in a DB transaction.", long: "Defaults: rollback on RuntimeException, propagation=REQUIRED. Only works on public methods called from outside the class (proxy)." },
   { topic: "java-spring", term: "Profile", short: "Conditional bean activation.", long: "Annotate beans with @Profile(\"dev\"); activate with `spring.profiles.active=dev`. Used for env-specific config." },
   { topic: "java-spring", term: "Application Properties", short: "Key/value config.", long: "Lives in application.yml or .properties. Override via env vars (`SPRING_DATASOURCE_URL`) or `--spring.config.location`." },
+
+  // java-core (additional)
+  { topic: "java-core", term: "String pool", short: "Interned string cache in the heap.", long: "String literals are interned; `new String(\"a\")` is not. `==` on literals can return true; use `.equals()`." },
+  { topic: "java-core", term: "var (local type inference)", short: "Java 10+ local var inference.", long: "`var list = new ArrayList<String>();` infers at compile time. Local only — not for fields, params, or returns." },
+  { topic: "java-core", term: "Generics erasure", short: "Type params vanish at runtime.", long: "`List<String>` and `List<Integer>` are the same class at runtime. Hence no `new T[]` and no `instanceof List<String>`." },
+  { topic: "java-core", term: "Bounded wildcard", short: "`? extends T` / `? super T`.", long: "PECS: Producer-Extends, Consumer-Super. A `List<? extends Number>` produces Numbers; `List<? super Integer>` consumes Integers." },
+  { topic: "java-core", term: "try-with-resources", short: "Auto-close any AutoCloseable.", long: "`try (var f = new FileReader(p)) { ... }` closes in reverse order even on exception. Suppressed exceptions kept on the primary." },
+  { topic: "java-core", term: "Pattern matching for instanceof", short: "Bind variable in the check (Java 16+).", long: "`if (o instanceof String s) { use(s); }` — no cast needed." },
+  { topic: "java-core", term: "Text Block", short: "Multi-line string literal (Java 15+).", long: "Triple-quoted `\"\"\"...\"\"\"`. Common indentation stripped automatically." },
+  { topic: "java-core", term: "Switch expression", short: "Returns a value, exhaustive (Java 14+).", long: "`var s = switch(day) { case MON, TUE -> 1; default -> 0; };`. Combined with sealed types for exhaustiveness." },
+  { topic: "java-core", term: "Checked vs Unchecked", short: "Compile-time vs runtime exception.", long: "Checked extends Exception; must be declared or caught. Unchecked extends RuntimeException; not required." },
+  { topic: "java-core", term: "Optional", short: "Container for maybe-absent value.", long: "Use as return type to signal absence. Don't use for fields or method parameters — that's an antipattern." },
+  { topic: "java-core", term: "Stream API", short: "Lazy pipeline over collections.", long: "`.filter().map().collect()`. Terminal operations trigger evaluation; intermediate are lazy. Single-use." },
+
+  // java-collections (additional)
+  { topic: "java-collections", term: "LinkedHashMap", short: "Insertion-ordered HashMap.", long: "Maintains a doubly-linked list of entries; iteration is predictable. Useful for LRU caches via `accessOrder=true`." },
+  { topic: "java-collections", term: "EnumMap", short: "Map keyed by enum, backed by array.", long: "Faster and smaller than HashMap for enum keys. Iteration order = enum declaration order." },
+  { topic: "java-collections", term: "ConcurrentSkipListMap", short: "Thread-safe sorted map.", long: "Lock-free; log(n) operations. Concurrent alternative to TreeMap." },
+  { topic: "java-collections", term: "Iterator vs ListIterator", short: "Forward vs bidirectional cursor.", long: "ListIterator also exposes index, previous(), set(), add(). Both throw ConcurrentModificationException on concurrent structural changes." },
+  { topic: "java-collections", term: "fail-fast", short: "Iterators detect mod during iteration.", long: "HashMap/ArrayList iterators throw ConcurrentModificationException best-effort. Concurrent collections are fail-safe (snapshot or weakly consistent)." },
+  { topic: "java-collections", term: "Collectors.groupingBy", short: "Stream → Map<K, List<V>>.", long: "`s.collect(groupingBy(User::dept))`. Combine with downstream collectors (counting, mapping, summingInt)." },
+  { topic: "java-collections", term: "Map.Entry", short: "Key-value pair view inside a map.", long: "Iterate via `map.entrySet()` to avoid double lookup. Java 9+ `Map.entry(k,v)` builds an immutable entry." },
+  { topic: "java-collections", term: "Deque / ArrayDeque", short: "Double-ended queue (use as a stack).", long: "Faster than legacy Stack; null elements not allowed. Push/pop at head, offer/poll at tail." },
+  { topic: "java-collections", term: "CopyOnWriteArrayList", short: "Snapshot on every write.", long: "Reads are lock-free, writes copy the array. Great for many-readers/few-writers (e.g. listener lists)." },
+  { topic: "java-collections", term: "Comparator.comparing", short: "Build a comparator from a key extractor.", long: "`comparing(User::name).thenComparing(User::age).reversed()`. Replace verbose anonymous classes." },
+  { topic: "java-collections", term: "BlockingQueue", short: "Thread-safe queue with blocking ops.", long: "ArrayBlockingQueue, LinkedBlockingQueue, SynchronousQueue. Backbone of producer-consumer pipelines and ExecutorService." },
+
+  // java-concurrency (additional)
+  { topic: "java-concurrency", term: "happens-before", short: "JMM ordering guarantee.", long: "Defines when one thread's write is visible to another's read. Provided by synchronized, volatile, locks, thread start/join." },
+  { topic: "java-concurrency", term: "ReentrantLock", short: "Explicit lock with extra features.", long: "tryLock, fairness, interruptible. Always `lock.lock(); try { } finally { lock.unlock(); }`." },
+  { topic: "java-concurrency", term: "Semaphore", short: "Permit-based concurrency limiter.", long: "Acquire N permits; bounds concurrent access to a resource (e.g. connection pool gate)." },
+  { topic: "java-concurrency", term: "CountDownLatch", short: "One-shot barrier.", long: "Threads await(); main countDown() N times. Reusable alternative: CyclicBarrier." },
+  { topic: "java-concurrency", term: "ForkJoinPool", short: "Work-stealing pool for divide-and-conquer.", long: "Underlies parallel streams and CompletableFuture's commonPool. Don't submit blocking tasks." },
+  { topic: "java-concurrency", term: "ThreadLocal", short: "Per-thread storage slot.", long: "Useful for SimpleDateFormat or contextual data. Always `remove()` in pooled threads to avoid leaks." },
+  { topic: "java-concurrency", term: "Atomic*", short: "Lock-free atomic primitives.", long: "AtomicInteger, AtomicReference, AtomicLongFieldUpdater. CAS-based, faster than synchronized for single-variable updates." },
+  { topic: "java-concurrency", term: "synchronized vs Lock", short: "Intrinsic vs explicit.", long: "Lock supports tryLock, fairness, multiple condition variables; synchronized is simpler and recently faster after JVM improvements." },
+  { topic: "java-concurrency", term: "ScheduledExecutorService", short: "Cron-like task scheduler.", long: "scheduleAtFixedRate / scheduleWithFixedDelay. Tasks throwing uncaught exceptions stop being rescheduled — wrap them." },
+  { topic: "java-concurrency", term: "StampedLock", short: "Optimistic read lock.", long: "tryOptimisticRead returns a stamp; validate before using read data. Up to 3× faster than ReentrantReadWriteLock for read-heavy paths." },
+  { topic: "java-concurrency", term: "Structured Concurrency", short: "Treat related tasks as one unit (preview/Java 21+).", long: "StructuredTaskScope.ShutdownOnFailure forks subtasks and joins/cancels together — eliminates orphan tasks." },
+
+  // java-spring (additional)
+  { topic: "java-spring", term: "Spring Boot Starter", short: "Curated dependency bundle.", long: "spring-boot-starter-web pulls Spring MVC, Tomcat, Jackson. Versions managed by the BOM." },
+  { topic: "java-spring", term: "Auto-configuration", short: "Conditional beans based on classpath.", long: "@EnableAutoConfiguration scans META-INF/spring.factories; beans created only if conditions (@ConditionalOnClass, etc.) match." },
+  { topic: "java-spring", term: "@RestController", short: "@Controller + @ResponseBody.", long: "Methods return values are serialized to JSON via Jackson. Combine with @RequestMapping/@GetMapping etc." },
+  { topic: "java-spring", term: "@ConfigurationProperties", short: "Bind a prefix of properties to a POJO.", long: "Type-safe config; supports validation via @Validated and JSR-303 annotations." },
+  { topic: "java-spring", term: "Spring Data JPA", short: "Repository abstraction over JPA.", long: "Declare an interface extending JpaRepository<Entity, Id>; method names become queries. @Query for custom JPQL/SQL." },
+  { topic: "java-spring", term: "Actuator", short: "Production-ready endpoints.", long: "/actuator/health, /metrics, /env. Expose deliberately and secure with Spring Security." },
+  { topic: "java-spring", term: "WebClient", short: "Reactive non-blocking HTTP client.", long: "Replaces RestTemplate (in maintenance). Use even in MVC apps for backpressure-friendly outbound calls." },
+  { topic: "java-spring", term: "ApplicationContext", short: "The DI container.", long: "Manages beans, lifecycle, events. Inject it directly only as a last resort." },
+  { topic: "java-spring", term: "Bean Scope", short: "singleton (default) / prototype / request / session.", long: "Scope mismatch (singleton holding prototype) needs lookup-method or ObjectProvider injection." },
+  { topic: "java-spring", term: "@Async", short: "Run a method on a TaskExecutor.", long: "Requires @EnableAsync. Method must be public and called via the proxy (not self-invocation)." },
+  { topic: "java-spring", term: "@SpringBootTest", short: "Bootstraps the full context for tests.", long: "Slow; prefer slice annotations (@WebMvcTest, @DataJpaTest) for unit-scope tests." },
 ];
 
 /* ============== QUIZZES ============== */
