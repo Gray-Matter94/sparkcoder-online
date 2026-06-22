@@ -138,6 +138,29 @@ function Home() {
           </div>
         </Link>
 
+        <Link
+          to="/play"
+          className="block p-4 rounded-2xl border-2 border-accent/50 bg-accent/5 hover:border-accent transition-all active:translate-y-0.5 relative overflow-hidden"
+        >
+          <div className="absolute -top-6 -right-6 text-7xl opacity-10">🎮</div>
+          <div className="flex items-center gap-3 relative">
+            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+              ⚡
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="font-display text-lg tracking-wide text-accent">
+                  GLIDE API MATCH
+                </h2>
+                <span className="text-[10px] text-muted-foreground font-mono">MINI-GAME</span>
+              </div>
+              <p className="text-xs text-muted-foreground truncate">
+                Speed-match Glide APIs to their descriptions. Beat the clock.
+              </p>
+            </div>
+          </div>
+        </Link>
+
         <DifficultyCard progress={progress} />
 
 
