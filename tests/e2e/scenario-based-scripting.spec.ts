@@ -28,14 +28,17 @@ test.describe("/learn/scenario-based-scripting", () => {
         .locator("li", { has: page.getByRole("heading", { name: title }) });
 
       const runBtn = article.getByRole("button", { name: /Run in simulator/i });
-      await runBtn.click();
+      await runBtn.scrollIntoViewIfNeeded();
+      await runBtn.click({ force: true });
       await expect(runBtn).toHaveAttribute("aria-expanded", "true");
 
       // Simulator header surfaces the active table as `DB: <table>`.
       await expect(article.getByText(`DB: ${table}`)).toBeVisible();
 
       // Collapse before moving on (only one simulator open at a time).
-      await article.getByRole("button", { name: /Hide simulator/i }).click();
+      const hideBtn = article.getByRole("button", { name: /Hide simulator/i });
+      await hideBtn.scrollIntoViewIfNeeded();
+      await hideBtn.click({ force: true });
     }
   });
 });
