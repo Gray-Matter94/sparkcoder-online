@@ -70,6 +70,21 @@ function Learn() {
             studied — no XP, no streak pressure.
           </p>
         </section>
+        <Link
+          to="/learn/scenario-based-scripting"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🧠 Scenario-Based Scripting Questions
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            Cross-table updates, retry logic, BR recursion, async events — with runnable
+            simulator traces. Built for senior ServiceNow interview loops.
+          </p>
+        </Link>
 
 
         {(() => {
