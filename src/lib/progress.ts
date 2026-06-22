@@ -111,8 +111,10 @@ function merge(a: Progress, b: Progress): Progress {
     weeklyBadges: { ...a.weeklyBadges, ...b.weeklyBadges },
     dailyChallenges: { ...a.dailyChallenges, ...b.dailyChallenges },
     srs,
+    termMastery: { ...(a.termMastery ?? {}), ...(b.termMastery ?? {}) },
   };
 }
+
 
 export function todayStr(d: Date = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
