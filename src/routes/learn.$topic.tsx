@@ -98,7 +98,12 @@ function TopicPage() {
         </div>
 
         {mode === "learn" ? (
-          <Glossary terms={terms} />
+          <Glossary
+            terms={terms}
+            topicId={meta.id}
+            mastery={progress.termMastery ?? {}}
+            onSetMastery={setTermMastery}
+          />
         ) : (
           <Quiz
             key={meta.id}
@@ -110,6 +115,7 @@ function TopicPage() {
             }}
           />
         )}
+
 
         <div className="pt-2">
           <Link
