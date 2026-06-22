@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { EASY, MEDIUM, HARD, EXPERT, POOL, type Pair } from "./play.data";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
@@ -8,13 +9,13 @@ export const Route = createFileRoute("/play")({
       {
         name: "description",
         content:
-          "Mini-game: match ServiceNow Glide APIs to their descriptions before the clock runs out. Beat your best time and reinforce scripting fundamentals.",
+          "Mini-game with 300+ ServiceNow Glide API challenges across 50 levels of escalating difficulty. Beat the clock, minimise misses, climb the levels.",
       },
       { property: "og:title", content: "Glide API Match — SparkCoder Mini-Game" },
       {
         property: "og:description",
         content:
-          "Speed-match ServiceNow Glide APIs with their descriptions. A fun way to drill scripting fundamentals.",
+          "Speed-match ServiceNow Glide APIs with their descriptions across 50 levels of progressively harder challenges.",
       },
       { property: "og:url", content: "https://sparkcoder.online/play" },
     ],
@@ -23,25 +24,11 @@ export const Route = createFileRoute("/play")({
   component: PlayPage,
 });
 
-type Pair = { api: string; desc: string };
-
-const PAIRS: Pair[] = [
-  { api: "GlideRecord.get()", desc: "Fetch a single record by sys_id or field=value" },
-  { api: "GlideRecord.addQuery()", desc: "Add a filter to the encoded query" },
-  { api: "GlideRecord.update()", desc: "Persist field changes on a fetched record" },
-  { api: "GlideRecord.insert()", desc: "Create a new record and return its sys_id" },
-  { api: "GlideRecord.deleteRecord()", desc: "Delete the current record from the table" },
-  { api: "GlideRecord.next()", desc: "Advance to the next row in a query" },
-  { api: "GlideDateTime.getNumericValue()", desc: "Get epoch milliseconds for date math" },
-  { api: "gs.addInfoMessage()", desc: "Show a non-blocking message to the user" },
-  { api: "gs.eventQueue()", desc: "Queue an event for async processing" },
-  { api: "GlideAggregate.addAggregate()", desc: "Add COUNT/SUM/AVG to a grouped query" },
-  { api: "current.setAbortAction()", desc: "Prevent a Business Rule's DB operation" },
-  { api: "GlideAjax.getXMLAnswer()", desc: "Call a Script Include from the client" },
-];
-
-const ROUND_SIZE = 6;
-const STORAGE_KEY = "sparkcoder.play.glide-match.best";
+// ---------- Level model ----------
+const MAX_LEVEL = 50;
+const STORAGE_BEST = "sparkcoder.play.glide-match.best"; // legacy single-round best
+const STORAGE_LEVEL = "sparkcoder.play.glide-match.level";
+const STORAGE_TOTAL = "sparkcoder.play.glide-match.totalScore";
 
 type CardKind = "api" | "desc";
 type Card = { id: string; kind: CardKind; key: number; text: string };
@@ -55,8 +42,33 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function pickRound(): Card[] {
-  const picks = shuffle(PAIRS).slice(0, ROUND_SIZE);
+// Round size scales with level: 4 (L1) up to 12 (L50)
+function roundSizeFor(level: number): number {
+  if (level <= 3) return 4;
+  if (level <= 6) return 5;
+  if (level <= 10) return 6;
+  if (level <= 16) return 7;
+  if (level <= 24) return 8;
+  if (level <= 34) return 9;
+  if (level <= 42) return 10;
+  if (level <= 48) return 11;
+  return 12;
+}
+
+// Tier distribution shifts toward expert as level climbs
+function poolFor(level: number): Pair[] {
+  if (level <= 4) return EASY;
+  if (level <= 9) return [...EASY, ...MEDIUM];
+  if (level <= 18) return [...MEDIUM, ...HARD];
+  if (level <= 30) return [...HARD, ...EXPERT];
+  if (level <= 42) return [...EXPERT, ...HARD];
+  return POOL; // anything from the whole bank
+}
+
+function pickRound(level: number): Card[] {
+  const pool = poolFor(level);
+  const size = Math.min(roundSizeFor(level), pool.length);
+  const picks = shuffle(pool).slice(0, size);
   const cards: Card[] = [];
   picks.forEach((p, i) => {
     cards.push({ id: `a-${i}`, kind: "api", key: i, text: p.api });
@@ -65,7 +77,104 @@ function pickRound(): Card[] {
   return shuffle(cards);
 }
 
+// ---------- Funny / motivating congrats ----------
+type Verdict = {
+  title: string;
+  blurb: string;
+  emoji: string;
+  rank: "S" | "A" | "B" | "C" | "D";
+};
+
+function verdictFor(level: number, timeMs: number, misses: number, size: number): Verdict {
+  const perPair = timeMs / Math.max(size, 1);
+  // Tiered thresholds — get tighter as round size grows
+  const fast = perPair < 2500;
+  const ok = perPair < 4500;
+  const clean = misses === 0;
+  const tidy = misses <= Math.ceil(size / 3);
+
+  if (fast && clean) {
+    return {
+      rank: "S",
+      emoji: "🚀",
+      title: pick([
+        "FLAWLESS VICTORY",
+        "GLIDE WIZARD MODE",
+        "ACL CAN'T STOP YOU",
+      ]),
+      blurb: pick([
+        `Cleared level ${level} without a single miss. Are you sure you're not a Script Include?`,
+        `Zero misses, sub-${(perPair / 1000).toFixed(1)}s per pair. Knowledge Article writers fear you.`,
+        `${size} pairs, ${misses} misses. Even ITIL is impressed.`,
+      ]),
+    };
+  }
+  if (fast && tidy) {
+    return {
+      rank: "A",
+      emoji: "⚡",
+      title: pick(["BLAZING RUN", "QUERY SPEED RECORD", "GLIDE GROOVE"]),
+      blurb: pick([
+        `Fast hands! ${misses} miss${misses === 1 ? "" : "es"} on level ${level} — the change-management board approves.`,
+        `Cooked it in ${(timeMs / 1000).toFixed(1)}s. Somewhere a Business Rule just applauded.`,
+        `Reflexes of a Background Script. Onwards to level ${level + 1}.`,
+      ]),
+    };
+  }
+  if (clean) {
+    return {
+      rank: "A",
+      emoji: "🎯",
+      title: pick(["NO MISSES, NO MERCY", "SURGICAL PRECISION", "ACL: APPROVED"]),
+      blurb: pick([
+        `Perfect accuracy on level ${level}. Slow is smooth, smooth is production-ready.`,
+        `Zero misses. You debug bugs that haven't been written yet.`,
+        `Every match landed. The audit log is smiling.`,
+      ]),
+    };
+  }
+  if (ok && tidy) {
+    return {
+      rank: "B",
+      emoji: "🛠️",
+      title: pick(["SOLID DEPLOY", "TICKET RESOLVED", "STORY: DONE"]),
+      blurb: pick([
+        `Level ${level} cleared in ${(timeMs / 1000).toFixed(1)}s with ${misses} miss${misses === 1 ? "" : "es"}. Stand-up update: shipped it.`,
+        `Not bad — a small change request, no rollback needed.`,
+        `You'd survive a Friday production push.`,
+      ]),
+    };
+  }
+  if (ok) {
+    return {
+      rank: "C",
+      emoji: "☕",
+      title: pick(["NEEDS COFFEE", "INCIDENT P3", "REOPENED"]),
+      blurb: pick([
+        `Level ${level} cleared — but ${misses} misses means the change board wants a post-mortem.`,
+        `Got there in the end. Your QA tester is rolling their eyes lovingly.`,
+        `Worked on a Friday afternoon vibe. Acceptable. Just.`,
+      ]),
+    };
+  }
+  return {
+    rank: "D",
+    emoji: "🐢",
+    title: pick(["EVENTUAL CONSISTENCY", "SLA EXTENDED", "MARATHON, NOT SPRINT"]),
+    blurb: pick([
+      `You cleared level ${level}. The instance is patient. So are we.`,
+      `Slow and steady — a true Asynchronous Business Rule.`,
+      `It took a while, but every catalog item ships eventually.`,
+    ]),
+  };
+}
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 function PlayPage() {
+  const [level, setLevel] = useState(1);
   const [cards, setCards] = useState<Card[]>([]);
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [missed, setMissed] = useState(0);
@@ -76,16 +185,36 @@ function PlayPage() {
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [done, setDone] = useState(false);
   const [best, setBest] = useState<number | null>(null);
+  const [totalScore, setTotalScore] = useState(0);
+  const [verdict, setVerdict] = useState<Verdict | null>(null);
+  const [gameComplete, setGameComplete] = useState(false);
 
-  // Init round + load best
+  const roundSize = roundSizeFor(level);
+
+  // Init: load saved progress
   useEffect(() => {
-    setCards(pickRound());
-    setStartedAt(Date.now());
-    if (typeof window !== "undefined") {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setBest(Number(raw) || null);
-    }
+    if (typeof window === "undefined") return;
+    const lv = Number(window.localStorage.getItem(STORAGE_LEVEL)) || 1;
+    const total = Number(window.localStorage.getItem(STORAGE_TOTAL)) || 0;
+    const raw = window.localStorage.getItem(STORAGE_BEST);
+    setLevel(Math.min(Math.max(lv, 1), MAX_LEVEL));
+    setTotalScore(total);
+    if (raw) setBest(Number(raw) || null);
   }, []);
+
+  // Re-deal whenever the level changes
+  useEffect(() => {
+    setCards(pickRound(level));
+    setMatched(new Set());
+    setMissed(0);
+    setSelectedApi(null);
+    setSelectedDesc(null);
+    setShake(null);
+    setElapsedMs(0);
+    setStartedAt(Date.now());
+    setDone(false);
+    setVerdict(null);
+  }, [level]);
 
   // Tick the timer
   useEffect(() => {
@@ -121,19 +250,28 @@ function PlayPage() {
 
   // Finish round
   useEffect(() => {
-    if (matched.size === ROUND_SIZE && !done) {
+    if (matched.size === roundSize && !done) {
       setDone(true);
       const finalMs = startedAt ? Date.now() - startedAt : elapsedMs;
       setElapsedMs(finalMs);
-      const score = finalMs + missed * 3000; // 3s penalty per miss
+      const roundScore = finalMs + missed * 3000;
+      const newTotal = totalScore + roundScore;
+      setTotalScore(newTotal);
+      setVerdict(verdictFor(level, finalMs, missed, roundSize));
       if (typeof window !== "undefined") {
-        if (best === null || score < best) {
-          window.localStorage.setItem(STORAGE_KEY, String(score));
-          setBest(score);
+        window.localStorage.setItem(STORAGE_TOTAL, String(newTotal));
+        if (best === null || roundScore < best) {
+          window.localStorage.setItem(STORAGE_BEST, String(roundScore));
+          setBest(roundScore);
+        }
+        if (level >= MAX_LEVEL) {
+          setGameComplete(true);
+        } else {
+          window.localStorage.setItem(STORAGE_LEVEL, String(level + 1));
         }
       }
     }
-  }, [matched, done, startedAt, elapsedMs, missed, best]);
+  }, [matched, done, startedAt, elapsedMs, missed, best, totalScore, roundSize, level]);
 
   function handlePick(card: Card) {
     if (done) return;
@@ -153,8 +291,13 @@ function PlayPage() {
     }
   }
 
-  function newRound() {
-    setCards(pickRound());
+  function nextLevel() {
+    if (level >= MAX_LEVEL) return;
+    setLevel((l) => l + 1);
+  }
+
+  function retryLevel() {
+    setCards(pickRound(level));
     setMatched(new Set());
     setMissed(0);
     setSelectedApi(null);
@@ -163,12 +306,25 @@ function PlayPage() {
     setStartedAt(Date.now());
     setElapsedMs(0);
     setDone(false);
+    setVerdict(null);
+  }
+
+  function resetProgress() {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(STORAGE_LEVEL);
+      window.localStorage.removeItem(STORAGE_TOTAL);
+    }
+    setTotalScore(0);
+    setGameComplete(false);
+    setLevel(1);
   }
 
   const apiCards = useMemo(() => cards.filter((c) => c.kind === "api"), [cards]);
   const descCards = useMemo(() => cards.filter((c) => c.kind === "desc"), [cards]);
   const seconds = (elapsedMs / 1000).toFixed(1);
   const bestSec = best !== null ? (best / 1000).toFixed(1) : null;
+  const tierLabel =
+    level <= 4 ? "Easy" : level <= 9 ? "Medium" : level <= 18 ? "Hard" : level <= 30 ? "Expert" : "Mixed";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -184,30 +340,27 @@ function PlayPage() {
             GLIDE API <span className="text-accent">MATCH</span>
           </h1>
           <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
-            Mini-game
+            L{level}/{MAX_LEVEL} · {tierLabel}
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-3xl w-full mx-auto p-5 sm:p-8 space-y-6">
-        <section className="grid grid-cols-3 gap-3">
+        <section className="grid grid-cols-4 gap-3">
           <Stat label="Time" value={`${seconds}s`} accent="text-primary" />
-          <Stat
-            label="Matched"
-            value={`${matched.size}/${ROUND_SIZE}`}
-            accent="text-accent"
-          />
+          <Stat label="Matched" value={`${matched.size}/${roundSize}`} accent="text-accent" />
           <Stat label="Misses" value={String(missed)} accent="text-secondary" />
+          <Stat label="Level" value={`${level}`} accent="text-foreground" />
         </section>
 
         {bestSec && (
           <div className="text-center text-[11px] uppercase tracking-widest text-muted-foreground font-mono">
-            Best score (time + 3s/miss): {bestSec}s
+            Best round: {bestSec}s · Total score across levels: {(totalScore / 1000).toFixed(1)}s
           </div>
         )}
 
         <p className="text-sm text-muted-foreground text-center">
-          Tap a Glide API on the left, then its matching description on the right.
+          Tap a Glide API on the left, then its matching description on the right. {roundSize} pairs to clear level {level}.
         </p>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -230,32 +383,71 @@ function PlayPage() {
           />
         </section>
 
-        {done && (
+        {done && verdict && !gameComplete && (
           <section className="rounded-2xl border-2 border-primary/60 bg-primary/5 p-5 text-center space-y-3 animate-fade-in">
-            <div className="text-3xl">🎉</div>
+            <div className="text-3xl">{verdict.emoji}</div>
+            <div className="inline-block rounded-full bg-accent/20 px-3 py-0.5 text-[10px] uppercase tracking-widest text-accent font-bold">
+              Rank {verdict.rank} · Level {level} cleared
+            </div>
             <h2 className="font-display text-2xl tracking-tight text-primary">
-              ROUND CLEARED
+              {verdict.title}
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              {verdict.blurb}
+            </p>
+            <p className="text-[11px] uppercase tracking-widest text-zinc-500 font-mono">
               Time {seconds}s · {missed} miss{missed === 1 ? "" : "es"} · Score{" "}
               {((elapsedMs + missed * 3000) / 1000).toFixed(1)}s
             </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+              <button
+                onClick={nextLevel}
+                className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground uppercase tracking-widest hover:bg-primary/90 transition-colors"
+              >
+                Level {level + 1} →
+              </button>
+              <button
+                onClick={retryLevel}
+                className="inline-flex items-center justify-center rounded-xl border border-border bg-panel px-5 py-2.5 text-sm font-bold text-foreground uppercase tracking-widest hover:border-accent/60 transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          </section>
+        )}
+
+        {done && gameComplete && (
+          <section className="rounded-2xl border-2 border-accent/60 bg-accent/5 p-6 text-center space-y-3 animate-fade-in">
+            <div className="text-4xl">🏆</div>
+            <h2 className="font-display text-3xl tracking-tight text-accent">
+              ALL {MAX_LEVEL} LEVELS CLEARED
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              You are now legally required to be on someone's ServiceNow architecture review.
+              Total score across the whole run: {(totalScore / 1000).toFixed(1)}s.
+            </p>
             <button
-              onClick={newRound}
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground uppercase tracking-widest hover:bg-primary/90 transition-colors"
+              onClick={resetProgress}
+              className="inline-flex items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-accent-foreground uppercase tracking-widest hover:bg-accent/90 transition-colors"
             >
-              Play again
+              Start a new run
             </button>
           </section>
         )}
 
         {!done && (
-          <div className="flex justify-center">
+          <div className="flex items-center justify-center gap-6">
             <button
-              onClick={newRound}
+              onClick={retryLevel}
               className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
-              Restart round
+              Restart level
+            </button>
+            <button
+              onClick={resetProgress}
+              className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
+            >
+              Reset progress
             </button>
           </div>
         )}
