@@ -21,6 +21,13 @@ test.describe("/learn/scenario-based-scripting", () => {
 
   test("simulator trace renders for every scenario", async ({ page }) => {
     await page.goto("/learn/scenario-based-scripting");
+    // Wait for React hydration — SSR emits the button but click handlers
+    // only attach after hydration. Probe for the React fiber props key.
+    await page.waitForFunction(() => {
+      const el = document.querySelector("button[aria-controls^='sim-']");
+      return !!el && Object.keys(el).some((k) => k.startsWith("__reactProps"));
+    });
+
 
     for (let i = 0; i < SCENARIOS.length; i++) {
       const { title, table } = SCENARIOS[i];
