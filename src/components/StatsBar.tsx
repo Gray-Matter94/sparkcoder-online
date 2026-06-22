@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import type { Progress } from "@/lib/progress";
 import { useAuth, signOut } from "@/hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
+import logoAsset from "@/assets/sparkcoder-logo.png.asset.json";
+
 
 export function StatsBar({ progress, back }: { progress: Progress; back?: boolean }) {
   return (
