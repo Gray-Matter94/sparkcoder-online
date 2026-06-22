@@ -31,9 +31,10 @@ function TopicPage() {
   const meta = TOPICS.find((t) => t.id === (topic as TopicId));
   if (!meta) throw notFound();
 
-  const { progress } = useProgress();
+  const { progress, setTermMastery } = useProgress();
   const terms = termsFor(meta.id);
   const quiz = quizFor(meta.id);
+
 
   const [mode, setMode] = useState<"learn" | "quiz">("learn");
 
