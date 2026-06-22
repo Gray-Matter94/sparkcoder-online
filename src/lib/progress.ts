@@ -391,12 +391,30 @@ export function useProgress() {
     [queueCloud],
   );
 
+
+  const setTermMastery = useCallback(
+    (topic: string, term: string, status: TermMastery | null) => {
+      setProgress((prev) => {
+        const key = `${topic}::${term}`;
+        const termMastery = { ...(prev.termMastery ?? {}) };
+        if (status === null) delete termMastery[key];
+        else termMastery[key] = status;
+        const next: Progress = { ...prev, termMastery };
+        write(trackRef.current, next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const reset = useCallback(() => {
     write(trackRef.current, empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge, recordSrs, track };
+  return { progress, award, reset, markDailyChallenge, recordSrs, setTermMastery, track };
+
 }
 
