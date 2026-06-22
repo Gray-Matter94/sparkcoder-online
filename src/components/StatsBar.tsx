@@ -21,7 +21,7 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
             <img
               src={logoAsset.url}
               alt="SparkCoder"
-              className="size-10 rounded-xl object-contain bg-background border border-border"
+              className="size-10 object-contain"
             />
           </Link>
         )}
