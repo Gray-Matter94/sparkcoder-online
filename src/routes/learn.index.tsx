@@ -6,24 +6,42 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
 
 export const Route = createFileRoute("/learn/")({
-  head: () => ({
-    meta: [
-      { title: "ServiceNow Glossary & Quizzes — SparkCoder" },
-      {
-        name: "description",
-        content:
-          "Learn ServiceNow concepts with illustrated definitions and topic quizzes — Platform, ITSM, CMDB, Flow Designer, Integrations.",
-      },
-      { property: "og:title", content: "ServiceNow Glossary & Quizzes — SparkCoder" },
-      {
-        property: "og:description",
-        content:
-          "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
-      },
-      { property: "og:url", content: "https://sparkcoder.online/learn" },
-    ],
-    links: [{ rel: "canonical", href: "https://sparkcoder.online/learn" }],
-  }),
+  head: () => {
+    const collectionJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "ServiceNow Glossary & Quizzes",
+      url: "https://sparkcoder.online/learn",
+      description:
+        "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
+      hasPart: TOPICS.map((t) => ({
+        "@type": "CreativeWork",
+        name: t.name,
+        url: `https://sparkcoder.online/learn/${t.id}`,
+      })),
+    };
+    return {
+      meta: [
+        { title: "ServiceNow Glossary & Quizzes — SparkCoder" },
+        {
+          name: "description",
+          content:
+            "Learn ServiceNow concepts with illustrated definitions and topic quizzes — Platform, ITSM, CMDB, Flow Designer, Integrations.",
+        },
+        { property: "og:title", content: "ServiceNow Glossary & Quizzes — SparkCoder" },
+        {
+          property: "og:description",
+          content:
+            "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
+        },
+        { property: "og:url", content: "https://sparkcoder.online/learn" },
+      ],
+      links: [{ rel: "canonical", href: "https://sparkcoder.online/learn" }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(collectionJsonLd) },
+      ],
+    };
+  },
   component: Learn,
 });
 
