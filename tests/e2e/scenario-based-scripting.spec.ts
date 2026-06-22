@@ -27,18 +27,19 @@ test.describe("/learn/scenario-based-scripting", () => {
       const article = page
         .locator("li", { has: page.getByRole("heading", { name: title }) });
 
-      const runBtn = article.getByRole("button", { name: /Run in simulator/i });
-      await runBtn.scrollIntoViewIfNeeded();
-      await runBtn.click({ force: true });
-      await expect(runBtn).toHaveAttribute("aria-expanded", "true");
+      const toggleBtn = article.locator("button[aria-controls^='sim-']");
+      await toggleBtn.scrollIntoViewIfNeeded();
+      await expect(toggleBtn).toHaveText(/Run in simulator/i);
+      await toggleBtn.click({ force: true });
+      await expect(toggleBtn).toHaveAttribute("aria-expanded", "true");
+      await expect(toggleBtn).toHaveText(/Hide simulator/i);
 
       // Simulator header surfaces the active table as `DB: <table>`.
       await expect(article.getByText(`DB: ${table}`)).toBeVisible();
 
       // Collapse before moving on (only one simulator open at a time).
-      const hideBtn = article.getByRole("button", { name: /Hide simulator/i });
-      await hideBtn.scrollIntoViewIfNeeded();
-      await hideBtn.click({ force: true });
+      await toggleBtn.click({ force: true });
+      await expect(toggleBtn).toHaveAttribute("aria-expanded", "false");
     }
   });
 });
