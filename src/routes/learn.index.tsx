@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TOPICS, topicsForTrack } from "@/lib/glossary";
+import { TOPICS, topicsForTrack, termsFor, type TopicId } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
