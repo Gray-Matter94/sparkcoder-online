@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TOPICS, topicsForTrack } from "@/lib/glossary";
+import { TOPICS, topicsForTrack, termsFor, type TopicId } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
@@ -105,6 +105,66 @@ function Learn() {
             </section>
           );
         })()}
+
+        {(() => {
+          const mastery = progress.termMastery ?? {};
+          const review: { topic: TopicId; term: string; short: string }[] = [];
+          let masteredCount = 0;
+          for (const t of visibleTopics) {
+            for (const term of termsFor(t.id)) {
+              const s = mastery[`${t.id}::${term.term}`];
+              if (s === "mastered") masteredCount++;
+              else if (s === "review")
+                review.push({ topic: t.id, term: term.term, short: term.short });
+            }
+          }
+          if (review.length === 0 && masteredCount === 0) return null;
+          return (
+            <section className="space-y-2 animate-fade-in" aria-label="Glossary mastery">
+              <h2 className="font-display tracking-wider text-sm uppercase text-foreground/80 flex items-center justify-between gap-2">
+                <span>📚 Term mastery</span>
+                <span className="text-[10px] font-mono text-muted-foreground">
+                  ✓ {masteredCount} mastered · ↻ {review.length} to review
+                </span>
+              </h2>
+              {review.length > 0 && (
+                <ul className="rounded-2xl border-2 border-accent/30 bg-accent/5 divide-y divide-border/60 overflow-hidden">
+                  {review.slice(0, 8).map((r) => {
+                    const t = TOPICS.find((x) => x.id === r.topic);
+                    return (
+                      <li key={`${r.topic}::${r.term}`}>
+                        <Link
+                          to="/learn/$topic"
+                          params={{ topic: r.topic }}
+                          className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-background/40 transition-colors"
+                        >
+                          <div className="min-w-0">
+                            <div className="text-[13px] font-display tracking-wide text-foreground/90 truncate">
+                              {r.term}
+                            </div>
+                            <div className="text-[10px] font-mono text-muted-foreground truncate">
+                              {t?.emoji} {t?.name} · {r.short}
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md border border-primary/40 text-primary shrink-0">
+                            Review
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                  {review.length > 8 && (
+                    <li className="px-4 py-2 text-[10px] font-mono text-muted-foreground text-center">
+                      + {review.length - 8} more
+                    </li>
+                  )}
+                </ul>
+              )}
+            </section>
+          );
+        })()}
+
+
 
         <section className="space-y-3">
 

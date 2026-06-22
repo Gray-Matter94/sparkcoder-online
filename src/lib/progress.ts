@@ -22,6 +22,8 @@ export interface SrsEntry {
   lastMissRate: number; // 0-1
 }
 
+export type TermMastery = "mastered" | "review";
+
 export interface Progress {
   xp: number;
   streak: number;
@@ -34,6 +36,8 @@ export interface Progress {
   dailyChallenges: Record<string, string>; // date -> questionId completed
   /** Spaced repetition schedule, keyed by `${topic}:${sectionIdx}`. */
   srs: Record<string, SrsEntry>;
+  /** Glossary term mastery, keyed by `${topic}::${term}`. */
+  termMastery: Record<string, TermMastery>;
 }
 
 const empty: Progress = {
@@ -47,7 +51,9 @@ const empty: Progress = {
   weeklyBadges: {},
   dailyChallenges: {},
   srs: {},
+  termMastery: {},
 };
+
 
 function read(track: TrackId): Progress {
   if (typeof window === "undefined") return empty;
@@ -105,8 +111,10 @@ function merge(a: Progress, b: Progress): Progress {
     weeklyBadges: { ...a.weeklyBadges, ...b.weeklyBadges },
     dailyChallenges: { ...a.dailyChallenges, ...b.dailyChallenges },
     srs,
+    termMastery: { ...(a.termMastery ?? {}), ...(b.termMastery ?? {}) },
   };
 }
+
 
 export function todayStr(d: Date = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -383,12 +391,30 @@ export function useProgress() {
     [queueCloud],
   );
 
+
+  const setTermMastery = useCallback(
+    (topic: string, term: string, status: TermMastery | null) => {
+      setProgress((prev) => {
+        const key = `${topic}::${term}`;
+        const termMastery = { ...(prev.termMastery ?? {}) };
+        if (status === null) delete termMastery[key];
+        else termMastery[key] = status;
+        const next: Progress = { ...prev, termMastery };
+        write(trackRef.current, next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const reset = useCallback(() => {
     write(trackRef.current, empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge, recordSrs, track };
+  return { progress, award, reset, markDailyChallenge, recordSrs, setTermMastery, track };
+
 }
 

@@ -31,9 +31,10 @@ function TopicPage() {
   const meta = TOPICS.find((t) => t.id === (topic as TopicId));
   if (!meta) throw notFound();
 
-  const { progress } = useProgress();
+  const { progress, setTermMastery } = useProgress();
   const terms = termsFor(meta.id);
   const quiz = quizFor(meta.id);
+
 
   const [mode, setMode] = useState<"learn" | "quiz">("learn");
 
@@ -97,7 +98,12 @@ function TopicPage() {
         </div>
 
         {mode === "learn" ? (
-          <Glossary terms={terms} />
+          <Glossary
+            terms={terms}
+            topicId={meta.id}
+            mastery={progress.termMastery ?? {}}
+            onSetMastery={setTermMastery}
+          />
         ) : (
           <Quiz
             key={meta.id}
@@ -109,6 +115,7 @@ function TopicPage() {
             }}
           />
         )}
+
 
         <div className="pt-2">
           <Link
@@ -123,44 +130,148 @@ function TopicPage() {
   );
 }
 
-function Glossary({ terms }: { terms: ReturnType<typeof termsFor> }) {
+type MasteryFilter = "all" | "unmarked" | "review" | "mastered";
+
+function Glossary({
+  terms,
+  topicId,
+  mastery,
+  onSetMastery,
+}: {
+  terms: ReturnType<typeof termsFor>;
+  topicId: TopicId;
+  mastery: Record<string, "mastered" | "review">;
+  onSetMastery: (topic: string, term: string, status: "mastered" | "review" | null) => void;
+}) {
   const [open, setOpen] = useState<string | null>(null);
+  const [filter, setFilter] = useState<MasteryFilter>("all");
+
+  const counts = { mastered: 0, review: 0, unmarked: 0 };
+  for (const t of terms) {
+    const s = mastery[`${topicId}::${t.term}`];
+    if (s === "mastered") counts.mastered++;
+    else if (s === "review") counts.review++;
+    else counts.unmarked++;
+  }
+  const visible = terms.filter((t) => {
+    const s = mastery[`${topicId}::${t.term}`];
+    if (filter === "all") return true;
+    if (filter === "unmarked") return !s;
+    return s === filter;
+  });
+
+  const chip = (id: MasteryFilter, label: string, n: number, tone: string) => (
+    <button
+      key={id}
+      onClick={() => setFilter(id)}
+      className={`px-2.5 py-1 rounded-md border text-[10px] font-mono uppercase tracking-widest transition-colors ${
+        filter === id ? tone : "border-border text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label} {n}
+    </button>
+  );
+
   return (
-    <ul className="space-y-2.5">
-      {terms.map((t) => {
-        const isOpen = open === t.term;
-        return (
-          <li
-            key={t.term}
-            className="rounded-xl border-2 border-border bg-panel overflow-hidden"
-          >
-            <button
-              onClick={() => setOpen(isOpen ? null : t.term)}
-              className="w-full p-3.5 text-left flex items-start justify-between gap-3"
-            >
-              <div className="min-w-0">
-                <div className="font-display tracking-wide text-base text-accent">{t.term}</div>
-                <div className="text-xs text-foreground/85 mt-0.5">{t.short}</div>
-              </div>
-              <span
-                className={`text-muted-foreground text-lg transition-transform shrink-0 ${
-                  isOpen ? "rotate-180" : ""
-                }`}
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by mastery">
+        {chip("all", "All", terms.length, "border-accent/50 bg-accent/10 text-accent")}
+        {chip("unmarked", "New", counts.unmarked, "border-foreground/40 bg-foreground/5 text-foreground")}
+        {chip("review", "Review", counts.review, "border-primary/50 bg-primary/10 text-primary")}
+        {chip("mastered", "Mastered", counts.mastered, "border-emerald-500/50 bg-emerald-500/10 text-emerald-400")}
+      </div>
+
+      {visible.length === 0 ? (
+        <p className="text-xs text-muted-foreground px-1 py-6 text-center">
+          Nothing here yet — mark some terms to see them in this view.
+        </p>
+      ) : (
+        <ul className="space-y-2.5">
+          {visible.map((t) => {
+            const isOpen = open === t.term;
+            const status = mastery[`${topicId}::${t.term}`];
+            const badge =
+              status === "mastered"
+                ? { label: "✓ Mastered", cls: "border-emerald-500/50 bg-emerald-500/10 text-emerald-400" }
+                : status === "review"
+                  ? { label: "↻ Review", cls: "border-primary/50 bg-primary/10 text-primary" }
+                  : null;
+            return (
+              <li
+                key={t.term}
+                className="rounded-xl border-2 border-border bg-panel overflow-hidden"
               >
-                ▾
-              </span>
-            </button>
-            {isOpen && (
-              <div className="px-3.5 pb-3.5 -mt-1 text-[13px] text-foreground/85 leading-relaxed border-t border-border/60 pt-3">
-                {t.long}
-              </div>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+                <button
+                  onClick={() => setOpen(isOpen ? null : t.term)}
+                  className="w-full p-3.5 text-left flex items-start justify-between gap-3"
+                >
+                  <div className="min-w-0">
+                    <div className="font-display tracking-wide text-base text-accent flex items-center gap-2 flex-wrap">
+                      <span>{t.term}</span>
+                      {badge && (
+                        <span className={`text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded border ${badge.cls}`}>
+                          {badge.label}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-foreground/85 mt-0.5">{t.short}</div>
+                  </div>
+                  <span
+                    className={`text-muted-foreground text-lg transition-transform shrink-0 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+                {isOpen && (
+                  <div className="px-3.5 pb-3.5 -mt-1 text-[13px] text-foreground/85 leading-relaxed border-t border-border/60 pt-3 space-y-3">
+                    <p>{t.long}</p>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button
+                        onClick={() =>
+                          onSetMastery(topicId, t.term, status === "mastered" ? null : "mastered")
+                        }
+                        className={`px-2.5 py-1.5 rounded-md border text-[10px] font-mono uppercase tracking-widest transition-colors ${
+                          status === "mastered"
+                            ? "border-emerald-500/60 bg-emerald-500/15 text-emerald-300"
+                            : "border-border hover:border-emerald-500/50 hover:text-emerald-300"
+                        }`}
+                      >
+                        ✓ I know this
+                      </button>
+                      <button
+                        onClick={() =>
+                          onSetMastery(topicId, t.term, status === "review" ? null : "review")
+                        }
+                        className={`px-2.5 py-1.5 rounded-md border text-[10px] font-mono uppercase tracking-widest transition-colors ${
+                          status === "review"
+                            ? "border-primary/60 bg-primary/15 text-primary"
+                            : "border-border hover:border-primary/50 hover:text-primary"
+                        }`}
+                      >
+                        ↻ Review later
+                      </button>
+                      {status && (
+                        <button
+                          onClick={() => onSetMastery(topicId, t.term, null)}
+                          className="px-2.5 py-1.5 rounded-md border border-border text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }
+
 
 type QuizStatus = "picking" | "answered" | "done";
 
