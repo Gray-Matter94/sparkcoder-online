@@ -288,17 +288,84 @@ const FLOW_FACTS = [
   { q: "Which Flow trigger fires from REST?", correct: "Inbound REST", explain: "Trigger exposed via Scripted REST API." },
   { q: "Action Designer extends Flow Designer with…", correct: "Custom reusable actions", explain: "Build your own actions with steps." },
   { q: "Which feature replays a Flow execution?", correct: "Flow Execution Details", explain: "Step-by-step trace with inputs/outputs." },
+  // Triggers & Run As
+  { q: "Which 'Run As' bypasses ACLs?", correct: "System User", explain: "System user runs with elevated privileges." },
+  { q: "Which 'Run As' enforces the user's ACLs?", correct: "User who initiated the session", explain: "Steps run under the user's permissions." },
+  { q: "Which trigger fires from a Catalog Item submission?", correct: "Service Catalog", explain: "Exposes the RITM and variables as data pills." },
+  { q: "Which trigger lets external systems start a flow over HTTP?", correct: "Inbound REST", explain: "Exposes the flow via a generated endpoint." },
+  { q: "Best way to prevent a record trigger from re-firing on every update?", correct: "Only the first time conditions are met", explain: "Trigger setting that suppresses repeats." },
+  { q: "Tight trigger condition vs broad trigger + internal Decision — which is cheaper?", correct: "Tight trigger condition", explain: "Cheapest run is the one that never starts." },
+  // Error handling & retries
+  { q: "Which Flow Logic block traps action errors?", correct: "Try / Catch", explain: "Failed steps route into the Catch branch." },
+  { q: "Safest 'on error' for an external write?", correct: "Stop and route to Catch", explain: "Fail loud + handle in Catch beats silent continue." },
+  { q: "Cure for a flaky third-party API?", correct: "Retry with backoff + idempotent calls", explain: "Standard pattern for transient failures." },
+  { q: "Without a timeout on an outbound call, you risk…", correct: "Flow waits indefinitely", explain: "Hung remote calls pin worker resources." },
+  { q: "Idempotency means…", correct: "Same input → same outcome, safe to retry", explain: "Critical for retried external steps." },
+  // Performance & scale
+  { q: "Two independent outbound calls can run concurrently via…", correct: "Parallel branches", explain: "Flow Logic parallel block cuts wall-clock time." },
+  { q: "High-volume production logging mode is…", correct: "Minimum logging", explain: "Keeps sys_flow_context manageable." },
+  { q: "Processing 50k records best uses…", correct: "Chunked / scheduled subflow", explain: "Avoid single-run timeouts; resumable." },
+  { q: "Async record trigger means…", correct: "User's save isn't blocked", explain: "Flow runs after the transaction commits." },
+  { q: "Data Stream action is for…", correct: "Large paged REST responses", explain: "Streams without loading full payload." },
+  // Design best practices
+  { q: "Inline 30-line script in one flow belongs in…", correct: "Script Include called from a Custom Action", explain: "Keeps the canvas declarative and testable." },
+  { q: "Swap dev/test/prod endpoints via…", correct: "Connection & Credential Alias", explain: "Alias resolves per environment." },
+  { q: "Externalize complex if/else owned by business users via…", correct: "Decision Table", explain: "Owners edit rows; flow unchanged." },
+  { q: "Surface business-meaningful progress with…", correct: "Stages", explain: "Named milestones visible on the request." },
+  { q: "A flow that does validate + integrate + notify in one canvas is a…", correct: "God Flow anti-pattern", explain: "Decompose into subflows by responsibility." },
+  { q: "Multi-flow end-to-end process orchestrator is…", correct: "Process Automation Designer", explain: "PAD stitches flows into lanes/stages." },
+  // Versioning & ops
+  { q: "Why won't a saved flow change behave differently at the trigger?", correct: "It wasn't Published / Activated", explain: "Trigger uses the active version." },
+  { q: "Rollback a bad flow change by…", correct: "Activating an older published version", explain: "Versioning is built in." },
+  { q: "In-flight runs after a new publish use…", correct: "The version they started on", explain: "Only new triggers pick up the change." },
+  { q: "Calling a flow from a Script Include uses…", correct: "sn_fd.FlowAPI.getRunner()", explain: "Public API for executing flows/subflows from script." },
+  { q: "Per-run state record is stored in…", correct: "sys_flow_context", explain: "Holds inputs, outputs, current step, status." },
+  { q: "Best debug loop while authoring a flow is…", correct: "Test against a sample record", explain: "Step-by-step inputs/outputs in Designer." },
+  { q: "Aggregate For Each results into a list by…", correct: "Pushing into a Flow Variable array", explain: "For Each has no aggregated output." },
+  { q: "Domain-separated instances run…", correct: "The right version per tenant", explain: "Flows respect domain separation." },
 ];
 
 const FLOW_POOL = [
   "Workflow Editor", "GlideRecord", "Update Set Editor", "Performance Analytics",
   "A pre-built integration pack", "A reusable subflow", "A debugging tool", "A type of CI relationship",
-  "IntegrationHub", "Service Portal", "MID Server", "Performance Analytics",
+  "IntegrationHub", "Service Portal", "MID Server",
   "For logic reused across multiple flows", "Only in global scope", "For UI customization", "Never",
   "Look Up Records", "Create Record", "Update Record", "Delete Record",
   "Created", "Updated", "Scheduled", "Inbound REST", "Service Catalog",
   "Custom reusable actions", "Workflow tasks", "Client scripts", "UI policies",
-  "Flow Execution Details", "Reports", "Dashboards", "Performance Analytics",
+  "Flow Execution Details", "Reports", "Dashboards",
+  // Run As + triggers
+  "System User", "User who initiated the session", "Service Account", "Maintenance",
+  "Only the first time conditions are met", "Every update", "Once per day", "Never",
+  "Tight trigger condition", "Broad trigger + internal Decision", "No difference", "Always broad",
+  // Errors
+  "Try / Catch", "Decision", "For Each", "Wait For Condition",
+  "Stop and route to Catch", "Continue silently", "Retry forever", "Ignore",
+  "Retry with backoff + idempotent calls", "Increase quota", "Run synchronously", "Add a Wait step",
+  "Flow waits indefinitely", "Flow speeds up", "User is notified", "Nothing changes",
+  "Same input → same outcome, safe to retry", "Always returns null", "Runs only once globally", "Random output",
+  // Performance
+  "Parallel branches", "Two For Each loops", "Sequential actions", "Wait For Condition",
+  "Minimum logging", "Full logging", "Verbose", "Debug",
+  "Chunked / scheduled subflow", "Increase transaction quota", "Switch to Business Rule", "Run foreground",
+  "User's save isn't blocked", "User waits for completion", "Logging is skipped", "There is no difference",
+  "Large paged REST responses", "Small payloads only", "JDBC imports", "MID Server health",
+  // Design
+  "Script Include called from a Custom Action", "Inline Script step", "Business Rule on the table", "UI Script",
+  "Connection & Credential Alias", "Hard-coded URLs", "Branch on instance name", "Duplicate the flow",
+  "Decision Table", "Giant Decision step", "Inline Script", "Nested Flow Logic",
+  "Stages", "Data Pills", "Flow Variables", "Decision Tables",
+  "God Flow anti-pattern", "Best practice", "Required by the platform", "Spoke pattern",
+  "Process Automation Designer", "Flow Designer", "Workflow Editor", "MID Server",
+  // Versioning & ops
+  "It wasn't Published / Activated", "Cache is cold", "Update sets are off", "ACLs blocked it",
+  "Activating an older published version", "Restoring from backup", "Rebuilding the flow", "Calling support",
+  "The version they started on", "The new active version", "The default version", "No version",
+  "sn_fd.FlowAPI.getRunner()", "GlideFlow.run()", "FlowRunner.execute()", "gs.runFlow()",
+  "sys_flow_context", "sys_flow_log", "sys_audit", "sys_journal_field",
+  "Test against a sample record", "Read the source XML", "Tail node logs", "Ask in chat",
+  "Pushing into a Flow Variable array", "Using the loop's output", "Adding a Decision", "Wait For Condition",
+  "The right version per tenant", "Always the global version", "Random version", "No version",
 ];
 
 function flowPool(): QuizQuestion[] {
