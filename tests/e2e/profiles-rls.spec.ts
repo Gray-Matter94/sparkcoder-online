@@ -23,9 +23,13 @@ test.describe("profiles RLS — profiles_public_select", () => {
   test("anonymous users cannot read any profile rows", async () => {
     const anon = freshClient();
     const { data, error } = await anon.from("profiles").select("id");
-    // RLS hides rows — request succeeds but returns zero rows.
-    expect(error).toBeNull();
-    expect(data ?? []).toEqual([]);
+    // Either the grant is revoked (permission denied) or RLS returns zero rows.
+    // Both prove anonymous reads are blocked.
+    if (error) {
+      expect(error.code).toBe("42501");
+    } else {
+      expect(data ?? []).toEqual([]);
+    }
   });
 
   test("anonymous users cannot insert into profiles", async () => {
