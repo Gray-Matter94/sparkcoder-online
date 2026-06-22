@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 
-const BASE_URL = "https://sparkcoder.online";
+const BASE_URL = "https://www.sparkcoder.online";
 
 interface SitemapEntry {
   path: string;
