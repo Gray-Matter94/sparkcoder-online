@@ -12,6 +12,21 @@ export const Route = createFileRoute("/learn/$topic")({
     const name = t?.name ?? "Topic";
     const url = `https://sparkcoder.online/learn/${params.topic}`;
     const description = `Illustrated ${name} glossary plus a quick quiz — clear definitions of the ServiceNow concepts interviewers actually ask about.`;
+    const terms = t ? termsFor(t.id) : [];
+    const faqJsonLd = terms.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: terms.map((term) => ({
+            "@type": "Question",
+            name: `What is ${term.term} in ServiceNow?`,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: term.long || term.short,
+            },
+          })),
+        }
+      : null;
     return {
       meta: [
         { title: `${name} — ServiceNow Glossary & Quiz` },
@@ -22,6 +37,9 @@ export const Route = createFileRoute("/learn/$topic")({
         { property: "og:image", content: t?.image ?? "" },
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: faqJsonLd
+        ? [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd) }]
+        : [],
     };
   },
   component: TopicPage,
