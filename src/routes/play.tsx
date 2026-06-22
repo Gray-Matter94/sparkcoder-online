@@ -315,7 +315,7 @@ function Column({
                   : isSelected
                     ? "border-accent bg-accent/10 text-foreground shadow-[0_0_18px_rgba(245,158,11,0.25)]"
                     : "border-border bg-panel text-foreground hover:border-accent/50",
-                isShaking ? "animate-[shake_0.4s_ease-in-out] border-destructive" : "",
+                isShaking ? "animate-shake border-destructive" : "",
               ].join(" ")}
             >
               {c.text}
