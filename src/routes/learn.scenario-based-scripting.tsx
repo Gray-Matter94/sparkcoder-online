@@ -42,17 +42,17 @@ while (pr.next()) {
     output: {
       table: "problem",
       logs: [
-        { text: "GlideRecord('problem')", tone: "info" },
-        { text: "addQuery parent_incident = INC0010023", tone: "info" },
-        { text: "matched 3 records", tone: "ok" },
-        { text: "PRB0040011 priority 3 → 2", tone: "ok" },
-        { text: "PRB0040019 priority 4 → 2", tone: "ok" },
-        { text: "PRB0040027 priority 3 → 2", tone: "ok" },
+        { time: "", text: "GlideRecord('problem')", tone: "info" },
+        { time: "", text: "addQuery parent_incident = INC0010023", tone: "info" },
+        { time: "", text: "matched 3 records", tone: "ok" },
+        { time: "", text: "PRB0040011 priority 3 → 2", tone: "ok" },
+        { time: "", text: "PRB0040019 priority 4 → 2", tone: "ok" },
+        { time: "", text: "PRB0040027 priority 3 → 2", tone: "ok" },
       ],
       rows: [
-        { cells: ["PRB0040011", "open", "2"], tone: "ok" },
-        { cells: ["PRB0040019", "open", "2"], tone: "ok" },
-        { cells: ["PRB0040027", "open", "2"], tone: "ok" },
+        { number: "PRB0040011", state: "open", updated: "2", highlight: "ok" },
+        { number: "PRB0040019", state: "open", updated: "2", highlight: "ok" },
+        { number: "PRB0040027", state: "open", updated: "2", highlight: "ok" },
       ],
     },
     pitfall:
@@ -88,14 +88,14 @@ while (pr.next()) {
     output: {
       table: "x_vendor_sync_log",
       logs: [
-        { text: "POST /api/v2/cases timeout 15s", tone: "warn" },
-        { text: "status 504 — gateway timeout", tone: "bad" },
-        { text: "scheduleRetry attempt=2 in 4s", tone: "warn" },
-        { text: "status 200 ok", tone: "ok" },
+        { time: "", text: "POST /api/v2/cases timeout 15s", tone: "warn" },
+        { time: "", text: "status 504 — gateway timeout", tone: "bad" },
+        { time: "", text: "scheduleRetry attempt=2 in 4s", tone: "warn" },
+        { time: "", text: "status 200 ok", tone: "ok" },
       ],
       rows: [
-        { cells: ["attempt 1", "504", "timeout"], tone: "bad" },
-        { cells: ["attempt 2", "200", "ok"], tone: "ok" },
+        { number: "attempt 1", state: "504", updated: "timeout", highlight: "bad" },
+        { number: "attempt 2", state: "200", updated: "ok", highlight: "ok" },
       ],
     },
     pitfall:
@@ -119,14 +119,14 @@ while (pr.next()) {
     output: {
       table: "sys_user",
       logs: [
-        { text: "before-update fired", tone: "info" },
-        { text: "current.update() called", tone: "warn" },
-        { text: "before-update fired (recursion)", tone: "bad" },
-        { text: "audit row x42 written", tone: "bad" },
+        { time: "", text: "before-update fired", tone: "info" },
+        { time: "", text: "current.update() called", tone: "warn" },
+        { time: "", text: "before-update fired (recursion)", tone: "bad" },
+        { time: "", text: "audit row x42 written", tone: "bad" },
       ],
       rows: [
-        { cells: ["v1", "old manager", "audit"], tone: "warn" },
-        { cells: ["v2..v42", "ping-pong", "audit"], tone: "bad" },
+        { number: "v1", state: "old manager", updated: "audit", highlight: "warn" },
+        { number: "v2..v42", state: "ping-pong", updated: "audit", highlight: "bad" },
       ],
     },
     pitfall:
@@ -157,13 +157,13 @@ gs.eventQueue('change.closed', current, current.assignment_group, '');
     output: {
       table: "sys_event",
       logs: [
-        { text: "event queued: change.closed", tone: "ok" },
-        { text: "script action: cmdb update — 12ms", tone: "ok" },
-        { text: "script action: slack post — 480ms (async)", tone: "info" },
-        { text: "notification: email assignment_group", tone: "ok" },
+        { time: "", text: "event queued: change.closed", tone: "ok" },
+        { time: "", text: "script action: cmdb update — 12ms", tone: "ok" },
+        { time: "", text: "script action: slack post — 480ms (async)", tone: "info" },
+        { time: "", text: "notification: email assignment_group", tone: "ok" },
       ],
       rows: [
-        { cells: ["change.closed", "processed", "3 actions"], tone: "ok" },
+        { number: "change.closed", state: "processed", updated: "3 actions", highlight: "ok" },
       ],
     },
     pitfall:
