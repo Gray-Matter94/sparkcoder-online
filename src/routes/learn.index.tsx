@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { TOPICS, topicsForTrack, termsFor, type TopicId } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
 
 export const Route = createFileRoute("/learn/")({
@@ -32,7 +33,7 @@ function Learn() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <StatsBar progress={progress} back />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-6">
         <TrackSwitcher />
