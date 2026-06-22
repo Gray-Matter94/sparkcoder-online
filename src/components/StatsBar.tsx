@@ -17,9 +17,13 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
             ← Home
           </Link>
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-panel border border-border flex items-center justify-center font-display text-lg text-primary">
-            S
-          </div>
+          <Link to="/" aria-label="SparkCoder home">
+            <img
+              src={logoAsset.url}
+              alt="SparkCoder"
+              className="size-10 rounded-xl object-contain bg-background border border-border"
+            />
+          </Link>
         )}
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1.5">
