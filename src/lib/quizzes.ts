@@ -199,6 +199,11 @@ const SECTION_PLAN: Record<string, QuizSection[]> = {
   flow: [
     { label: "Flow Designer basics", icon: "⚡", count: 2 },
     { label: "Spokes & reuse", icon: "🔌", count: 2 },
+    { label: "Triggers & Run As", icon: "🎯", count: 3 },
+    { label: "Error handling & retries", icon: "🛡️", count: 3 },
+    { label: "Performance & scale", icon: "🚀", count: 3 },
+    { label: "Design best practices", icon: "🧠", count: 6 },
+    { label: "Versioning & ops", icon: "🧰", count: 4 },
   ],
   integration: [
     { label: "REST & inbound APIs", icon: "🌐", count: 2 },
