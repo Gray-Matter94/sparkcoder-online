@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PlayRouteImport } from './routes/play'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -21,6 +22,11 @@ import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayRoute = PlayRouteImport.update({
+  id: '/play',
+  path: '/play',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyRoute = DailyRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/daily'
+    | '/play'
     | '/sitemap.xml'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/daily'
+    | '/play'
     | '/sitemap.xml'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/daily'
+    | '/play'
     | '/sitemap.xml'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DailyRoute: typeof DailyRoute
+  PlayRoute: typeof PlayRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play': {
+      id: '/play'
+      path: '/play'
+      fullPath: '/play'
+      preLoaderRoute: typeof PlayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DailyRoute: DailyRoute,
+  PlayRoute: PlayRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
