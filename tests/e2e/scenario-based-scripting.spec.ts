@@ -15,33 +15,25 @@ test.describe("/learn/scenario-based-scripting", () => {
     for (const s of SCENARIOS) {
       await expect(page.getByRole("heading", { name: s.title })).toBeVisible();
     }
-    const runButtons = page.getByRole("button", { name: /Run in simulator/i });
-    await expect(runButtons).toHaveCount(SCENARIOS.length);
+    const toggleButtons = page.locator("button[aria-controls^='sim-']");
+    await expect(toggleButtons).toHaveCount(SCENARIOS.length);
   });
 
   test("simulator trace renders for every scenario", async ({ page }) => {
     await page.goto("/learn/scenario-based-scripting");
-    // Wait for React hydration. React 19 attaches a fiber key starting with
-    // either __reactProps or __reactFiber on rendered DOM nodes.
-    await page.waitForFunction(() => {
-      const el = document.querySelector("button[aria-controls^='sim-']");
-      if (!el) return false;
-      return Object.keys(el).some(
-        (k) => k.startsWith("__reactProps") || k.startsWith("__reactFiber"),
-      );
-    }, { timeout: 15000 });
+    await page.waitForLoadState("domcontentloaded");
+    // Allow React hydration to attach onClick handlers to the SSR'd buttons.
+    await page.waitForTimeout(1500);
 
-
-
-    for (let i = 0; i < SCENARIOS.length; i++) {
-      const { title, table } = SCENARIOS[i];
+    for (const { title, table } of SCENARIOS) {
       const article = page
         .locator("li", { has: page.getByRole("heading", { name: title }) });
 
       const toggleBtn = article.locator("button[aria-controls^='sim-']");
-      await toggleBtn.scrollIntoViewIfNeeded();
       await expect(toggleBtn).toHaveText(/Run in simulator/i);
-      await toggleBtn.click({ force: true });
+      // element.click() bypasses the sticky header that would otherwise
+      // intercept pointer events; React's delegated handler still fires.
+      await toggleBtn.evaluate((el) => (el as HTMLButtonElement).click());
       await expect(toggleBtn).toHaveAttribute("aria-expanded", "true");
       await expect(toggleBtn).toHaveText(/Hide simulator/i);
 
@@ -49,7 +41,7 @@ test.describe("/learn/scenario-based-scripting", () => {
       await expect(article.getByText(`DB: ${table}`)).toBeVisible();
 
       // Collapse before moving on (only one simulator open at a time).
-      await toggleBtn.click({ force: true });
+      await toggleBtn.evaluate((el) => (el as HTMLButtonElement).click());
       await expect(toggleBtn).toHaveAttribute("aria-expanded", "false");
     }
   });
