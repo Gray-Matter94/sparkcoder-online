@@ -22,6 +22,8 @@ export interface SrsEntry {
   lastMissRate: number; // 0-1
 }
 
+export type TermMastery = "mastered" | "review";
+
 export interface Progress {
   xp: number;
   streak: number;
@@ -34,6 +36,8 @@ export interface Progress {
   dailyChallenges: Record<string, string>; // date -> questionId completed
   /** Spaced repetition schedule, keyed by `${topic}:${sectionIdx}`. */
   srs: Record<string, SrsEntry>;
+  /** Glossary term mastery, keyed by `${topic}::${term}`. */
+  termMastery: Record<string, TermMastery>;
 }
 
 const empty: Progress = {
@@ -47,7 +51,9 @@ const empty: Progress = {
   weeklyBadges: {},
   dailyChallenges: {},
   srs: {},
+  termMastery: {},
 };
+
 
 function read(track: TrackId): Progress {
   if (typeof window === "undefined") return empty;
