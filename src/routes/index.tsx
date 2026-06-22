@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, QUESTIONS, categoriesForTrack } from "@/lib/questions";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { BadgesPanel } from "@/components/BadgesPanel";
 import { DifficultyCard } from "@/components/DifficultyCard";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
@@ -50,7 +51,7 @@ function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <StatsBar progress={progress} />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} /></ErrorBoundary>
       <div className="h-1.5 w-full bg-border">
         <div
           className="h-full bg-primary shadow-[0_0_12px_rgba(34,197,94,0.5)] transition-all duration-700"

@@ -4,6 +4,7 @@ import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOut
 import { useProgress } from "@/lib/progress";
 import { getCurrentTier, getNextTier } from "@/lib/difficulty";
 import { StatsBar } from "@/components/StatsBar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
@@ -87,7 +88,7 @@ function Practice() {
   if (questions.length === 0) {
     return (
       <div className="min-h-screen flex flex-col">
-        <StatsBar progress={progress} back />
+        <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
         <div className="flex-1 grid place-items-center p-8 text-center">
           <p className="text-muted-foreground text-sm">No puzzles in this module yet.</p>
         </div>
@@ -145,7 +146,7 @@ function Practice() {
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <StatsBar progress={progress} back />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
       <div className="h-1.5 w-full bg-border">
         <div
           className="h-full bg-primary shadow-[0_0_12px_rgba(34,197,94,0.5)] transition-all duration-500"
@@ -273,7 +274,7 @@ function Completed({ cat, onRestart, onHome }: { cat: string; onRestart: () => v
   const { progress } = useProgress();
   return (
     <div className="min-h-screen flex flex-col">
-      <StatsBar progress={progress} back />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
         <div className="text-7xl mb-4 animate-pop">🏆</div>
         <h1 className="font-display text-4xl tracking-tight text-primary mb-2">MODULE CLEARED</h1>

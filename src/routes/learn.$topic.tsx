@@ -4,6 +4,7 @@ import { TOPICS, termsFor, type TopicId } from "@/lib/glossary";
 import { quizFor, sectionsFor, sectionForIndex } from "@/lib/quizzes";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export const Route = createFileRoute("/learn/$topic")({
   head: ({ params }) => {
@@ -40,7 +41,7 @@ function TopicPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <StatsBar progress={progress} back />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-5 pb-20">
         <div className="rounded-2xl overflow-hidden border-2 border-border bg-panel animate-fade-in">

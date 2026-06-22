@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useProgress, todayStr } from "@/lib/progress";
 import { getDailyChallenge } from "@/lib/daily";
 import { StatsBar } from "@/components/StatsBar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
@@ -72,7 +73,7 @@ function Daily() {
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <StatsBar progress={progress} back />
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-5 pb-[460px]">
         <div className="space-y-2 animate-fade-in">
