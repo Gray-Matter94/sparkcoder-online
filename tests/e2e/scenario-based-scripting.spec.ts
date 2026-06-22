@@ -20,16 +20,17 @@ test.describe("/learn/scenario-based-scripting", () => {
   });
 
   test("simulator trace renders for every scenario", async ({ page }) => {
-    await page.goto("/learn/scenario-based-scripting", { waitUntil: "networkidle" });
-    // Wait for React hydration — SSR emits the button but click handlers
-    // only attach after hydration.
+    await page.goto("/learn/scenario-based-scripting");
+    // Wait for React hydration. React 19 attaches a fiber key starting with
+    // either __reactProps or __reactFiber on rendered DOM nodes.
     await page.waitForFunction(() => {
-      const btns = document.querySelectorAll("button");
-      for (const el of Array.from(btns)) {
-        if (Object.keys(el).some((k) => k.startsWith("__reactProps"))) return true;
-      }
-      return false;
-    });
+      const el = document.querySelector("button[aria-controls^='sim-']");
+      if (!el) return false;
+      return Object.keys(el).some(
+        (k) => k.startsWith("__reactProps") || k.startsWith("__reactFiber"),
+      );
+    }, { timeout: 15000 });
+
 
 
     for (let i = 0; i < SCENARIOS.length; i++) {
