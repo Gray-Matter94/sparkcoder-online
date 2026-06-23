@@ -170,6 +170,7 @@ async function fetchOverviewFor(domain: string, isYou: boolean): Promise<Competi
 }
 
 export const getBacklinksComparison = createServerFn({ method: "GET" })
+  .middleware([requireOwner])
   .inputValidator((input: { domains: string[] }) => ({
     domains: (input?.domains ?? []).map(sanitizeDomain).filter(Boolean).slice(0, 5),
   }))
