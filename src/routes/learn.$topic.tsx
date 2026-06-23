@@ -34,7 +34,7 @@ export const Route = createFileRoute("/learn/$topic")({
         { property: "og:title", content: `${name} — ServiceNow Glossary & Quiz` },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: t?.image ?? "" },
+        ...(t?.image ? [{ property: "og:image" as const, content: t.image }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: faqJsonLd
