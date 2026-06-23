@@ -72,6 +72,111 @@ export type BacklinksInsights = {
   errorMessage?: string;
 };
 
+export type CompetitorRow = {
+  domain: string;
+  authorityScore: number;
+  totalBacklinks: number;
+  referringDomains: number;
+  referringUrls: number;
+  follow: number;
+  nofollow: number;
+  followPct: number;
+  isYou: boolean;
+  error?: string;
+};
+
+export type BacklinksComparison = {
+  fetchedAt: string;
+  rows: CompetitorRow[];
+  quotaExceeded?: boolean;
+  errorMessage?: string;
+};
+
+function sanitizeDomain(d: string): string {
+  return d
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/.*$/, "");
+}
+
+async function fetchOverviewFor(domain: string, isYou: boolean): Promise<CompetitorRow> {
+  const base: CompetitorRow = {
+    domain,
+    authorityScore: 0,
+    totalBacklinks: 0,
+    referringDomains: 0,
+    referringUrls: 0,
+    follow: 0,
+    nofollow: 0,
+    followPct: 0,
+    isYou,
+  };
+  try {
+    const res = await semrush("backlinks/backlinks_overview", {
+      target: domain,
+      target_type: "root_domain",
+      export_columns:
+        "ascore,total,domains_num,urls_num,follows_num,nofollows_num",
+    });
+    if (typeof res.error === "string") {
+      if (/LIMIT EXCEEDED/i.test(res.error)) {
+        return { ...base, error: "Quota exhausted" };
+      }
+      return { ...base, error: res.error };
+    }
+    const row = toRecords(res)[0];
+    if (!row) return { ...base, error: "No data" };
+    const follow = Number(row.follows_num) || 0;
+    const nofollow = Number(row.nofollows_num) || 0;
+    const total = follow + nofollow;
+    return {
+      ...base,
+      authorityScore: Number(row.ascore) || 0,
+      totalBacklinks: Number(row.total) || 0,
+      referringDomains: Number(row.domains_num) || 0,
+      referringUrls: Number(row.urls_num) || 0,
+      follow,
+      nofollow,
+      followPct: total ? Math.round((follow / total) * 100) : 0,
+    };
+  } catch (err) {
+    return { ...base, error: err instanceof Error ? err.message : "Failed" };
+  }
+}
+
+export const getBacklinksComparison = createServerFn({ method: "GET" })
+  .inputValidator((input: { domains: string[] }) => ({
+    domains: (input?.domains ?? []).map(sanitizeDomain).filter(Boolean).slice(0, 5),
+  }))
+  .handler(async ({ data }): Promise<BacklinksComparison> => {
+    const fetchedAt = new Date().toISOString();
+    try {
+      const seen = new Set<string>([TARGET]);
+      const competitors = data.domains.filter((d) => {
+        if (seen.has(d)) return false;
+        seen.add(d);
+        return true;
+      });
+      const all = [TARGET, ...competitors];
+      const rows = await Promise.all(all.map((d) => fetchOverviewFor(d, d === TARGET)));
+      const quotaExceeded = rows.some((r) => r.error === "Quota exhausted");
+      return {
+        fetchedAt,
+        rows,
+        quotaExceeded,
+        errorMessage: quotaExceeded ? "Semrush API quota exhausted." : undefined,
+      };
+    } catch (err) {
+      return {
+        fetchedAt,
+        rows: [],
+        errorMessage: err instanceof Error ? err.message : "Failed to load comparison.",
+      };
+    }
+  });
+
 export const getBacklinksInsights = createServerFn({ method: "GET" }).handler(
   async (): Promise<BacklinksInsights> => {
     const empty: BacklinksInsights = {

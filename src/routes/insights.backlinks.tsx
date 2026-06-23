@@ -1,8 +1,35 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { getBacklinksInsights, type BacklinksInsights } from "@/lib/backlinks.functions";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  getBacklinksInsights,
+  getBacklinksComparison,
+  type BacklinksInsights,
+  type BacklinksComparison,
+} from "@/lib/backlinks.functions";
+
+const DEFAULT_COMPETITORS = ["servicenowelite.com", "jace.pro"];
+
+function parseCompare(raw: unknown): string[] {
+  if (typeof raw !== "string" || !raw.trim()) return DEFAULT_COMPETITORS;
+  return raw
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 5);
+}
 
 export const Route = createFileRoute("/insights/backlinks")({
-  loader: () => getBacklinksInsights(),
+  validateSearch: (search: Record<string, unknown>) => ({
+    compare: parseCompare(search.compare),
+  }),
+  loaderDeps: ({ search }) => ({ compare: search.compare }),
+  loader: async ({ deps }) => {
+    const [insights, comparison] = await Promise.all([
+      getBacklinksInsights(),
+      getBacklinksComparison({ data: { domains: deps.compare } }),
+    ]);
+    return { insights, comparison };
+  },
   head: () => ({
     meta: [
       { title: "Backlinks Insights — SparkCoder" },
@@ -61,7 +88,12 @@ function dateFromUnix(s: string) {
 }
 
 function BacklinksPage() {
-  const data = Route.useLoaderData() as BacklinksInsights;
+  const loaderData = Route.useLoaderData() as {
+    insights: BacklinksInsights;
+    comparison: BacklinksComparison;
+  };
+  const data = loaderData.insights;
+  const comparison = loaderData.comparison;
   const { overview, refDomains, topLinks, quotaExceeded, errorMessage } = data;
 
   const followTotal = overview ? overview.follow + overview.nofollow : 0;
@@ -140,6 +172,8 @@ function BacklinksPage() {
             </div>
           </section>
         )}
+
+        <CompetitorComparison comparison={comparison} />
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">Top referring domains</h2>
@@ -250,3 +284,172 @@ function Stat({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function CompetitorComparison({ comparison }: { comparison: BacklinksComparison }) {
+  const navigate = useNavigate({ from: Route.fullPath });
+  const search = Route.useSearch();
+  const [input, setInput] = useState("");
+
+  const competitors = search.compare;
+  const rows = comparison.rows;
+  const maxBacklinks = Math.max(1, ...rows.map((r) => r.totalBacklinks));
+  const maxRefDomains = Math.max(1, ...rows.map((r) => r.referringDomains));
+
+  const updateCompetitors = (next: string[]) => {
+    navigate({
+      search: () => ({ compare: next.slice(0, 5) }),
+      replace: true,
+    });
+  };
+
+  const addCompetitor = () => {
+    const cleaned = input
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .replace(/\/.*$/, "");
+    if (!cleaned) return;
+    if (competitors.includes(cleaned)) {
+      setInput("");
+      return;
+    }
+    updateCompetitors([...competitors, cleaned]);
+    setInput("");
+  };
+
+  const removeCompetitor = (domain: string) => {
+    updateCompetitors(competitors.filter((d: string) => d !== domain));
+  };
+
+  return (
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Competitor comparison</h2>
+          <p className="text-sm text-muted-foreground">
+            Compare your backlink profile against 2–5 ServiceNow scripting sites.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addCompetitor();
+              }
+            }}
+            placeholder="add competitor.com"
+            disabled={competitors.length >= 5}
+            className="text-sm px-3 py-2 rounded-md border border-border bg-background w-56 focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <button
+            type="button"
+            onClick={addCompetitor}
+            disabled={competitors.length >= 5 || !input.trim()}
+            className="text-sm rounded-md bg-primary text-primary-foreground px-3 py-2 font-medium hover:bg-primary/90 disabled:opacity-50"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {competitors.map((d: string) => (
+          <span
+            key={d}
+            className="inline-flex items-center gap-2 text-xs rounded-full border border-border bg-muted px-3 py-1 font-mono"
+          >
+            {d}
+            <button
+              type="button"
+              onClick={() => removeCompetitor(d)}
+              className="text-muted-foreground hover:text-foreground"
+              aria-label={`Remove ${d}`}
+            >
+              ×
+            </button>
+          </span>
+        ))}
+        {competitors.length === 0 && (
+          <span className="text-xs text-muted-foreground">
+            No competitors selected — add 2–5 above.
+          </span>
+        )}
+      </div>
+
+      {comparison.quotaExceeded && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm">
+          Semrush API quota exhausted while loading competitor data.
+        </div>
+      )}
+
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
+            <tr>
+              <th className="px-3 py-2">Domain</th>
+              <th className="px-3 py-2">AS</th>
+              <th className="px-3 py-2">Referring domains</th>
+              <th className="px-3 py-2">Total backlinks</th>
+              <th className="px-3 py-2 hidden md:table-cell">Follow %</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={r.domain}
+                className={`border-t border-border ${r.isYou ? "bg-primary/5" : ""}`}
+              >
+                <td className="px-3 py-2 font-mono break-all">
+                  {r.domain}
+                  {r.isYou && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wider text-primary font-bold">
+                      you
+                    </span>
+                  )}
+                  {r.error && (
+                    <span className="ml-2 text-[10px] text-destructive">{r.error}</span>
+                  )}
+                </td>
+                <td className="px-3 py-2 font-semibold">{r.authorityScore}</td>
+                <td className="px-3 py-2">
+                  <BarCell value={r.referringDomains} max={maxRefDomains} isYou={r.isYou} />
+                </td>
+                <td className="px-3 py-2">
+                  <BarCell value={r.totalBacklinks} max={maxBacklinks} isYou={r.isYou} />
+                </td>
+                <td className="px-3 py-2 hidden md:table-cell text-muted-foreground">
+                  {r.follow + r.nofollow > 0 ? `${r.followPct}%` : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Bars are scaled to the largest value in this comparison. Higher referring domains and
+        Authority Score generally indicate stronger link equity.
+      </p>
+    </section>
+  );
+}
+
+function BarCell({ value, max, isYou }: { value: number; max: number; isYou: boolean }) {
+  const pct = Math.max(2, Math.round((value / max) * 100));
+  return (
+    <div className="flex items-center gap-2 min-w-[140px]">
+      <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+        <div
+          className={`h-full ${isYou ? "bg-primary" : "bg-accent"}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className="text-xs tabular-nums w-14 text-right">{fmt(value)}</span>
+    </div>
+  );
+}
+
