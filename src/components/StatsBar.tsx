@@ -98,11 +98,11 @@ function AuthButton() {
               setOpen(false);
               await signOut();
             }}
-            className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+            className="w-full text-left px-3 py-2.5 text-sm text-destructive-foreground bg-destructive/20 hover:bg-destructive/30 transition-colors"
           >
             Sign out
           </button>
-          <div className="px-3 py-2 text-[10px] text-zinc-600 border-t border-border">
+          <div className="px-3 py-2 text-[10px] text-muted-foreground border-t border-border">
             Progress auto-syncs to the cloud.
           </div>
         </div>
