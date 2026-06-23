@@ -11,7 +11,7 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+      <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
         Badges & Trophies
       </h2>
 
@@ -20,7 +20,7 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
         <div className="rounded-2xl bg-panel border-2 border-border p-4 relative overflow-hidden">
           <div className="flex items-start justify-between">
             <span className="text-3xl">🏅</span>
-            <span className="text-[10px] text-zinc-500 font-mono">{thisWeek}</span>
+            <span className="text-[10px] text-muted-foreground font-mono">{thisWeek}</span>
           </div>
           <div className="mt-2 font-display text-lg tracking-wide text-accent">
             WEEK BADGE
@@ -42,7 +42,7 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
         <div className="rounded-2xl bg-panel border-2 border-border p-4">
           <div className="flex items-start justify-between">
             <span className="text-3xl">🎖️</span>
-            <span className="text-[10px] text-zinc-500 font-mono">×{progress.sessionBadges}</span>
+            <span className="text-[10px] text-muted-foreground font-mono">×{progress.sessionBadges}</span>
           </div>
           <div className="mt-2 font-display text-lg tracking-wide text-secondary">
             SESSION PINS
@@ -64,7 +64,7 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
       {/* Earned week badges trophy case */}
       {weeks.length > 0 && (
         <div className="rounded-2xl bg-panel border border-border p-3">
-          <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">
             Trophy Case
           </div>
           <div className="flex flex-wrap gap-2">

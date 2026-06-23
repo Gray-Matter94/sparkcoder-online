@@ -85,7 +85,7 @@ function AuthPage() {
         <Link to="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
           ← Home
         </Link>
-        <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
+        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
           SparkCoder
         </span>
       </header>
@@ -109,7 +109,7 @@ function AuthPage() {
           <form onSubmit={submit} className="space-y-3">
             {mode === "signup" && (
               <label className="block">
-                <span className="text-[10px] uppercase tracking-widest text-zinc-500">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
                   Display name
                 </span>
                 <input
@@ -125,7 +125,7 @@ function AuthPage() {
             )}
 
             <label className="block">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Email
               </span>
               <input
@@ -141,7 +141,7 @@ function AuthPage() {
             </label>
 
             <label className="block">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Password
               </span>
               <input
@@ -172,7 +172,7 @@ function AuthPage() {
             </button>
           </form>
 
-          <div className="text-center text-xs text-zinc-500">
+          <div className="text-center text-xs text-muted-foreground">
             {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
             <button
               type="button"

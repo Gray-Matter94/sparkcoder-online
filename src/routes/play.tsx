@@ -304,7 +304,7 @@ function PlayPage() {
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               {verdict.blurb}
             </p>
-            <p className="text-[11px] uppercase tracking-widest text-zinc-500 font-mono">
+            <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-mono">
               Time {seconds}s · {missed} miss{missed === 1 ? "" : "es"} · Score{" "}
               {((elapsedMs + missed * 3000) / 1000).toFixed(1)}s
             </p>
@@ -369,7 +369,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent: 
   return (
     <div className="rounded-2xl bg-panel border border-border p-3 text-center">
       <div className={`font-display text-xl ${accent}`}>{value}</div>
-      <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
         {label}
       </div>
     </div>
@@ -395,7 +395,7 @@ function Column({
 }) {
   return (
     <div className="space-y-2">
-      <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
         {title}
       </div>
       <div className="space-y-2">

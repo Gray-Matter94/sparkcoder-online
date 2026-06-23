@@ -37,7 +37,7 @@ export function DifficultyCard({ progress }: { progress: Progress }) {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+      <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
         Your Difficulty Rank
       </h2>
 
@@ -51,7 +51,7 @@ export function DifficultyCard({ progress }: { progress: Progress }) {
             {tier.emoji}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
               Rank {tier.index + 1} / {TIERS.length}
             </div>
             <h3 className={`font-display text-xl tracking-wide ${colorText} truncate`}>
@@ -65,13 +65,13 @@ export function DifficultyCard({ progress }: { progress: Progress }) {
 
         <div className="mt-3 grid grid-cols-2 gap-2 relative">
           <div className="rounded-lg bg-background/60 border border-border px-2.5 py-1.5">
-            <div className="text-[9px] uppercase tracking-widest text-zinc-500">Unlocked</div>
+            <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Unlocked</div>
             <div className={`font-mono text-xs ${colorText}`}>
               Lv 1{tier.maxLevel >= 2 ? `–${tier.maxLevel === 99 ? "∞" : tier.maxLevel}` : ""}
             </div>
           </div>
           <div className="rounded-lg bg-background/60 border border-border px-2.5 py-1.5">
-            <div className="text-[9px] uppercase tracking-widest text-zinc-500">XP Boost</div>
+            <div className="text-[9px] uppercase tracking-widest text-muted-foreground">XP Boost</div>
             <div className={`font-mono text-xs ${colorText}`}>×{tier.xpMultiplier.toFixed(2)}</div>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function DifficultyCard({ progress }: { progress: Progress }) {
           {next ? (
             <>
               <div className="flex items-center justify-between text-[10px] mb-1">
-                <span className="text-zinc-500 font-mono">
+                <span className="text-muted-foreground font-mono">
                   Next: {next.emoji} {next.name}
                 </span>
                 <span className={`font-mono ${colorText}`}>

@@ -47,7 +47,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
         ? "bg-primary/20 border-primary/60 text-primary"
         : slotState === "filled"
           ? "bg-accent/15 border-accent/50 text-accent"
-          : "bg-white/5 border-dashed border-zinc-600 text-zinc-500";
+          : "bg-white/5 border-dashed border-zinc-600 text-muted-foreground";
 
   return (
     <div className="bg-panel border border-border rounded-2xl overflow-hidden shadow-2xl animate-slide-up">
@@ -55,7 +55,7 @@ export function CodeBlock({ filename, lines, slotContent, slotState }: Props) {
         <div className="size-2 rounded-full bg-red-500/50" />
         <div className="size-2 rounded-full bg-amber-500/50" />
         <div className="size-2 rounded-full bg-green-500/50" />
-        <span className="ml-2 text-[10px] text-zinc-500 font-mono">{filename}</span>
+        <span className="ml-2 text-[10px] text-muted-foreground font-mono">{filename}</span>
       </div>
       <pre className="p-4 text-[13px] leading-7 font-mono overflow-x-auto scrollbar-thin">
         {lines.map((line, i) => {
