@@ -319,7 +319,7 @@ function CompetitorComparison({ comparison }: { comparison: BacklinksComparison 
   };
 
   const removeCompetitor = (domain: string) => {
-    updateCompetitors(competitors.filter((d) => d !== domain));
+    updateCompetitors(competitors.filter((d: string) => d !== domain));
   };
 
   return (
@@ -358,7 +358,7 @@ function CompetitorComparison({ comparison }: { comparison: BacklinksComparison 
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {competitors.map((d) => (
+        {competitors.map((d: string) => (
           <span
             key={d}
             className="inline-flex items-center gap-2 text-xs rounded-full border border-border bg-muted px-3 py-1 font-mono"
