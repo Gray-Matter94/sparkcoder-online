@@ -201,7 +201,9 @@ export const getBacklinksComparison = createServerFn({ method: "GET" })
     }
   });
 
-export const getBacklinksInsights = createServerFn({ method: "GET" }).handler(
+export const getBacklinksInsights = createServerFn({ method: "GET" })
+  .middleware([requireOwner])
+  .handler(
   async (): Promise<BacklinksInsights> => {
     const empty: BacklinksInsights = {
       target: TARGET,
