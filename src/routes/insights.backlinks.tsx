@@ -88,7 +88,7 @@ function dateFromUnix(s: string) {
 }
 
 function BacklinksPage() {
-  const data = Route.useLoaderData() as BacklinksInsights;
+  const { insights: data, comparison } = Route.useLoaderData();
   const { overview, refDomains, topLinks, quotaExceeded, errorMessage } = data;
 
   const followTotal = overview ? overview.follow + overview.nofollow : 0;
