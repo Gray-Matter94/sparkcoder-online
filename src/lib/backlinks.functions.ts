@@ -1,4 +1,27 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, createMiddleware } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
+// Optional owner allowlist. If OWNER_EMAILS is set (comma-separated), only those
+// emails may call the Semrush-backed insights endpoints. If unset, any
+// authenticated user is allowed. This blocks anonymous quota abuse either way.
+const requireOwner = createMiddleware({ type: "function" })
+  .middleware([requireSupabaseAuth])
+  .server(async ({ next, context }) => {
+    const raw = process.env.OWNER_EMAILS;
+    if (raw && raw.trim()) {
+      const allow = raw
+        .split(",")
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      const email = String(
+        (context.claims as { email?: string } | undefined)?.email ?? "",
+      ).toLowerCase();
+      if (!email || !allow.includes(email)) {
+        throw new Error("Forbidden: owner access only");
+      }
+    }
+    return next();
+  });
 
 const TARGET = "sparkcoder.online";
 const GATEWAY = "https://connector-gateway.lovable.dev/semrush";
@@ -147,6 +170,7 @@ async function fetchOverviewFor(domain: string, isYou: boolean): Promise<Competi
 }
 
 export const getBacklinksComparison = createServerFn({ method: "GET" })
+  .middleware([requireOwner])
   .inputValidator((input: { domains: string[] }) => ({
     domains: (input?.domains ?? []).map(sanitizeDomain).filter(Boolean).slice(0, 5),
   }))
@@ -177,7 +201,9 @@ export const getBacklinksComparison = createServerFn({ method: "GET" })
     }
   });
 
-export const getBacklinksInsights = createServerFn({ method: "GET" }).handler(
+export const getBacklinksInsights = createServerFn({ method: "GET" })
+  .middleware([requireOwner])
+  .handler(
   async (): Promise<BacklinksInsights> => {
     const empty: BacklinksInsights = {
       target: TARGET,

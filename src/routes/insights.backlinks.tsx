@@ -1,11 +1,14 @@
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import {
   getBacklinksInsights,
   getBacklinksComparison,
   type BacklinksInsights,
   type BacklinksComparison,
 } from "@/lib/backlinks.functions";
+import { useAuth } from "@/hooks/useAuth";
 
 const DEFAULT_COMPETITORS = ["servicenowelite.com", "jace.pro"];
 
@@ -19,17 +22,10 @@ function parseCompare(raw: unknown): string[] {
 }
 
 export const Route = createFileRoute("/insights/backlinks")({
+  ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     compare: parseCompare(search.compare),
   }),
-  loaderDeps: ({ search }) => ({ compare: search.compare }),
-  loader: async ({ deps }) => {
-    const [insights, comparison] = await Promise.all([
-      getBacklinksInsights(),
-      getBacklinksComparison({ data: { domains: deps.compare } }),
-    ]);
-    return { insights, comparison };
-  },
   head: () => ({
     meta: [
       { title: "Backlinks Insights — SparkCoder" },
@@ -49,7 +45,7 @@ export const Route = createFileRoute("/insights/backlinks")({
   }),
   errorComponent: ErrorView,
   notFoundComponent: NotFound,
-  component: BacklinksPage,
+  component: BacklinksGate,
 });
 
 function NotFound() {
@@ -87,13 +83,83 @@ function dateFromUnix(s: string) {
   return new Date(n * 1000).toLocaleDateString();
 }
 
+function BacklinksGate() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 text-sm text-muted-foreground">
+        Loading…
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md text-center space-y-3">
+          <h1 className="text-xl font-semibold">Sign in required</h1>
+          <p className="text-sm text-muted-foreground">
+            Backlinks Insights is an owner-only dashboard. Sign in to view your
+            Semrush-powered link data.
+          </p>
+          <Link
+            to="/auth"
+            className="inline-block rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90"
+          >
+            Sign in
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return <BacklinksPage />;
+}
+
 function BacklinksPage() {
-  const loaderData = Route.useLoaderData() as {
-    insights: BacklinksInsights;
-    comparison: BacklinksComparison;
-  };
-  const data = loaderData.insights;
-  const comparison = loaderData.comparison;
+  const search = Route.useSearch();
+  const fetchInsights = useServerFn(getBacklinksInsights);
+  const fetchComparison = useServerFn(getBacklinksComparison);
+
+  const insightsQ = useQuery({
+    queryKey: ["backlinks-insights"],
+    queryFn: () => fetchInsights(),
+  });
+  const comparisonQ = useQuery({
+    queryKey: ["backlinks-comparison", search.compare.join(",")],
+    queryFn: () => fetchComparison({ data: { domains: search.compare } }),
+  });
+
+  if (insightsQ.isLoading || comparisonQ.isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 text-sm text-muted-foreground">
+        Loading backlinks data…
+      </div>
+    );
+  }
+
+  if (insightsQ.error || comparisonQ.error) {
+    const err = (insightsQ.error ?? comparisonQ.error) as Error;
+    const forbidden = /forbidden|unauthorized/i.test(err.message);
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md text-center space-y-3">
+          <h1 className="text-xl font-semibold">
+            {forbidden ? "Not authorized" : "Couldn't load backlinks"}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {forbidden
+              ? "Your account isn't on the owner allowlist for this dashboard."
+              : err.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const data = insightsQ.data as BacklinksInsights;
+  const comparison = comparisonQ.data as BacklinksComparison;
   const { overview, refDomains, topLinks, quotaExceeded, errorMessage } = data;
 
   const followTotal = overview ? overview.follow + overview.nofollow : 0;
@@ -452,4 +518,3 @@ function BarCell({ value, max, isYou }: { value: number; max: number; isYou: boo
     </div>
   );
 }
-
