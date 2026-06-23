@@ -85,8 +85,9 @@ describe("classifyVerdict — boundary conditions", () => {
 
   it("tidy threshold scales with size: ceil(size/3)", () => {
     // size 9 → tidy <= 3 misses
-    expect(classifyVerdict(1, fast(9), 3, 9).rank).toBe("A"); // BLAZING
-    expect(classifyVerdict(1, fast(9), 4, 9).rank).toBe("D"); // fast but not clean, not tidy
+    expect(classifyVerdict(1, fast(9), 3, 9).rank).toBe("A"); // BLAZING (fast + tidy)
+    // 4 misses busts tidy; still fast (so still ok) and not clean → falls to C
+    expect(classifyVerdict(1, fast(9), 4, 9).rank).toBe("C");
   });
 
   it("guards against size 0 (no divide-by-zero)", () => {
