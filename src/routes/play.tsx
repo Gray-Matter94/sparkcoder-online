@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { EASY, MEDIUM, HARD, EXPERT, POOL, type Pair } from "./play.data";
+import { verdictFor, type Verdict } from "./play.verdict";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
@@ -78,100 +79,8 @@ function pickRound(level: number): Card[] {
 }
 
 // ---------- Funny / motivating congrats ----------
-type Verdict = {
-  title: string;
-  blurb: string;
-  emoji: string;
-  rank: "S" | "A" | "B" | "C" | "D";
-};
+// Logic lives in ./play.verdict so it can be unit-tested without the route.
 
-function verdictFor(level: number, timeMs: number, misses: number, size: number): Verdict {
-  const perPair = timeMs / Math.max(size, 1);
-  // Tiered thresholds — get tighter as round size grows
-  const fast = perPair < 2500;
-  const ok = perPair < 4500;
-  const clean = misses === 0;
-  const tidy = misses <= Math.ceil(size / 3);
-
-  if (fast && clean) {
-    return {
-      rank: "S",
-      emoji: "🚀",
-      title: pick([
-        "FLAWLESS VICTORY",
-        "GLIDE WIZARD MODE",
-        "ACL CAN'T STOP YOU",
-      ]),
-      blurb: pick([
-        `Cleared level ${level} without a single miss. Are you sure you're not a Script Include?`,
-        `Zero misses, sub-${(perPair / 1000).toFixed(1)}s per pair. Knowledge Article writers fear you.`,
-        `${size} pairs, ${misses} misses. Even ITIL is impressed.`,
-      ]),
-    };
-  }
-  if (fast && tidy) {
-    return {
-      rank: "A",
-      emoji: "⚡",
-      title: pick(["BLAZING RUN", "QUERY SPEED RECORD", "GLIDE GROOVE"]),
-      blurb: pick([
-        `Fast hands! ${misses} miss${misses === 1 ? "" : "es"} on level ${level} — the change-management board approves.`,
-        `Cooked it in ${(timeMs / 1000).toFixed(1)}s. Somewhere a Business Rule just applauded.`,
-        `Reflexes of a Background Script. Onwards to level ${level + 1}.`,
-      ]),
-    };
-  }
-  if (clean) {
-    return {
-      rank: "A",
-      emoji: "🎯",
-      title: pick(["NO MISSES, NO MERCY", "SURGICAL PRECISION", "ACL: APPROVED"]),
-      blurb: pick([
-        `Perfect accuracy on level ${level}. Slow is smooth, smooth is production-ready.`,
-        `Zero misses. You debug bugs that haven't been written yet.`,
-        `Every match landed. The audit log is smiling.`,
-      ]),
-    };
-  }
-  if (ok && tidy) {
-    return {
-      rank: "B",
-      emoji: "🛠️",
-      title: pick(["SOLID DEPLOY", "TICKET RESOLVED", "STORY: DONE"]),
-      blurb: pick([
-        `Level ${level} cleared in ${(timeMs / 1000).toFixed(1)}s with ${misses} miss${misses === 1 ? "" : "es"}. Stand-up update: shipped it.`,
-        `Not bad — a small change request, no rollback needed.`,
-        `You'd survive a Friday production push.`,
-      ]),
-    };
-  }
-  if (ok) {
-    return {
-      rank: "C",
-      emoji: "☕",
-      title: pick(["NEEDS COFFEE", "INCIDENT P3", "REOPENED"]),
-      blurb: pick([
-        `Level ${level} cleared — but ${misses} misses means the change board wants a post-mortem.`,
-        `Got there in the end. Your QA tester is rolling their eyes lovingly.`,
-        `Worked on a Friday afternoon vibe. Acceptable. Just.`,
-      ]),
-    };
-  }
-  return {
-    rank: "D",
-    emoji: "🐢",
-    title: pick(["EVENTUAL CONSISTENCY", "SLA EXTENDED", "MARATHON, NOT SPRINT"]),
-    blurb: pick([
-      `You cleared level ${level}. The instance is patient. So are we.`,
-      `Slow and steady — a true Asynchronous Business Rule.`,
-      `It took a while, but every catalog item ships eventually.`,
-    ]),
-  };
-}
-
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 function PlayPage() {
   const [level, setLevel] = useState(1);
