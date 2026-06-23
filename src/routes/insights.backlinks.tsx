@@ -173,6 +173,8 @@ function BacklinksPage() {
           </section>
         )}
 
+        <CompetitorComparison comparison={comparison} />
+
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">Top referring domains</h2>
           {refDomains.length === 0 ? (
