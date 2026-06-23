@@ -85,6 +85,21 @@ function Learn() {
             simulator traces. Built for senior ServiceNow interview loops.
           </p>
         </Link>
+        <Link
+          to="/learn/acl-scripting"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🛡️ ACL Scripting Deep Dive
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            The <code>answer</code> variable, <code>gs.hasRole()</code>, table vs field
+            evaluation order, and write-time transition guards — with simulator traces.
+          </p>
+        </Link>
 
 
         {(() => {
