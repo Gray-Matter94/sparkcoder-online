@@ -186,7 +186,7 @@ function AuthPage() {
             </button>
           </div>
 
-          <p className="text-[10px] text-center text-zinc-600 leading-relaxed">
+          <p className="text-[10px] text-center text-muted-foreground leading-relaxed">
             Your local progress will merge with your cloud save the first time you sign in.
             Nothing gets lost.
           </p>
