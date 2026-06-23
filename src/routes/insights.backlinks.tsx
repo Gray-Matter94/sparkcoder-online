@@ -41,6 +41,7 @@ export const Route = createFileRoute("/insights/backlinks")({
         content:
           "Track referring domains, follow/nofollow ratio, and top link sources for sparkcoder.online.",
       },
+      { property: "og:url", content: "https://www.sparkcoder.online/insights/backlinks" },
     ],
   }),
   errorComponent: ErrorView,

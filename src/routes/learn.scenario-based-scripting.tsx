@@ -6,7 +6,7 @@ import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
 
-const TITLE = "Scenario-Based Scripting Questions — ServiceNow Interview Guide";
+const TITLE = "Scenario Scripting Questions — ServiceNow Interview Guide";
 const DESCRIPTION =
   "Practice scenario-based ServiceNow scripting interview questions: cross-table updates, integration error handling, recursion, and async flows with a simulator.";
 const URL = "https://sparkcoder.online/learn/scenario-based-scripting";
