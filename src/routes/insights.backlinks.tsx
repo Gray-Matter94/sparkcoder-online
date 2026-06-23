@@ -1,8 +1,35 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { getBacklinksInsights, type BacklinksInsights } from "@/lib/backlinks.functions";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  getBacklinksInsights,
+  getBacklinksComparison,
+  type BacklinksInsights,
+  type BacklinksComparison,
+} from "@/lib/backlinks.functions";
+
+const DEFAULT_COMPETITORS = ["servicenowelite.com", "jace.pro"];
+
+function parseCompare(raw: unknown): string[] {
+  if (typeof raw !== "string" || !raw.trim()) return DEFAULT_COMPETITORS;
+  return raw
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 5);
+}
 
 export const Route = createFileRoute("/insights/backlinks")({
-  loader: () => getBacklinksInsights(),
+  validateSearch: (search: Record<string, unknown>) => ({
+    compare: parseCompare(search.compare),
+  }),
+  loaderDeps: ({ search }) => ({ compare: search.compare }),
+  loader: async ({ deps }) => {
+    const [insights, comparison] = await Promise.all([
+      getBacklinksInsights(),
+      getBacklinksComparison({ data: { domains: deps.compare } }),
+    ]);
+    return { insights, comparison };
+  },
   head: () => ({
     meta: [
       { title: "Backlinks Insights — SparkCoder" },
