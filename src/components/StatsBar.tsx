@@ -87,11 +87,11 @@ function AuthButton() {
       {open && (
         <div className="absolute right-0 mt-2 w-52 rounded-xl border border-border bg-panel shadow-xl z-50 overflow-hidden">
           <div className="px-3 py-2.5 border-b border-border">
-            <div className="text-[10px] uppercase tracking-widest text-zinc-500">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Signed in as
             </div>
             <div className="text-sm font-semibold truncate">{name}</div>
-            <div className="text-[11px] text-zinc-500 truncate">{user.email}</div>
+            <div className="text-[11px] text-muted-foreground truncate">{user.email}</div>
           </div>
           <button
             onClick={async () => {

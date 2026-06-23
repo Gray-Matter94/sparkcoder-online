@@ -164,7 +164,7 @@ function Practice() {
               <span className="px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/30 text-accent">
                 {tier.emoji} {tier.name} · ×{tier.xpMultiplier.toFixed(2)}
               </span>
-              <span className="text-zinc-500">{index + 1}/{questions.length}</span>
+              <span className="text-muted-foreground">{index + 1}/{questions.length}</span>
             </div>
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
@@ -184,7 +184,7 @@ function Practice() {
         />
 
         <div className="space-y-2">
-          <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+          <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose the right block
           </h2>
           <div className="grid grid-cols-1 gap-2.5">

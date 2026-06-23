@@ -104,7 +104,7 @@ function Home() {
                 <h2 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
                   DAILY CHALLENGE
                 </h2>
-                <span className="text-[10px] text-zinc-500 font-mono">
+                <span className="text-[10px] text-muted-foreground font-mono">
                   {dailyDone ? "DONE" : "+50 XP"}
                 </span>
               </div>
@@ -167,7 +167,7 @@ function Home() {
         <BadgesPanel progress={progress} />
 
         <section className="space-y-3">
-          <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+          <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose a module
           </h2>
           <div className="grid grid-cols-1 gap-3">
@@ -204,7 +204,7 @@ function Home() {
                       <h3 className={`font-display text-lg tracking-wide ${textColor}`}>
                         {c.name.toUpperCase()}
                       </h3>
-                      <span className="text-[10px] text-zinc-500 font-mono">
+                      <span className="text-[10px] text-muted-foreground font-mono">
                         {done}/{full}
                         {locked > 0 && (
                           <span className="text-muted-foreground ml-1">· 🔒{locked}</span>
@@ -240,7 +240,7 @@ function Home() {
           </button>
         </section>
       </main>
-      <footer className="py-6 text-center text-[10px] text-zinc-500 uppercase tracking-widest">
+      <footer className="py-6 text-center text-[10px] text-muted-foreground uppercase tracking-widest">
         Built for thumb-driving on the train.
       </footer>
     </div>
@@ -257,7 +257,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent: 
   return (
     <div className="rounded-2xl bg-panel border border-border p-4 text-center">
       <div className={`font-display text-2xl ${color}`}>{value}</div>
-      <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">{label}</div>
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">{label}</div>
     </div>
   );
 }

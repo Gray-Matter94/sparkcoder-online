@@ -9,7 +9,7 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
         <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-bold">
           Practice Track
         </span>
-        <span className="text-[10px] font-mono text-zinc-500">
+        <span className="text-[10px] font-mono text-muted-foreground">
           {TRACKS.length} TRACKS
         </span>
       </div>

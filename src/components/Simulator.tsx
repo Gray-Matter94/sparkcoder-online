@@ -53,7 +53,7 @@ export function Simulator({ output, status, resultTone }: Props) {
           <span className={`size-1.5 rounded-full ${dotColor} animate-pulse`} />
           Instance Simulator (dev10294)
         </span>
-        <span className="text-[10px] text-zinc-500 font-mono">
+        <span className="text-[10px] text-muted-foreground font-mono">
           {output?.table ? `DB: ${output.table}` : "idle"}
         </span>
       </div>
@@ -68,7 +68,7 @@ export function Simulator({ output, status, resultTone }: Props) {
 
         {output && output.rows.length > 0 && (
           <div className="space-y-1">
-            <div className="grid grid-cols-3 gap-2 py-1 border-b border-white/5 text-[9px] text-zinc-500 uppercase font-bold tracking-wider">
+            <div className="grid grid-cols-3 gap-2 py-1 border-b border-white/5 text-[9px] text-muted-foreground uppercase font-bold tracking-wider">
               <div>Number</div>
               <div>State</div>
               <div>Updated</div>
@@ -83,7 +83,7 @@ export function Simulator({ output, status, resultTone }: Props) {
               >
                 <div className="font-mono truncate">{r.number}</div>
                 <div className="truncate">{r.state}</div>
-                <div className="text-zinc-500 truncate">{r.updated}</div>
+                <div className="text-muted-foreground truncate">{r.updated}</div>
               </div>
             ))}
           </div>

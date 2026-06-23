@@ -101,7 +101,7 @@ function Daily() {
         />
 
         <div className="space-y-2">
-          <h3 className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+          <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose the right block
           </h3>
           <div className="grid grid-cols-1 gap-2.5">
