@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { EASY, MEDIUM, HARD, EXPERT, POOL, type Pair } from "./play.data";
+import { verdictFor, type Verdict } from "./play.verdict";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
