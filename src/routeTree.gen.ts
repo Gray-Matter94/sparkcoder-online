@@ -18,6 +18,7 @@ import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
+import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -65,6 +66,11 @@ const LearnTopicRoute = LearnTopicRouteImport.update({
   path: '/learn/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsBacklinksRoute = InsightsBacklinksRouteImport.update({
+  id: '/insights/backlinks',
+  path: '/insights/backlinks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/sitemap.xml'
+    | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/sitemap.xml'
+    | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/sitemap.xml'
+    | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   DailyRoute: typeof DailyRoute
   PlayRoute: typeof PlayRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
@@ -213,6 +226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnTopicRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insights/backlinks': {
+      id: '/insights/backlinks'
+      path: '/insights/backlinks'
+      fullPath: '/insights/backlinks'
+      preLoaderRoute: typeof InsightsBacklinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   DailyRoute: DailyRoute,
   PlayRoute: PlayRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
@@ -230,13 +251,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
