@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
+import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 
@@ -61,6 +62,11 @@ const LearnScenarioBasedScriptingRoute =
     path: '/learn/scenario-based-scripting',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
+  id: '/learn/acl-scripting',
+  path: '/learn/acl-scripting',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnTopicRoute = LearnTopicRouteImport.update({
   id: '/learn/$topic',
   path: '/learn/$topic',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
+  '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
+  '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn': typeof LearnIndexRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
+  '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/insights/backlinks'
     | '/learn/$topic'
+    | '/learn/acl-scripting'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn/'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/insights/backlinks'
     | '/learn/$topic'
+    | '/learn/acl-scripting'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/insights/backlinks'
     | '/learn/$topic'
+    | '/learn/acl-scripting'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn/'
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
+  LearnAclScriptingRoute: typeof LearnAclScriptingRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   LearnIndexRoute: typeof LearnIndexRoute
@@ -219,6 +232,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/acl-scripting': {
+      id: '/learn/acl-scripting'
+      path: '/learn/acl-scripting'
+      fullPath: '/learn/acl-scripting'
+      preLoaderRoute: typeof LearnAclScriptingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/$topic': {
       id: '/learn/$topic'
       path: '/learn/$topic'
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
+  LearnAclScriptingRoute: LearnAclScriptingRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   LearnIndexRoute: LearnIndexRoute,
