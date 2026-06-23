@@ -14,7 +14,7 @@ export const Route = createFileRoute("/practice/$category")({
     const cat = CATEGORIES.find((c) => c.id === params.category);
     const name = cat?.name ?? "Practice";
     const url = `https://sparkcoder.online/practice/${params.category}`;
-    const description = `Solve interactive ${name} puzzles from real ServiceNow scripting interviews — pick the right block, run it in the simulator, and get coached the moment you miss.`;
+    const description = `Solve interactive ${name} puzzles from real ServiceNow scripting interviews. Pick the right block, run it, and get coached the moment you miss.`;
     return {
       meta: [
         { title: `${name} Puzzles — SparkCoder` },
