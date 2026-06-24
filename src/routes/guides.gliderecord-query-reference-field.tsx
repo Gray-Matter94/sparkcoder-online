@@ -3,9 +3,9 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 
-const TITLE = "How to Query a Reference Field with GlideRecord (ServiceNow)";
+const TITLE = "Query a Reference Field with GlideRecord (ServiceNow)";
 const DESCRIPTION =
-  "Step-by-step guide to querying a reference field in ServiceNow with GlideRecord: sys_id matching, dot-walking, addQuery vs addJoinQuery, getRefRecord(), and the pitfalls that cost interview points.";
+  "Query a ServiceNow reference field with GlideRecord: sys_id matching, dot-walking, addQuery vs addJoinQuery, and getRefRecord() — with examples.";
 const URL =
   "https://www.sparkcoder.online/guides/gliderecord-query-reference-field";
 

@@ -5,7 +5,7 @@ import { useProgress } from "@/lib/progress";
 
 const TITLE = "AngularJS Coding Test — Practice Questions with Answers";
 const DESCRIPTION =
-  "Take a hands-on AngularJS coding test covering scopes, digest cycles, directives, services, $http promises, and routing. Read the model answers, then run the timed practice drills.";
+  "Hands-on AngularJS coding test on scopes, digest cycles, directives, services, $http promises and routing — with model answers and timed drills.";
 const URL = "https://www.sparkcoder.online/angularjs-coding-test";
 
 interface QA {
