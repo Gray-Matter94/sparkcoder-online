@@ -13,7 +13,7 @@ export const Route = createFileRoute("/auth")({
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "Sign in — SparkCoder" },
       { property: "og:description", content: "Sign in or create a SparkCoder account to save your XP, streaks, and solved puzzles across devices." },
-      { property: "og:url", content: "https://sparkcoder.online/auth" },
+      { property: "og:url", content: "https://www.sparkcoder.online/auth" },
     ],
   }),
   component: AuthPage,

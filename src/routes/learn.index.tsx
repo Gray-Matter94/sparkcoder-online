@@ -11,13 +11,13 @@ export const Route = createFileRoute("/learn/")({
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: "ServiceNow Glossary & Quizzes",
-      url: "https://sparkcoder.online/learn",
+      url: "https://www.sparkcoder.online/learn",
       description:
         "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
       hasPart: TOPICS.map((t) => ({
         "@type": "CreativeWork",
         name: t.name,
-        url: `https://sparkcoder.online/learn/${t.id}`,
+        url: `https://www.sparkcoder.online/learn/${t.id}`,
       })),
     };
     return {
@@ -34,9 +34,9 @@ export const Route = createFileRoute("/learn/")({
           content:
             "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
         },
-        { property: "og:url", content: "https://sparkcoder.online/learn" },
+        { property: "og:url", content: "https://www.sparkcoder.online/learn" },
       ],
-      links: [{ rel: "canonical", href: "https://sparkcoder.online/learn" }],
+      links: [{ rel: "canonical", href: "https://www.sparkcoder.online/learn" }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(collectionJsonLd) },
       ],

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/practice/$category")({
   head: ({ params }) => {
     const cat = CATEGORIES.find((c) => c.id === params.category);
     const name = cat?.name ?? "Practice";
-    const url = `https://sparkcoder.online/practice/${params.category}`;
+    const url = `https://www.sparkcoder.online/practice/${params.category}`;
     const description = `Solve interactive ${name} puzzles from real ServiceNow scripting interviews. Pick the right block, run it, and get coached the moment you miss.`;
     return {
       meta: [
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/practice/$category")({
             isPartOf: {
               "@type": "WebSite",
               name: "SparkCoder",
-              url: "https://sparkcoder.online",
+              url: "https://www.sparkcoder.online",
             },
             about: { "@type": "Thing", name: `ServiceNow ${name}` },
           }),
