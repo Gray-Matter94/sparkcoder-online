@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
@@ -20,12 +22,19 @@ import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
+import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicenowCsaInterviewQuestions2026Route =
+  ServicenowCsaInterviewQuestions2026RouteImport.update({
+    id: '/servicenow-csa-interview-questions-2026',
+    path: '/servicenow-csa-interview-questions-2026',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
@@ -39,6 +48,11 @@ const DailyRoute = DailyRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AngularjsCodingTestRoute = AngularjsCodingTestRouteImport.update({
+  id: '/angularjs-coding-test',
+  path: '/angularjs-coding-test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -77,13 +91,22 @@ const InsightsBacklinksRoute = InsightsBacklinksRouteImport.update({
   path: '/insights/backlinks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesGliderecordQueryReferenceFieldRoute =
+  GuidesGliderecordQueryReferenceFieldRouteImport.update({
+    id: '/guides/gliderecord-query-reference-field',
+    path: '/guides/gliderecord-query-reference-field',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
+  '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
@@ -93,10 +116,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
+  '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
@@ -107,10 +133,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
+  '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
@@ -122,10 +151,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
     | '/play'
+    | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
@@ -135,10 +167,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
     | '/play'
+    | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
@@ -148,10 +183,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
     | '/play'
+    | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
@@ -162,10 +200,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AngularjsCodingTestRoute: typeof AngularjsCodingTestRoute
   AuthRoute: typeof AuthRoute
   DailyRoute: typeof DailyRoute
   PlayRoute: typeof PlayRoute
+  ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
@@ -181,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-csa-interview-questions-2026': {
+      id: '/servicenow-csa-interview-questions-2026'
+      path: '/servicenow-csa-interview-questions-2026'
+      fullPath: '/servicenow-csa-interview-questions-2026'
+      preLoaderRoute: typeof ServicenowCsaInterviewQuestions2026RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play': {
@@ -202,6 +250,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/angularjs-coding-test': {
+      id: '/angularjs-coding-test'
+      path: '/angularjs-coding-test'
+      fullPath: '/angularjs-coding-test'
+      preLoaderRoute: typeof AngularjsCodingTestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -253,15 +308,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsBacklinksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/gliderecord-query-reference-field': {
+      id: '/guides/gliderecord-query-reference-field'
+      path: '/guides/gliderecord-query-reference-field'
+      fullPath: '/guides/gliderecord-query-reference-field'
+      preLoaderRoute: typeof GuidesGliderecordQueryReferenceFieldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AngularjsCodingTestRoute: AngularjsCodingTestRoute,
   AuthRoute: AuthRoute,
   DailyRoute: DailyRoute,
   PlayRoute: PlayRoute,
+  ServicenowCsaInterviewQuestions2026Route:
+    ServicenowCsaInterviewQuestions2026Route,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  GuidesGliderecordQueryReferenceFieldRoute:
+    GuidesGliderecordQueryReferenceFieldRoute,
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
@@ -272,13 +339,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
