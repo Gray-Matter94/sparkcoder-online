@@ -10,7 +10,7 @@ export const Route = createFileRoute("/learn/$topic")({
   head: ({ params }) => {
     const t = TOPICS.find((x) => x.id === params.topic);
     const name = t?.name ?? "Topic";
-    const url = `https://sparkcoder.online/learn/${params.topic}`;
+    const url = `https://www.sparkcoder.online/learn/${params.topic}`;
     const description = `Illustrated ${name} glossary plus a quick quiz — clear definitions of the ServiceNow concepts interviewers actually ask about.`;
     const terms = t ? termsFor(t.id) : [];
     const faqJsonLd = terms.length > 0

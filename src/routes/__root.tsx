@@ -102,12 +102,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             {
               "@type": "Organization",
               name: "SparkCoder",
-              url: "https://sparkcoder.online",
+              url: "https://www.sparkcoder.online",
             },
             {
               "@type": "WebSite",
               name: "SparkCoder",
-              url: "https://sparkcoder.online",
+              url: "https://www.sparkcoder.online",
               description: "Arcade-style ServiceNow scripting interview puzzles with a live simulator.",
             },
           ],

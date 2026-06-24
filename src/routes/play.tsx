@@ -18,9 +18,9 @@ export const Route = createFileRoute("/play")({
         content:
           "Speed-match ServiceNow Glide APIs with their descriptions across 50 levels of progressively harder challenges.",
       },
-      { property: "og:url", content: "https://sparkcoder.online/play" },
+      { property: "og:url", content: "https://www.sparkcoder.online/play" },
     ],
-    links: [{ rel: "canonical", href: "https://sparkcoder.online/play" }],
+    links: [{ rel: "canonical", href: "https://www.sparkcoder.online/play" }],
   }),
   component: PlayPage,
 });

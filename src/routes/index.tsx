@@ -25,9 +25,9 @@ export const Route = createFileRoute("/")({
         content:
           "Arcade-style ServiceNow scripting puzzles with a live instance simulator and built-in coach.",
       },
-      { property: "og:url", content: "https://sparkcoder.online/" },
+      { property: "og:url", content: "https://www.sparkcoder.online/" },
     ],
-    links: [{ rel: "canonical", href: "https://sparkcoder.online/" }],
+    links: [{ rel: "canonical", href: "https://www.sparkcoder.online/" }],
   }),
   component: Home,
 });
