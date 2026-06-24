@@ -410,6 +410,7 @@ function CompetitorComparison({ comparison }: { comparison: BacklinksComparison 
               }
             }}
             placeholder="add competitor.com"
+            aria-label="Add competitor domain"
             disabled={competitors.length >= 5}
             className="text-sm px-3 py-2 rounded-md border border-border bg-background w-56 focus:outline-none focus:ring-2 focus:ring-primary"
           />

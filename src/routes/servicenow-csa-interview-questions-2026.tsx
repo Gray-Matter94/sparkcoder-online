@@ -3,9 +3,9 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 
-const TITLE = "ServiceNow CSA Interview Questions 2026 — Answers + Practice";
+const TITLE = "ServiceNow CSA Interview Questions 2026 + Practice";
 const DESCRIPTION =
-  "20 ServiceNow CSA (Certified System Administrator) interview questions for 2026 with concise model answers covering ACLs, UI Policies, Update Sets, Service Catalog, and Notifications — plus timed practice drills.";
+  "20 ServiceNow CSA interview questions for 2026 with model answers on ACLs, UI Policies, Update Sets, Catalog and Notifications, plus timed drills.";
 const URL =
   "https://www.sparkcoder.online/servicenow-csa-interview-questions-2026";
 
