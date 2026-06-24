@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/start-client-core/serverRoute";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 
@@ -12,6 +11,9 @@ interface SitemapEntry {
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
+  server: {
+    handlers: {
+      GET: async () => {
   server: {
     handlers: {
       GET: async () => {
