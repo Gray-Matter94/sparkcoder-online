@@ -20,6 +20,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/learn", changefreq: "weekly", priority: "0.8" },
           { path: "/learn/scenario-based-scripting", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/acl-scripting", changefreq: "monthly", priority: "0.8" },
+          { path: "/learn/glideajax-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
           { path: "/angularjs-coding-test", changefreq: "monthly", priority: "0.9" },
           { path: "/guides/gliderecord-query-reference-field", changefreq: "monthly", priority: "0.9" },
