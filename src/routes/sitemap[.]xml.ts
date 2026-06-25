@@ -11,7 +11,6 @@ interface SitemapEntry {
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
-  // @ts-expect-error - `server` option provided by @tanstack/start module augmentation
   server: {
     handlers: {
       GET: async () => {
