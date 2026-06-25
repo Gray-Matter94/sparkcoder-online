@@ -100,7 +100,21 @@ function Learn() {
             evaluation order, and write-time transition guards — with simulator traces.
           </p>
         </Link>
-
+        <Link
+          to="/learn/glideajax-interview-questions"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            📡 GlideAjax Interview Questions
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            AbstractAjaxProcessor, client-to-server data passing, getXMLAnswer callbacks,
+            and performance best practices — with simulator traces.
+          </p>
+        </Link>
 
         {(() => {
           const today = todayStr();
