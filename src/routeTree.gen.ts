@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
+import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
@@ -76,6 +77,12 @@ const LearnScenarioBasedScriptingRoute =
     path: '/learn/scenario-based-scripting',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnGlideajaxInterviewQuestionsRoute =
+  LearnGlideajaxInterviewQuestionsRouteImport.update({
+    id: '/learn/glideajax-interview-questions',
+    path: '/learn/glideajax-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
   id: '/learn/acl-scripting',
   path: '/learn/acl-scripting',
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -126,6 +134,7 @@ export interface FileRoutesByTo {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn': typeof LearnIndexRoute
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn/'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn'
@@ -193,6 +205,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/learn/'
@@ -210,6 +223,7 @@ export interface RootRouteChildren {
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
+  LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   LearnIndexRoute: typeof LearnIndexRoute
@@ -287,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/glideajax-interview-questions': {
+      id: '/learn/glideajax-interview-questions'
+      path: '/learn/glideajax-interview-questions'
+      fullPath: '/learn/glideajax-interview-questions'
+      preLoaderRoute: typeof LearnGlideajaxInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/acl-scripting': {
       id: '/learn/acl-scripting'
       path: '/learn/acl-scripting'
@@ -332,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
+  LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   LearnIndexRoute: LearnIndexRoute,
@@ -339,13 +361,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
