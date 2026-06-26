@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
@@ -66,6 +67,12 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsServicenowRegexTesterRoute =
+  ToolsServicenowRegexTesterRouteImport.update({
+    id: '/tools/servicenow-regex-tester',
+    path: '/tools/servicenow-regex-tester',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
   id: '/practice/$category',
   path: '/practice/$category',
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
@@ -155,6 +164,7 @@ export interface FileRoutesById {
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-regex-tester'
     | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-regex-tester'
     | '/learn'
   id:
     | '__root__'
@@ -208,6 +220,7 @@ export interface FileRouteTypes {
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-regex-tester'
     | '/learn/'
   fileRoutesById: FileRoutesById
 }
@@ -226,6 +239,7 @@ export interface RootRouteChildren {
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
+  ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -285,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/learn'
       fullPath: '/learn/'
       preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/servicenow-regex-tester': {
+      id: '/tools/servicenow-regex-tester'
+      path: '/tools/servicenow-regex-tester'
+      fullPath: '/tools/servicenow-regex-tester'
+      preLoaderRoute: typeof ToolsServicenowRegexTesterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice/$category': {
@@ -356,6 +377,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
+  ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
