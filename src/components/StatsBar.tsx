@@ -20,7 +20,7 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
           <Link to="/" aria-label="SparkCoder home">
             <img
               src={logoAsset.url}
-              alt="SparkCoder logo"
+              alt="SparkCoder - ServiceNow Interview Practice logo"
               width={40}
               height={40}
               fetchPriority="high"
