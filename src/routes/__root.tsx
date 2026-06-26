@@ -79,7 +79,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#09090b" },
       { name: "google-site-verification", content: "maZpmXx90JgZ8mSegFII_U3YDKEn03Bn6nanxlrJ528" },
-      { property: "og:type", content: "website" },
       { property: "og:site_name", content: "SparkCoder" },
       { name: "twitter:card", content: "summary" },
     ],
