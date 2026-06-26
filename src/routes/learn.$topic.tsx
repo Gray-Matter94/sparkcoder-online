@@ -193,6 +193,9 @@ function Glossary({
 
   return (
     <div className="space-y-3">
+      <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
+        Term Glossary
+      </h2>
       <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by mastery">
         {chip("all", "All", terms.length, "border-accent/50 bg-accent/10 text-accent")}
         {chip("unmarked", "New", counts.unmarked, "border-foreground/40 bg-foreground/5 text-foreground")}
