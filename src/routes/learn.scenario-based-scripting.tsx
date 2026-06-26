@@ -190,6 +190,10 @@ const ARTICLE_JSONLD = {
   headline: "Scenario-Based ServiceNow Scripting Interview Questions",
   description: DESCRIPTION,
   url: URL,
+  datePublished: "2026-06-20",
+  dateModified: "2026-06-26",
+  author: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
+  publisher: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   about: "ServiceNow scripting interview preparation",
   audience: { "@type": "Audience", audienceType: "ServiceNow Developers" },
 };
