@@ -8,7 +8,7 @@ import type { SimulatorOutput } from "@/lib/questions";
 
 const TITLE = "ServiceNow GlideAjax Interview Questions — Guide";
 const DESCRIPTION =
-  "Master ServiceNow GlideAjax interview questions: AbstractAjaxProcessor, client-to-server data passing, getXMLAnswer callbacks, and performance best practices — with runnable simulator traces.";
+  "ServiceNow GlideAjax interview questions: AbstractAjaxProcessor, data passing, callbacks, and performance — with simulator traces.";
 const URL = "https://www.sparkcoder.online/learn/glideajax-interview-questions";
 
 interface Lesson {

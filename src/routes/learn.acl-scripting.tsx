@@ -8,7 +8,7 @@ import type { SimulatorOutput } from "@/lib/questions";
 
 const TITLE = "ServiceNow ACL Scripting Guide — Interview Prep";
 const DESCRIPTION =
-  "Master ServiceNow Access Control List (ACL) scripting: the 'answer' variable, gs.hasRole(), table.* vs table.field rules, and the order ACLs evaluate — with runnable simulator traces.";
+  "ServiceNow ACL scripting guide: the 'answer' variable, gs.hasRole(), evaluation order, and common pitfalls — with simulator traces.";
 const URL = "https://www.sparkcoder.online/learn/acl-scripting";
 
 interface Lesson {
