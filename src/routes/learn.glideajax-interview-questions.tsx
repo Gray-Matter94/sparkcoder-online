@@ -216,6 +216,10 @@ const ARTICLE_JSONLD = {
   headline: "ServiceNow GlideAjax Interview Questions — AbstractAjaxProcessor & Performance Guide",
   description: DESCRIPTION,
   url: URL,
+  datePublished: "2026-06-24",
+  dateModified: "2026-06-26",
+  author: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
+  publisher: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   about: "ServiceNow GlideAjax scripting and client-server communication",
   audience: { "@type": "Audience", audienceType: "ServiceNow Developers" },
 };
