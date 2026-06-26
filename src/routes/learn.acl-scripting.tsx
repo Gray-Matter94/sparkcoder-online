@@ -176,6 +176,10 @@ const ARTICLE_JSONLD = {
   headline: "ServiceNow Access Control List (ACL) Scripting Guide",
   description: DESCRIPTION,
   url: URL,
+  datePublished: "2026-06-22",
+  dateModified: "2026-06-26",
+  author: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
+  publisher: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   about: "ServiceNow ACL scripting and platform security",
   audience: { "@type": "Audience", audienceType: "ServiceNow Developers" },
 };
