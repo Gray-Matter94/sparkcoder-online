@@ -34,9 +34,8 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "style",
         href: "https://fonts.googleapis.com/css2?family=Anton&display=swap",
-        // @ts-expect-error - valid HTML attribute
-        fetchpriority: "high",
       },
+
     ],
   }),
 
