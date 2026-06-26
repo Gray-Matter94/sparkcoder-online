@@ -15,6 +15,7 @@ export const Route = createFileRoute("/auth")({
       { property: "og:description", content: "Sign in or create a SparkCoder account to save your XP, streaks, and solved puzzles across devices." },
       { property: "og:url", content: "https://www.sparkcoder.online/auth" },
     ],
+    links: [{ rel: "canonical", href: "https://www.sparkcoder.online/auth" }],
   }),
   component: AuthPage,
 });

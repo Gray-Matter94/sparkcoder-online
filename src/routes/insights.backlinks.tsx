@@ -43,6 +43,7 @@ export const Route = createFileRoute("/insights/backlinks")({
       },
       { property: "og:url", content: "https://www.sparkcoder.online/insights/backlinks" },
     ],
+    links: [{ rel: "canonical", href: "https://www.sparkcoder.online/insights/backlinks" }],
   }),
   errorComponent: ErrorView,
   notFoundComponent: NotFound,
