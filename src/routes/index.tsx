@@ -27,8 +27,19 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://www.sparkcoder.online/" },
     ],
-    links: [{ rel: "canonical", href: "https://www.sparkcoder.online/" }],
+    links: [
+      { rel: "canonical", href: "https://www.sparkcoder.online/" },
+      // Preload the display font stylesheet so the LCP H1 paints with Anton ASAP.
+      {
+        rel: "preload",
+        as: "style",
+        href: "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        // @ts-expect-error - valid HTML attribute
+        fetchpriority: "high",
+      },
+    ],
   }),
+
   component: Home,
 });
 
