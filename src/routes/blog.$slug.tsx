@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ReadingProgress } from "@/components/ReadingProgress";
 import { useProgress } from "@/lib/progress";
 import { getPost, BLOG_POSTS } from "@/lib/blog";
 
