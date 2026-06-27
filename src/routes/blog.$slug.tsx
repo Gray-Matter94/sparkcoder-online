@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ReadingProgress } from "@/components/ReadingProgress";
 import { useProgress } from "@/lib/progress";
 import { getPost, BLOG_POSTS } from "@/lib/blog";
 
@@ -79,9 +80,11 @@ function BlogPost() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ReadingProgress slug={post.slug} />
       <ErrorBoundary name="Stats">
         <StatsBar progress={progress} back />
       </ErrorBoundary>
+
 
       <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-8">
         <nav className="text-[10px] uppercase tracking-widest text-muted-foreground">
