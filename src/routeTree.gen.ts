@@ -22,6 +22,7 @@ import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.s
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
+import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
@@ -97,6 +98,12 @@ const LearnGlideajaxInterviewQuestionsRoute =
     path: '/learn/glideajax-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnFlowDesignerInterviewQuestionsRoute =
+  LearnFlowDesignerInterviewQuestionsRouteImport.update({
+    id: '/learn/flow-designer-interview-questions',
+    path: '/learn/flow-designer-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
   id: '/learn/acl-scripting',
   path: '/learn/acl-scripting',
@@ -137,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -157,6 +165,7 @@ export interface FileRoutesByTo {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -178,6 +187,7 @@ export interface FileRoutesById {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -240,6 +252,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
@@ -261,6 +274,7 @@ export interface RootRouteChildren {
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
+  LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
@@ -362,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnGlideajaxInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/flow-designer-interview-questions': {
+      id: '/learn/flow-designer-interview-questions'
+      path: '/learn/flow-designer-interview-questions'
+      fullPath: '/learn/flow-designer-interview-questions'
+      preLoaderRoute: typeof LearnFlowDesignerInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/acl-scripting': {
       id: '/learn/acl-scripting'
       path: '/learn/acl-scripting'
@@ -415,6 +436,8 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
+  LearnFlowDesignerInterviewQuestionsRoute:
+    LearnFlowDesignerInterviewQuestionsRoute,
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
