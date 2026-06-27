@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
+import { BLOG_POSTS } from "@/lib/blog";
+
 
 const BASE_URL = "https://www.sparkcoder.online";
 
@@ -28,6 +30,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/tools/servicenow-regex-tester", changefreq: "monthly", priority: "0.8" },
           { path: "/insights/backlinks", changefreq: "weekly", priority: "0.6" },
           { path: "/auth", changefreq: "monthly", priority: "0.3" },
+          { path: "/blog", changefreq: "weekly", priority: "0.8" },
+          ...BLOG_POSTS.map((p) => ({
+            path: `/blog/${p.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
           ...CATEGORIES.map((c) => ({
             path: `/practice/${c.id}`,
             changefreq: "weekly" as const,
