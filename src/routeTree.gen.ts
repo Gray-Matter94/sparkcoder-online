@@ -21,6 +21,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
+import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
@@ -92,6 +93,12 @@ const LearnScenarioBasedScriptingRoute =
     path: '/learn/scenario-based-scripting',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnIrmArchitectInterviewQuestionsRoute =
+  LearnIrmArchitectInterviewQuestionsRouteImport.update({
+    id: '/learn/irm-architect-interview-questions',
+    path: '/learn/irm-architect-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnGlideajaxInterviewQuestionsRoute =
   LearnGlideajaxInterviewQuestionsRouteImport.update({
     id: '/learn/glideajax-interview-questions',
@@ -146,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -189,6 +198,7 @@ export interface FileRoutesById {
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/learn/acl-scripting'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/irm-architect-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/learn/acl-scripting'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/irm-architect-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | '/learn/acl-scripting'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/irm-architect-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -276,6 +289,7 @@ export interface RootRouteChildren {
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
+  LearnIrmArchitectInterviewQuestionsRoute: typeof LearnIrmArchitectInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
@@ -369,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/irm-architect-interview-questions': {
+      id: '/learn/irm-architect-interview-questions'
+      path: '/learn/irm-architect-interview-questions'
+      fullPath: '/learn/irm-architect-interview-questions'
+      preLoaderRoute: typeof LearnIrmArchitectInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/glideajax-interview-questions': {
       id: '/learn/glideajax-interview-questions'
       path: '/learn/glideajax-interview-questions'
@@ -439,6 +460,8 @@ const rootRouteChildren: RootRouteChildren = {
   LearnFlowDesignerInterviewQuestionsRoute:
     LearnFlowDesignerInterviewQuestionsRoute,
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
+  LearnIrmArchitectInterviewQuestionsRoute:
+    LearnIrmArchitectInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
