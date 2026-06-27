@@ -29,13 +29,14 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://www.sparkcoder.online/" },
-      // Preload the display font stylesheet so the LCP H1 paints with Anton ASAP.
+      // Preload the Anton latin woff2 so the LCP H1 paints ASAP (font-display: swap in CSS).
       {
         rel: "preload",
-        as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Anton&display=swap",
+        as: "font",
+        type: "font/woff2",
+        href: "https://fonts.gstatic.com/s/anton/v27/1Ptgg87LROyAm3Kz-C8.woff2",
+        crossOrigin: "anonymous",
       },
-
     ],
   }),
 
