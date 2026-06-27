@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
@@ -25,6 +26,7 @@ import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-script
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -65,6 +67,11 @@ const IndexRoute = IndexRouteImport.update({
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsServicenowRegexTesterRoute =
@@ -111,6 +118,11 @@ const GuidesGliderecordQueryReferenceFieldRoute =
     path: '/guides/gliderecord-query-reference-field',
     getParentRoute: () => rootRouteImport,
   } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -128,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
+  '/blog/': typeof BlogIndexRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -138,6 +152,7 @@ export interface FileRoutesByTo {
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -146,6 +161,7 @@ export interface FileRoutesByTo {
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
+  '/blog': typeof BlogIndexRoute
   '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
@@ -157,6 +173,7 @@ export interface FileRoutesById {
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -165,6 +182,7 @@ export interface FileRoutesById {
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
+  '/blog/': typeof BlogIndexRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
@@ -177,6 +195,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -185,6 +204,7 @@ export interface FileRouteTypes {
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
+    | '/blog/'
     | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -195,6 +215,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -203,6 +224,7 @@ export interface FileRouteTypes {
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
+    | '/blog'
     | '/learn'
   id:
     | '__root__'
@@ -213,6 +235,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -221,6 +244,7 @@ export interface FileRouteTypes {
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
+    | '/blog/'
     | '/learn/'
   fileRoutesById: FileRoutesById
 }
@@ -232,6 +256,7 @@ export interface RootRouteChildren {
   PlayRoute: typeof PlayRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
@@ -240,6 +265,7 @@ export interface RootRouteChildren {
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -301,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/servicenow-regex-tester': {
       id: '/tools/servicenow-regex-tester'
       path: '/tools/servicenow-regex-tester'
@@ -357,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesGliderecordQueryReferenceFieldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -369,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogSlugRoute: BlogSlugRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
     GuidesGliderecordQueryReferenceFieldRoute,
   InsightsBacklinksRoute: InsightsBacklinksRoute,
@@ -378,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
+  BlogIndexRoute: BlogIndexRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport

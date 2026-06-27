@@ -72,7 +72,7 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPost() {
-  const { post } = Route.useLoaderData();
+  const { post } = Route.useLoaderData() as { post: NonNullable<ReturnType<typeof getPost>> };
   const { progress } = useProgress();
   const prev = post.prevSlug ? BLOG_POSTS.find((p) => p.slug === post.prevSlug) : undefined;
   const next = post.nextSlug ? BLOG_POSTS.find((p) => p.slug === post.nextSlug) : undefined;
