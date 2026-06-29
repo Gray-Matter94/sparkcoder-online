@@ -30,8 +30,12 @@ export const Route = createFileRoute("/blog/$slug")({
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: post.ogTitle },
         { name: "twitter:description", content: post.description },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
         {
-          "script:ld+json": {
+          type: "application/ld+json",
+          children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             headline: post.title,
@@ -46,10 +50,9 @@ export const Route = createFileRoute("/blog/$slug")({
             },
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
             url,
-          },
+          }),
         },
       ],
-      links: [{ rel: "canonical", href: url }],
     };
   },
   notFoundComponent: () => (
