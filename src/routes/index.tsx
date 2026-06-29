@@ -235,9 +235,9 @@ function Home() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className={`font-display text-lg tracking-wide ${textColor}`}>
+                      <h2 className={`font-display text-lg tracking-wide ${textColor}`}>
                         {c.name.toUpperCase()}
-                      </h3>
+                      </h2>
                       <span className="text-[10px] text-muted-foreground font-mono">
                         {done}/{full}
                         {locked > 0 && (
