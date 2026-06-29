@@ -21,8 +21,12 @@ export const Route = createFileRoute("/blog/")({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+    ],
+    links: [{ rel: "canonical", href: URL }],
+    scripts: [
       {
-        "script:ld+json": {
+        type: "application/ld+json",
+        children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Blog",
           name: "SparkCoder ServiceNow Blog",
@@ -37,10 +41,9 @@ export const Route = createFileRoute("/blog/")({
             description: p.description,
             author: { "@type": "Organization", name: "SparkCoder" },
           })),
-        },
+        }),
       },
     ],
-    links: [{ rel: "canonical", href: URL }],
   }),
   component: BlogIndex,
 });

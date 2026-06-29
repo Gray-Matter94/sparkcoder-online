@@ -72,6 +72,7 @@ function Learn() {
         </section>
         <Link
           to="/learn/scenario-based-scripting"
+          aria-label="Open the Scenario-Based Scripting Questions guide"
           className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -87,6 +88,7 @@ function Learn() {
         </Link>
         <Link
           to="/learn/acl-scripting"
+          aria-label="Open the ACL Scripting Deep Dive guide"
           className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -102,6 +104,7 @@ function Learn() {
         </Link>
         <Link
           to="/learn/glideajax-interview-questions"
+          aria-label="Open the GlideAjax Interview Questions guide"
           className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -117,6 +120,7 @@ function Learn() {
         </Link>
         <Link
           to="/learn/flow-designer-interview-questions"
+          aria-label="Open the Flow Designer Interview Questions guide"
           className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -128,6 +132,22 @@ function Learn() {
           <p className="text-xs text-foreground/75 mt-1">
             Subflows vs actions, REST error handling, trigger conditions, and flow vs workflow
             migration decisions — with simulator traces.
+          </p>
+        </Link>
+        <Link
+          to="/learn/discovery-interview-questions"
+          aria-label="Open the ServiceNow Discovery Interview Questions guide"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🛰️ Discovery Interview Questions
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            Horizontal vs top-down discovery, MID Server architecture, classification
+            vs identification rules, and CI reconciliation — with simulator traces.
           </p>
         </Link>
 
