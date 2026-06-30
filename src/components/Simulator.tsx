@@ -60,13 +60,14 @@ export function Simulator({ output, status, resultTone }: Props) {
         type="button"
         onClick={() => setMinimized(false)}
         aria-label="Expand instance simulator"
-        className="w-full group rounded-full bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex items-center gap-3 px-4 py-2 animate-fade-in hover:border-accent/40 transition-colors"
+        aria-expanded="false"
+        className="w-full group relative rounded-full bg-zinc-900/90 border border-white/10 shadow-lg overflow-hidden flex items-center gap-3 px-4 py-2 animate-tap-line-in hover:border-accent/50 hover:bg-zinc-900 transition-all duration-300"
       >
         <span className={`size-1.5 rounded-full ${dotColor} animate-pulse shrink-0`} />
         <span className="relative flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
-          <span className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-[slide-in-right_1.6s_ease-in-out_infinite]" />
+          <span className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-tap-shimmer" />
         </span>
-        <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase shrink-0 group-hover:text-accent">
+        <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase shrink-0 group-hover:text-accent transition-colors">
           Tap to expand
         </span>
       </button>
@@ -74,7 +75,8 @@ export function Simulator({ output, status, resultTone }: Props) {
   }
 
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex flex-col h-56 md:h-64 animate-fade-in">
+    <div className="rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex flex-col h-56 md:h-64 animate-sim-expand">
+
       <div className="px-4 py-2 bg-white/5 border-b border-white/5 flex items-center justify-between shrink-0">
         <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-2 tracking-widest uppercase">
           <span className={`size-1.5 rounded-full ${dotColor} animate-pulse`} />
