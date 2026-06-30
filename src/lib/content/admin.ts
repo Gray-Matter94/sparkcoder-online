@@ -1118,6 +1118,56 @@ export const ADMIN_QUIZZES: QuizQuestion[] = [
     correctIndex: 0,
     explain: "Scheduled Reports email the rendered report (PDF/Excel/Inline) on a cadence.",
   },
+
+  // sam-pro
+  {
+    id: "ad-sm1", topic: "sam-pro",
+    question: "Which engine compares purchased entitlements against discovered installs?",
+    options: ["Reconciliation", "Discovery", "Flow Designer", "Performance Analytics"],
+    correctIndex: 0,
+    explain: "Reconciliation is SAM Pro's compliance engine — it produces the surplus / compliant / non-compliant position per software model.",
+    whyWrong: {
+      1: "Discovery just inventories what's installed; it doesn't compare to entitlements.",
+      2: "Flow Designer automates workflows, e.g. reclamation, but doesn't compute compliance.",
+      3: "PA reports trends over time — different concern.",
+    },
+    learnMore: ["Reconciliation is scheduled; you can also run it on demand from the License Workbench.", "Results land on samp_sw_reconciliation_result."],
+  },
+  {
+    id: "ad-sm2", topic: "sam-pro",
+    question: "What does the Content Library Service (CLS) do?",
+    options: ["Normalizes raw install strings to canonical publishers/products/models", "Stores PDFs of contracts", "Backs up the CMDB", "Hosts learning content"],
+    correctIndex: 0,
+    explain: "CLS is ServiceNow's cloud-hosted normalization catalog — without it, every reconciliation is wrong.",
+  },
+  {
+    id: "ad-sm3", topic: "sam-pro",
+    question: "You found 137 installs of Visio but own 100 licenses. Right SAM Pro response?",
+    options: ["Create Reclamation Candidates for unused installs, then SCCM-uninstall", "Edit the entitlement quantity to 137", "Delete 37 install records", "Disable Discovery for Visio"],
+    correctIndex: 0,
+    explain: "Reclamation closes the gap legitimately by recovering unused licenses. Inflating entitlements falsifies compliance.",
+  },
+  {
+    id: "ad-sm4", topic: "sam-pro",
+    question: "Best way to handle Oracle DB Enterprise's Processor Core Factor licensing?",
+    options: ["Oracle Publisher Pack", "Custom Script Include", "Count installs", "Ignore — count users"],
+    correctIndex: 0,
+    explain: "Publisher Packs (Oracle, MS, IBM, SAP, Adobe, Salesforce) encode each vendor's metric rules and audit math.",
+  },
+  {
+    id: "ad-sm5", topic: "sam-pro",
+    question: "Which SAM Pro module surfaces duplicate Microsoft 365 license assignments?",
+    options: ["SaaS License Management", "Discovery probes", "Update Sets", "Notifications"],
+    correctIndex: 0,
+    explain: "SaaS License Management ingests usage from publisher APIs (M365 Graph, Zoom, Salesforce, Adobe CC, etc.) and flags overlap.",
+  },
+  {
+    id: "ad-sm6", topic: "sam-pro",
+    question: "Where do entitlement records live?",
+    options: ["alm_license", "cmdb_ci_server", "sc_req_item", "sys_user"],
+    correctIndex: 0,
+    explain: "alm_license stores the right-to-use record: quantity, metric, contract, software model.",
+  },
 ];
 
 /* ============== SECTION PLAN ============== */
@@ -1139,4 +1189,9 @@ export const ADMIN_SECTIONS: Record<string, QuizSection[]> = {
     { label: "Reports & sharing", icon: "📊", count: 3 },
     { label: "Performance Analytics", icon: "📈", count: 3 },
   ],
+  "sam-pro": [
+    { label: "Discovery & normalization", icon: "🔎", count: 3 },
+    { label: "Reconciliation & reclamation", icon: "⚖️", count: 3 },
+  ],
 };
+
