@@ -7,6 +7,7 @@ export interface Track {
   name: string;
   short: string;
   tagline: string;
+  heading: [string, string];
   emoji: string;
   /** Tailwind accent color used by the switcher. */
   accent: "primary" | "accent" | "secondary" | "destructive";
