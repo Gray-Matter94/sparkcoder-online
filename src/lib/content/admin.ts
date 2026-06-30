@@ -819,7 +819,16 @@ export const ADMIN_TOPICS: Topic[] = [
     blurb: "Charts, lists, pivots, and the difference between point-in-time reports and trend-style Performance Analytics indicators.",
     track: "servicenow-admin",
   },
+  {
+    id: "sam-pro",
+    name: "SAM Pro",
+    tagline: "Software Asset Management Professional.",
+    emoji: "💿",
+    blurb: "Discover, normalize, reconcile, and reclaim software licenses across on-prem and SaaS. Stay compliant during vendor audits and cut spend on shelfware.",
+    track: "servicenow-admin",
+  },
 ];
+
 
 export const ADMIN_TERMS: Term[] = [
   { topic: "platform-admin", term: "sys_properties", short: "Global config switches.", long: "Key/value table for instance-wide settings. Avoid storing secrets here — use credentials or vault." },
