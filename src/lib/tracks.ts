@@ -7,6 +7,7 @@ export interface Track {
   name: string;
   short: string;
   tagline: string;
+  heading: [string, string];
   emoji: string;
   /** Tailwind accent color used by the switcher. */
   accent: "primary" | "accent" | "secondary" | "destructive";
@@ -18,6 +19,7 @@ export const TRACKS: Track[] = [
     name: "ServiceNow Developer",
     short: "SN Dev",
     tagline: "Server scripts, GlideRecord, business rules.",
+    heading: ["ServiceNow Scripting", "Interview Practice."],
     emoji: "🛰️",
     accent: "primary",
   },
@@ -26,6 +28,7 @@ export const TRACKS: Track[] = [
     name: "ServiceNow Administrator",
     short: "SN Admin",
     tagline: "ACLs, UI policies, catalogs, update sets.",
+    heading: ["ServiceNow Admin", "Interview Practice."],
     emoji: "🛡️",
     accent: "accent",
   },
@@ -34,6 +37,7 @@ export const TRACKS: Track[] = [
     name: "Java Developer",
     short: "Java",
     tagline: "Collections, concurrency, Streams, Spring.",
+    heading: ["Java", "Interview Practice."],
     emoji: "☕",
     accent: "secondary",
   },
@@ -42,6 +46,7 @@ export const TRACKS: Track[] = [
     name: "AngularJS Developer",
     short: "AngularJS",
     tagline: "Scopes, directives, services, digest cycle.",
+    heading: ["AngularJS", "Interview Practice."],
     emoji: "🅰️",
     accent: "destructive",
   },
