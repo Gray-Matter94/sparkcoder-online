@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useProgress } from "@/lib/progress";
 
 const TITLE = "ServiceNow Flow Designer How-To Guide — SparkCoder";
 const DESCRIPTION =
@@ -205,9 +206,10 @@ export const Route = createFileRoute("/learn/flow-designer-how-to")({
 });
 
 function FlowDesignerHowTo() {
+  const { progress } = useProgress();
   return (
     <div className="min-h-screen flex flex-col">
-      <ErrorBoundary name="Stats"><StatsBar back /></ErrorBoundary>
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
 
       <main className="flex-1 max-w-3xl w-full mx-auto p-5 sm:p-8 space-y-8">
         <header className="space-y-3 animate-fade-in">
