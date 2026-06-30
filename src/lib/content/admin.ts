@@ -10,6 +10,7 @@ export const ADMIN_CATEGORIES: CategoryMeta[] = [
   { id: "update-set", name: "Update Sets", emoji: "📦", blurb: "Promote config across instances", color: "secondary", track: "servicenow-admin" },
   { id: "catalog", name: "Service Catalog", emoji: "🛒", blurb: "Items, variables, workflows", color: "primary", track: "servicenow-admin" },
   { id: "notification", name: "Notifications", emoji: "📧", blurb: "Email rules & templates", color: "accent", track: "servicenow-admin" },
+  { id: "sam-pro", name: "SAM Pro", emoji: "💿", blurb: "Software Asset Management Pro", color: "secondary", track: "servicenow-admin" },
 ];
 
 const T = (offset = 0) => {
