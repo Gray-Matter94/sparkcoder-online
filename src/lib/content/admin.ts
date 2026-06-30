@@ -10,6 +10,7 @@ export const ADMIN_CATEGORIES: CategoryMeta[] = [
   { id: "update-set", name: "Update Sets", emoji: "📦", blurb: "Promote config across instances", color: "secondary", track: "servicenow-admin" },
   { id: "catalog", name: "Service Catalog", emoji: "🛒", blurb: "Items, variables, workflows", color: "primary", track: "servicenow-admin" },
   { id: "notification", name: "Notifications", emoji: "📧", blurb: "Email rules & templates", color: "accent", track: "servicenow-admin" },
+  { id: "sam-pro", name: "SAM Pro", emoji: "💿", blurb: "Software Asset Management Pro", color: "secondary", track: "servicenow-admin" },
 ];
 
 const T = (offset = 0) => {
@@ -528,7 +529,260 @@ export const ADMIN_QUESTIONS: Question[] = [
       explain: "Every outbound (and inbound) email is a row. Filter by recipient + recent time and read `state` / `error_string`. That's 80% of admin email debugging.",
     },
   },
+
+  // ----- SAM Pro -----
+  {
+    id: "sam-1",
+    category: "sam-pro",
+    level: 1,
+    filename: "reconcile.txt",
+    title: "Compare what you OWN vs what you USE for Adobe Acrobat.",
+    code: [
+      "// You have 100 entitlements (purchased licenses).",
+      "// Discovery + SCCM found 137 installs.",
+      "// Correct SAM Pro action:",
+      "{{SLOT}}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "Run a Reconciliation against the Adobe Acrobat software model — review the compliance gap of 37",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "Uninstall every install over 100 immediately",
+        correct: false,
+        feedback: {
+          title: "No — reclaim, don't nuke",
+          explain: "SAM Pro flags the gap; you remediate via Reclamation rules (unused > N days) or purchase. Blind uninstall breaks users.",
+          sim: { rows: [], logs: [{ time: T(), text: "37 angry tickets from finance team", tone: "bad" }] },
+        },
+      },
+      {
+        id: "c",
+        text: "Add 37 rows to the entitlement record manually",
+        correct: false,
+        feedback: {
+          title: "Falsifies compliance",
+          explain: "Entitlements must match purchased licenses (PO / contract). Inflating them hides the real position from audit.",
+          sim: { rows: [], logs: [{ time: T(), text: "Audit detects entitlement without PO", tone: "bad" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "samp_sw_reconciliation_result",
+      rows: [{ number: "RECON-ADOBE-ACR", state: "Non-compliant by 37", updated: "now", highlight: "bad" }],
+      logs: [{ time: T(), text: "Reconciliation complete: 100 owned / 137 used / -37 gap", tone: "warn" }],
+    },
+    correctTeach: {
+      title: "Reconciliation = compliance math",
+      explain: "SAM Pro reconciles Entitlements vs Installs (normalized via the Content Library) per Software Model. Result is a compliance position, not an action — Reclamation closes the gap.",
+    },
+  },
+  {
+    id: "sam-2",
+    category: "sam-pro",
+    level: 2,
+    filename: "normalization.txt",
+    title: "Discovery returns 'ADOBE ACROBAT DC 23.001.20143'. SAM Pro needs to:",
+    code: [
+      "// Raw publisher/product/version strings vary wildly.",
+      "// The right SAM Pro mechanism:",
+      "{{SLOT}}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "Normalize the raw install via the Content Library Service (CLS) into a canonical Software Model + Publisher",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "Edit cmdb_sam_sw_install rows by hand to match",
+        correct: false,
+        feedback: {
+          title: "Doesn't scale",
+          explain: "Manual edits don't survive re-discovery. CLS publishes normalization data from ServiceNow's content team.",
+          sim: { rows: [], logs: [{ time: T(), text: "Next Discovery overwrites manual edits", tone: "bad" }] },
+        },
+      },
+      {
+        id: "c",
+        text: "Write a Business Rule on cmdb_ci to rename installs",
+        correct: false,
+        feedback: {
+          title: "Reinventing CLS",
+          explain: "Normalization is exactly what CLS does — and it ships with thousands of vendor signatures.",
+          sim: { rows: [], logs: [{ time: T(), text: "Custom regex misses Adobe Creative Cloud rebrands", tone: "warn" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "samp_sw_install",
+      rows: [{ number: "INSTALL-9421", state: "Normalized → Adobe Acrobat DC", updated: "now", highlight: "ok" }],
+      logs: [{ time: T(), text: "CLS matched raw string → samp_sw_product 'Adobe Acrobat DC'", tone: "ok" }],
+    },
+    correctTeach: {
+      title: "Normalization is the foundation",
+      explain: "Without CLS-driven normalization every report is wrong. The pipeline is: Discovery raw → CLS normalize → Software Model → Reconcile against Entitlements.",
+    },
+  },
+  {
+    id: "sam-3",
+    category: "sam-pro",
+    level: 2,
+    filename: "reclamation.rule",
+    title: "Reclaim Visio licenses unused for 90+ days.",
+    code: [
+      "// Condition:",
+      "// last_used > 90 days AND software_model = 'Microsoft Visio Pro'",
+      "// Action:",
+      "{{SLOT}}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "Create a Reclamation Candidate → workflow: notify user → wait → SCCM uninstall task",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "Delete the install row from cmdb_sam_sw_install",
+        correct: false,
+        feedback: {
+          title: "Doesn't uninstall",
+          explain: "The row is just a record — Discovery will re-create it. You need an actual SCCM/Intune uninstall task.",
+          sim: { rows: [], logs: [{ time: T(), text: "Next sync re-inserts the install row", tone: "bad" }] },
+        },
+      },
+      {
+        id: "c",
+        text: "Email the user telling them to uninstall it themselves",
+        correct: false,
+        feedback: {
+          title: "Unverifiable",
+          explain: "SAM Pro should close the loop: notify, wait, then trigger automation. Pure email leaves licenses stranded.",
+          sim: { rows: [], logs: [{ time: T(), text: "User ignored email; license still consumed", tone: "warn" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "samp_sw_reclamation_candidate",
+      rows: [{ number: "REC-VISIO-018", state: "Approved → SCCM uninstall queued", updated: "now", highlight: "ok" }],
+      logs: [{ time: T(), text: "Reclamation workflow fired: notify → wait 14d → uninstall", tone: "ok" }],
+    },
+    correctTeach: {
+      title: "Reclamation closes the loop",
+      explain: "Reclamation Rules generate candidates; a workflow notifies, then integrates with SCCM/Intune/JAMF to actually uninstall. That's where SAM Pro saves real money.",
+    },
+  },
+  {
+    id: "sam-4",
+    category: "sam-pro",
+    level: 3,
+    filename: "engine.txt",
+    title: "Oracle DB Enterprise audit — which engine handles Processor Core Factor math?",
+    code: [
+      "// You're licensing Oracle DB Enterprise by processor.",
+      "// Cores × Core Factor (e.g. Intel Xeon = 0.5).",
+      "// SAM Pro uses:",
+      "{{SLOT}}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "The Engineering / Publisher Pack for Oracle — applies metric rules + core factor table at reconciliation",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "A custom Script Include that calls Oracle's website",
+        correct: false,
+        feedback: {
+          title: "Already built",
+          explain: "Publisher Packs (Oracle, Microsoft, IBM, SAP) ship the metric logic. Build custom only for niche publishers.",
+          sim: { rows: [], logs: [{ time: T(), text: "Custom logic drifts from Oracle's current core factors", tone: "warn" }] },
+        },
+      },
+      {
+        id: "c",
+        text: "A simple count of installs",
+        correct: false,
+        feedback: {
+          title: "Wrong metric",
+          explain: "Processor-based licenses count cores × core factor — not install count. Mis-modelling here = 7-figure audit findings.",
+          sim: { rows: [], logs: [{ time: T(), text: "Reported 4 installs when truth is 64 cores × 0.5 = 32 PROC", tone: "bad" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "samp_engine_result",
+      rows: [{ number: "ENG-ORA-DB", state: "32 PROC required", updated: "now", highlight: "ok" }],
+      logs: [{ time: T(), text: "Oracle Engineering Pack applied core factor 0.5 to 64 cores", tone: "ok" }],
+    },
+    correctTeach: {
+      title: "Publisher Packs do the hard math",
+      explain: "Oracle / Microsoft / IBM / SAP / Adobe / Salesforce packs encode each publisher's licensing metric quirks (PVU, Processor, CAL, named user, etc.) into the reconciliation engine.",
+    },
+  },
+  {
+    id: "sam-5",
+    category: "sam-pro",
+    level: 3,
+    filename: "saas_overlap.txt",
+    title: "You own M365 E3 and added Visio Plan 2 — what catches the overlap?",
+    code: [
+      "// Some users have BOTH E3 (with Teams/OneDrive) AND",
+      "// standalone Teams licenses assigned by an admin.",
+      "// SAM Pro feature:",
+      "{{SLOT}}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "SaaS License Management — ingests usage from M365 Graph + flags duplicate / unused assignments",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "Discovery probe on the user's laptop",
+        correct: false,
+        feedback: {
+          title: "Wrong source",
+          explain: "SaaS entitlement lives in the tenant (M365 Graph), not on the endpoint. Discovery sees the installed app but not the assigned plan.",
+          sim: { rows: [], logs: [{ time: T(), text: "Endpoint scan can't see tenant-side license assignment", tone: "bad" }] },
+        },
+      },
+      {
+        id: "c",
+        text: "A Performance Analytics indicator on incident counts",
+        correct: false,
+        feedback: {
+          title: "Unrelated",
+          explain: "PA reports trends. SaaS License Management is the dedicated SAM Pro module for cloud subscriptions.",
+          sim: { rows: [], logs: [{ time: T(), text: "Trend chart doesn't reveal duplicate assignments", tone: "warn" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "samp_saas_subscription_assignment",
+      rows: [{ number: "M365-OVERLAP", state: "112 duplicate Teams assignments", updated: "now", highlight: "warn" }],
+      logs: [{ time: T(), text: "SaaS recon found 112 users with overlapping E3 + standalone Teams", tone: "warn" }],
+    },
+    correctTeach: {
+      title: "SaaS ≠ on-prem",
+      explain: "SAM Pro's SaaS License Management pulls from publisher APIs (M365, Zoom, Salesforce, Adobe CC, AWS) to track assignment + actual usage. Reclamation works here too: unassign unused seats.",
+    },
+  },
 ];
+
+
 
 /* ============== TOPICS (learn) ============== */
 
@@ -565,7 +819,16 @@ export const ADMIN_TOPICS: Topic[] = [
     blurb: "Charts, lists, pivots, and the difference between point-in-time reports and trend-style Performance Analytics indicators.",
     track: "servicenow-admin",
   },
+  {
+    id: "sam-pro",
+    name: "SAM Pro",
+    tagline: "Software Asset Management Professional.",
+    emoji: "💿",
+    blurb: "Discover, normalize, reconcile, and reclaim software licenses across on-prem and SaaS. Stay compliant during vendor audits and cut spend on shelfware.",
+    track: "servicenow-admin",
+  },
 ];
+
 
 export const ADMIN_TERMS: Term[] = [
   { topic: "platform-admin", term: "sys_properties", short: "Global config switches.", long: "Key/value table for instance-wide settings. Avoid storing secrets here — use credentials or vault." },
@@ -639,7 +902,25 @@ export const ADMIN_TERMS: Term[] = [
   { topic: "reporting", term: "Report ACL", short: "Who can see/share a report.", long: "report_view/report_publisher roles + sharing on the report record. Audit before sharing PII reports broadly." },
   { topic: "reporting", term: "DB View", short: "Cross-table join for reporting.", long: "Define a join across tables in System Definition > Database Views. Reports can run against the view." },
   { topic: "reporting", term: "Visual Task Board", short: "Kanban-style task view.", long: "Built from a filter; cards = records, lanes = field values. Drag to update state." },
+
+  // sam-pro
+  { topic: "sam-pro", term: "Software Asset Management Pro", short: "Premium SAM application.", long: "ServiceNow's licensed SAM offering. Adds Publisher Packs, SaaS License Management, Reclamation, and the Content Library Service on top of SAM Foundation." },
+  { topic: "sam-pro", term: "Content Library Service (CLS)", short: "Cloud-hosted normalization data.", long: "ServiceNow-managed catalog of publishers, products, and software models. Normalizes raw Discovery strings into canonical entries so reconciliation is accurate." },
+  { topic: "sam-pro", term: "Software Model", short: "A purchasable edition of a product.", long: "e.g. 'Microsoft Visio Professional 2021'. Links discovered installs to entitlements during reconciliation. Lives on samp_sw_product_model." },
+  { topic: "sam-pro", term: "Entitlement", short: "Proof of purchase / right-to-use.", long: "Stored on alm_license. Holds quantity, metric, contract reference, and tied software model. Source of 'what you own'." },
+  { topic: "sam-pro", term: "License Metric", short: "How a license is measured.", long: "Per User, Per Device, Per Core, Processor, PVU (IBM), Named User Plus (Oracle), CAL, Concurrent. Drives the reconciliation math." },
+  { topic: "sam-pro", term: "Reconciliation", short: "Compare entitlements vs installs.", long: "Scheduled engine that calculates compliance position per software model — surplus, compliant, or non-compliant. Results land on samp_sw_reconciliation_result." },
+  { topic: "sam-pro", term: "Reclamation Rule", short: "Identify unused installs.", long: "Criteria (e.g. last_used > 90 days) that generate Reclamation Candidates. Workflow then notifies user and triggers SCCM/Intune uninstall to recover the license." },
+  { topic: "sam-pro", term: "Publisher Pack", short: "Vendor-specific licensing rules.", long: "Engineering packs for Oracle, Microsoft, IBM, SAP, Adobe, Salesforce. Encode core factors, PVU tables, CAL math, and audit-grade compliance logic." },
+  { topic: "sam-pro", term: "SaaS License Management", short: "Track cloud subscriptions.", long: "Ingests usage from Microsoft 365, Zoom, Salesforce, Adobe CC, AWS, Google Workspace, etc. Finds unused / duplicate assignments and powers SaaS reclamation." },
+  { topic: "sam-pro", term: "Software Discovery Model", short: "How Discovery feeds SAM.", long: "Discovery + SCCM/Intune/JAMF/BigFix populate cmdb_sam_sw_install. CLS normalizes; reconciliation consumes the normalized installs." },
+  { topic: "sam-pro", term: "License Workbench", short: "Compliance command center.", long: "Single page per software model showing entitlements, installs, allocations, reclamation candidates, contracts, and remediation actions." },
+  { topic: "sam-pro", term: "Allocation", short: "Assign an entitlement to a CI/user.", long: "Records who consumes a license. Required for named-user metrics and helpful for chargeback and audit defense." },
+  { topic: "sam-pro", term: "True-Up / True-Down", short: "Adjust position post-reconciliation.", long: "True-up: buy more to close a gap. True-down: drop seats at renewal. SAM Pro feeds Procurement with hard numbers." },
+  { topic: "sam-pro", term: "Audit Defense Workspace", short: "Workspace for vendor audits.", long: "Curates the evidence package — entitlements, contracts, installs, allocation — so you can respond to a publisher audit in days, not months." },
+  { topic: "sam-pro", term: "Software Spend Detection", short: "Find shadow IT software spend.", long: "Parses AP / expense / contract data to surface software purchases that never made it into SAM. Common discovery: 20–30% hidden SaaS." },
 ];
+
 
 /* ============== QUIZZES ============== */
 
@@ -837,6 +1118,56 @@ export const ADMIN_QUIZZES: QuizQuestion[] = [
     correctIndex: 0,
     explain: "Scheduled Reports email the rendered report (PDF/Excel/Inline) on a cadence.",
   },
+
+  // sam-pro
+  {
+    id: "ad-sm1", topic: "sam-pro",
+    question: "Which engine compares purchased entitlements against discovered installs?",
+    options: ["Reconciliation", "Discovery", "Flow Designer", "Performance Analytics"],
+    correctIndex: 0,
+    explain: "Reconciliation is SAM Pro's compliance engine — it produces the surplus / compliant / non-compliant position per software model.",
+    whyWrong: {
+      1: "Discovery just inventories what's installed; it doesn't compare to entitlements.",
+      2: "Flow Designer automates workflows, e.g. reclamation, but doesn't compute compliance.",
+      3: "PA reports trends over time — different concern.",
+    },
+    learnMore: ["Reconciliation is scheduled; you can also run it on demand from the License Workbench.", "Results land on samp_sw_reconciliation_result."],
+  },
+  {
+    id: "ad-sm2", topic: "sam-pro",
+    question: "What does the Content Library Service (CLS) do?",
+    options: ["Normalizes raw install strings to canonical publishers/products/models", "Stores PDFs of contracts", "Backs up the CMDB", "Hosts learning content"],
+    correctIndex: 0,
+    explain: "CLS is ServiceNow's cloud-hosted normalization catalog — without it, every reconciliation is wrong.",
+  },
+  {
+    id: "ad-sm3", topic: "sam-pro",
+    question: "You found 137 installs of Visio but own 100 licenses. Right SAM Pro response?",
+    options: ["Create Reclamation Candidates for unused installs, then SCCM-uninstall", "Edit the entitlement quantity to 137", "Delete 37 install records", "Disable Discovery for Visio"],
+    correctIndex: 0,
+    explain: "Reclamation closes the gap legitimately by recovering unused licenses. Inflating entitlements falsifies compliance.",
+  },
+  {
+    id: "ad-sm4", topic: "sam-pro",
+    question: "Best way to handle Oracle DB Enterprise's Processor Core Factor licensing?",
+    options: ["Oracle Publisher Pack", "Custom Script Include", "Count installs", "Ignore — count users"],
+    correctIndex: 0,
+    explain: "Publisher Packs (Oracle, MS, IBM, SAP, Adobe, Salesforce) encode each vendor's metric rules and audit math.",
+  },
+  {
+    id: "ad-sm5", topic: "sam-pro",
+    question: "Which SAM Pro module surfaces duplicate Microsoft 365 license assignments?",
+    options: ["SaaS License Management", "Discovery probes", "Update Sets", "Notifications"],
+    correctIndex: 0,
+    explain: "SaaS License Management ingests usage from publisher APIs (M365 Graph, Zoom, Salesforce, Adobe CC, etc.) and flags overlap.",
+  },
+  {
+    id: "ad-sm6", topic: "sam-pro",
+    question: "Where do entitlement records live?",
+    options: ["alm_license", "cmdb_ci_server", "sc_req_item", "sys_user"],
+    correctIndex: 0,
+    explain: "alm_license stores the right-to-use record: quantity, metric, contract, software model.",
+  },
 ];
 
 /* ============== SECTION PLAN ============== */
@@ -858,4 +1189,9 @@ export const ADMIN_SECTIONS: Record<string, QuizSection[]> = {
     { label: "Reports & sharing", icon: "📊", count: 3 },
     { label: "Performance Analytics", icon: "📈", count: 3 },
   ],
+  "sam-pro": [
+    { label: "Discovery & normalization", icon: "🔎", count: 3 },
+    { label: "Reconciliation & reclamation", icon: "⚖️", count: 3 },
+  ],
 };
+
