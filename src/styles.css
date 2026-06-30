@@ -78,12 +78,29 @@
   from { opacity: 0; transform: translateX(-6px); }
   to { opacity: 1; transform: translateX(0); }
 }
+@keyframes sim-expand {
+  0% { opacity: 0; transform: translateY(6px) scaleY(0.05); max-height: 14px; }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); max-height: 18rem; }
+}
+@keyframes tap-line-in {
+  0% { opacity: 0; transform: scaleX(0.2); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+@keyframes tap-shimmer {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
 
 .animate-slide-up { animation: slideUp 0.5s var(--ease-spring) both; }
 .animate-fade-in { animation: fadeIn 0.3s ease-out both; }
 .animate-shake { animation: shake 0.45s ease-in-out; }
 .animate-pop { animation: pop 0.35s var(--ease-spring) both; }
 .animate-log-in { animation: log-in 0.25s ease-out both; }
+.animate-sim-expand { animation: sim-expand 0.42s var(--ease-spring) both; transform-origin: bottom; overflow: hidden; }
+.animate-tap-line-in { animation: tap-line-in 0.35s var(--ease-spring) both; transform-origin: center; }
+.animate-tap-shimmer { animation: tap-shimmer 1.8s ease-in-out infinite; }
+
 
 .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
