@@ -780,6 +780,9 @@ export const ADMIN_QUESTIONS: Question[] = [
       explain: "SAM Pro's SaaS License Management pulls from publisher APIs (M365, Zoom, Salesforce, Adobe CC, AWS) to track assignment + actual usage. Reclamation works here too: unassign unused seats.",
     },
   },
+];
+
+
 
 /* ============== TOPICS (learn) ============== */
 
