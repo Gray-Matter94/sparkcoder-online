@@ -135,6 +135,22 @@ function Learn() {
           </p>
         </Link>
         <Link
+          to="/learn/flow-designer-how-to"
+          aria-label="Open the Flow Designer How-To Guide"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🛠️ Flow Designer How-To
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            Script steps, REST messages, subflows, decision tables, catalog items —
+            direct answers to the 10 most-searched Flow Designer questions.
+          </p>
+        </Link>
+        <Link
           to="/learn/discovery-interview-questions"
           aria-label="Open the ServiceNow Discovery Interview Questions guide"
           className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
