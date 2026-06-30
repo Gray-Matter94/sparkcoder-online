@@ -902,7 +902,25 @@ export const ADMIN_TERMS: Term[] = [
   { topic: "reporting", term: "Report ACL", short: "Who can see/share a report.", long: "report_view/report_publisher roles + sharing on the report record. Audit before sharing PII reports broadly." },
   { topic: "reporting", term: "DB View", short: "Cross-table join for reporting.", long: "Define a join across tables in System Definition > Database Views. Reports can run against the view." },
   { topic: "reporting", term: "Visual Task Board", short: "Kanban-style task view.", long: "Built from a filter; cards = records, lanes = field values. Drag to update state." },
+
+  // sam-pro
+  { topic: "sam-pro", term: "Software Asset Management Pro", short: "Premium SAM application.", long: "ServiceNow's licensed SAM offering. Adds Publisher Packs, SaaS License Management, Reclamation, and the Content Library Service on top of SAM Foundation." },
+  { topic: "sam-pro", term: "Content Library Service (CLS)", short: "Cloud-hosted normalization data.", long: "ServiceNow-managed catalog of publishers, products, and software models. Normalizes raw Discovery strings into canonical entries so reconciliation is accurate." },
+  { topic: "sam-pro", term: "Software Model", short: "A purchasable edition of a product.", long: "e.g. 'Microsoft Visio Professional 2021'. Links discovered installs to entitlements during reconciliation. Lives on samp_sw_product_model." },
+  { topic: "sam-pro", term: "Entitlement", short: "Proof of purchase / right-to-use.", long: "Stored on alm_license. Holds quantity, metric, contract reference, and tied software model. Source of 'what you own'." },
+  { topic: "sam-pro", term: "License Metric", short: "How a license is measured.", long: "Per User, Per Device, Per Core, Processor, PVU (IBM), Named User Plus (Oracle), CAL, Concurrent. Drives the reconciliation math." },
+  { topic: "sam-pro", term: "Reconciliation", short: "Compare entitlements vs installs.", long: "Scheduled engine that calculates compliance position per software model — surplus, compliant, or non-compliant. Results land on samp_sw_reconciliation_result." },
+  { topic: "sam-pro", term: "Reclamation Rule", short: "Identify unused installs.", long: "Criteria (e.g. last_used > 90 days) that generate Reclamation Candidates. Workflow then notifies user and triggers SCCM/Intune uninstall to recover the license." },
+  { topic: "sam-pro", term: "Publisher Pack", short: "Vendor-specific licensing rules.", long: "Engineering packs for Oracle, Microsoft, IBM, SAP, Adobe, Salesforce. Encode core factors, PVU tables, CAL math, and audit-grade compliance logic." },
+  { topic: "sam-pro", term: "SaaS License Management", short: "Track cloud subscriptions.", long: "Ingests usage from Microsoft 365, Zoom, Salesforce, Adobe CC, AWS, Google Workspace, etc. Finds unused / duplicate assignments and powers SaaS reclamation." },
+  { topic: "sam-pro", term: "Software Discovery Model", short: "How Discovery feeds SAM.", long: "Discovery + SCCM/Intune/JAMF/BigFix populate cmdb_sam_sw_install. CLS normalizes; reconciliation consumes the normalized installs." },
+  { topic: "sam-pro", term: "License Workbench", short: "Compliance command center.", long: "Single page per software model showing entitlements, installs, allocations, reclamation candidates, contracts, and remediation actions." },
+  { topic: "sam-pro", term: "Allocation", short: "Assign an entitlement to a CI/user.", long: "Records who consumes a license. Required for named-user metrics and helpful for chargeback and audit defense." },
+  { topic: "sam-pro", term: "True-Up / True-Down", short: "Adjust position post-reconciliation.", long: "True-up: buy more to close a gap. True-down: drop seats at renewal. SAM Pro feeds Procurement with hard numbers." },
+  { topic: "sam-pro", term: "Audit Defense Workspace", short: "Workspace for vendor audits.", long: "Curates the evidence package — entitlements, contracts, installs, allocation — so you can respond to a publisher audit in days, not months." },
+  { topic: "sam-pro", term: "Software Spend Detection", short: "Find shadow IT software spend.", long: "Parses AP / expense / contract data to surface software purchases that never made it into SAM. Common discovery: 20–30% hidden SaaS." },
 ];
+
 
 /* ============== QUIZZES ============== */
 
