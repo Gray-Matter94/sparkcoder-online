@@ -61,9 +61,9 @@ function Learn() {
             Knowledge Vault
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
-            LEARN THE
+            ServiceNow Glossary
             <br />
-            <span className="text-accent">LINGO.</span>
+            and <span className="text-accent">Quizzes.</span>
           </h1>
           <p className="text-sm text-foreground/85">
             Pick a topic to skim the glossary and run a quiz. Quizzes mark the topic as
