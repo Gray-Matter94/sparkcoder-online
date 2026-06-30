@@ -23,10 +23,13 @@ interface Props {
 
 export function Simulator({ output, status, resultTone }: Props) {
   const [visibleLogs, setVisibleLogs] = useState(0);
+  const [minimized, setMinimized] = useState(false);
 
   useEffect(() => {
     setVisibleLogs(0);
     if (!output) return;
+    // Auto-expand when a new run starts
+    setMinimized(false);
     const total = output.logs.length;
     let i = 0;
     const id = setInterval(() => {
@@ -37,6 +40,11 @@ export function Simulator({ output, status, resultTone }: Props) {
     return () => clearInterval(id);
   }, [output]);
 
+  // Auto-expand whenever the simulator is actively running
+  useEffect(() => {
+    if (status === "running") setMinimized(false);
+  }, [status]);
+
   const dotColor =
     status === "running"
       ? "bg-accent"
@@ -46,16 +54,45 @@ export function Simulator({ output, status, resultTone }: Props) {
           ? "bg-destructive"
           : "bg-zinc-600";
 
+  if (minimized) {
+    return (
+      <button
+        type="button"
+        onClick={() => setMinimized(false)}
+        aria-label="Expand instance simulator"
+        className="w-full group rounded-full bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex items-center gap-3 px-4 py-2 animate-fade-in hover:border-accent/40 transition-colors"
+      >
+        <span className={`size-1.5 rounded-full ${dotColor} animate-pulse shrink-0`} />
+        <span className="relative flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
+          <span className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-[slide-in-right_1.6s_ease-in-out_infinite]" />
+        </span>
+        <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase shrink-0 group-hover:text-accent">
+          Tap to expand
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <div className="rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex flex-col h-56 md:h-64">
+    <div className="rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex flex-col h-56 md:h-64 animate-fade-in">
       <div className="px-4 py-2 bg-white/5 border-b border-white/5 flex items-center justify-between shrink-0">
         <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-2 tracking-widest uppercase">
           <span className={`size-1.5 rounded-full ${dotColor} animate-pulse`} />
           Instance Simulator (dev10294)
         </span>
-        <span className="text-[10px] text-muted-foreground font-mono">
-          {output?.table ? `DB: ${output.table}` : "idle"}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] text-muted-foreground font-mono">
+            {output?.table ? `DB: ${output.table}` : "idle"}
+          </span>
+          <button
+            type="button"
+            onClick={() => setMinimized(true)}
+            aria-label="Minimize instance simulator"
+            className="text-muted-foreground hover:text-foreground text-xs leading-none size-5 rounded hover:bg-white/5 grid place-items-center"
+          >
+            —
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 p-3 overflow-y-auto scrollbar-thin flex flex-col gap-3 min-h-0">
