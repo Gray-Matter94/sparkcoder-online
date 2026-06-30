@@ -9,6 +9,7 @@ import { TrackSwitcher } from "@/components/TrackSwitcher";
 import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
 import { trackMeta } from "@/lib/tracks";
+import { TopWeeklyBlogs } from "@/components/TopWeeklyBlogs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -264,6 +265,8 @@ function Home() {
             })}
           </div>
         </section>
+
+        <TopWeeklyBlogs />
 
         <section className="pt-2">
           <button
