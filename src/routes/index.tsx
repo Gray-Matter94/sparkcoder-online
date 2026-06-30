@@ -79,9 +79,12 @@ function Home() {
             {meta.emoji} {meta.name}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
-            ServiceNow Scripting
+            {meta.heading[0]}
             <br />
-            Interview <span className={accentText}>Practice.</span>
+            {meta.heading[1].split(" ").slice(0, -1).join(" ")}{" "}
+            <span className={accentText}>
+              {meta.heading[1].split(" ").slice(-1)[0]}
+            </span>
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
             {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
