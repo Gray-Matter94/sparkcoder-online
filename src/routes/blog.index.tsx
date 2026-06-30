@@ -62,7 +62,7 @@ function BlogIndex() {
             📚 20-Day Curriculum
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
-            FOUR WEEKS TO <span className="text-accent">SHIP-READY.</span>
+            ServiceNow 20-Day <span className="text-accent">Scripting Curriculum.</span>
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Twenty days of ServiceNow scripting, grouped into four weekly guides. Each day has one goal, one

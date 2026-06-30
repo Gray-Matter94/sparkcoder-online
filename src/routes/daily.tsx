@@ -84,7 +84,7 @@ function Daily() {
             </span>
           </div>
           <h1 className="font-display text-3xl tracking-tight leading-[1]">
-            TODAY'S <span className="text-accent">PUZZLE.</span>
+            Daily ServiceNow <span className="text-accent">Scripting Challenge.</span>
           </h1>
           <p className="text-xs text-muted-foreground">
             {meta.emoji} {meta.name} · Level {q.level} · {alreadyDone ? "✅ Already locked in" : "Worth bonus XP + streak"}
