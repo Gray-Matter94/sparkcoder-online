@@ -56,6 +56,9 @@ export const Route = createFileRoute("/practice/$category")({
     };
   },
   component: Practice,
+  validateSearch: (search: Record<string, unknown>) => ({
+    difficulty: parseDifficulty(search.difficulty),
+  }),
 });
 
 type Status = "picking" | "running" | "wrong" | "right" | "done";
