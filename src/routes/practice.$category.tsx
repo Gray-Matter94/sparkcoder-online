@@ -67,31 +67,47 @@ function Practice() {
   const tier = useMemo(() => getCurrentTier(progress), [progress]);
   const nextTier = useMemo(() => getNextTier(progress), [progress]);
   const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
-  const questions = useMemo(
+  const tierAllowed = useMemo(
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
   );
-  const lockedCount = allQuestions.length - questions.length;
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => readStoredDifficulty());
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(DIFFICULTY_STORAGE_KEY, difficulty);
+    }
+  }, [difficulty]);
+
+  const questions = useMemo(() => {
+    const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
+    return filtered.length > 0 ? filtered : tierAllowed;
+  }, [tierAllowed, difficulty]);
+  const lockedCount = allQuestions.length - tierAllowed.length;
+  const noneAtDifficulty =
+    tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty)).length === 0;
 
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<Option | null>(null);
   const [status, setStatus] = useState<Status>("picking");
   const [simOutput, setSimOutput] = useState<SimulatorOutput | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
+  const [hintOpen, setHintOpen] = useState(false);
 
-  // Reset on category change
+  // Reset on category or difficulty change
   useEffect(() => {
     setIndex(0);
     resetQuestion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category]);
+  }, [category, difficulty]);
 
   function resetQuestion() {
     setPicked(null);
     setStatus("picking");
     setSimOutput(null);
     setWrongAttempts([]);
+    setHintOpen(false);
   }
+
 
   if (questions.length === 0) {
     return (
