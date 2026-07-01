@@ -200,6 +200,47 @@ function Practice() {
           )}
         </div>
 
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
+              Difficulty
+            </h2>
+            {noneAtDifficulty && (
+              <span className="text-[10px] text-accent font-mono">
+                No {difficulty} puzzles here — showing all.
+              </span>
+            )}
+          </div>
+          <div role="radiogroup" aria-label="Puzzle difficulty" className="grid grid-cols-3 gap-2">
+            {DIFFICULTIES.map((d) => {
+              const active = d.id === difficulty;
+              return (
+                <button
+                  key={d.id}
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setDifficulty(d.id)}
+                  className={`px-2 py-2 rounded-xl border-2 text-left transition-all ${
+                    active
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-panel hover:border-primary/40"
+                  }`}
+                  title={d.blurb}
+                >
+                  <div className="flex items-center gap-1.5 text-xs font-bold">
+                    <span>{d.emoji}</span>
+                    <span className={active ? "text-primary" : "text-foreground"}>{d.label}</span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                    {d.blurb}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         <CodeBlock
           filename={q.filename}
           lines={q.code}
