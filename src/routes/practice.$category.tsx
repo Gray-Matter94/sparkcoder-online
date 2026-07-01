@@ -8,6 +8,14 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
+import { DIFFICULTIES, matchesDifficulty, getHintForQuestion, type Difficulty } from "@/lib/hints";
+
+const DIFFICULTY_STORAGE_KEY = "snscript_difficulty_v1";
+function readStoredDifficulty(): Difficulty {
+  if (typeof window === "undefined") return "medium";
+  const v = window.localStorage.getItem(DIFFICULTY_STORAGE_KEY);
+  return v === "easy" || v === "medium" || v === "hard" ? v : "medium";
+}
 
 export const Route = createFileRoute("/practice/$category")({
   head: ({ params }) => {
@@ -59,31 +67,47 @@ function Practice() {
   const tier = useMemo(() => getCurrentTier(progress), [progress]);
   const nextTier = useMemo(() => getNextTier(progress), [progress]);
   const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
-  const questions = useMemo(
+  const tierAllowed = useMemo(
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
   );
-  const lockedCount = allQuestions.length - questions.length;
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => readStoredDifficulty());
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(DIFFICULTY_STORAGE_KEY, difficulty);
+    }
+  }, [difficulty]);
+
+  const questions = useMemo(() => {
+    const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
+    return filtered.length > 0 ? filtered : tierAllowed;
+  }, [tierAllowed, difficulty]);
+  const lockedCount = allQuestions.length - tierAllowed.length;
+  const noneAtDifficulty =
+    tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty)).length === 0;
 
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<Option | null>(null);
   const [status, setStatus] = useState<Status>("picking");
   const [simOutput, setSimOutput] = useState<SimulatorOutput | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
+  const [hintOpen, setHintOpen] = useState(false);
 
-  // Reset on category change
+  // Reset on category or difficulty change
   useEffect(() => {
     setIndex(0);
     resetQuestion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category]);
+  }, [category, difficulty]);
 
   function resetQuestion() {
     setPicked(null);
     setStatus("picking");
     setSimOutput(null);
     setWrongAttempts([]);
+    setHintOpen(false);
   }
+
 
   if (questions.length === 0) {
     return (
@@ -176,6 +200,47 @@ function Practice() {
           )}
         </div>
 
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
+              Difficulty
+            </h2>
+            {noneAtDifficulty && (
+              <span className="text-[10px] text-accent font-mono">
+                No {difficulty} puzzles here — showing all.
+              </span>
+            )}
+          </div>
+          <div role="radiogroup" aria-label="Puzzle difficulty" className="grid grid-cols-3 gap-2">
+            {DIFFICULTIES.map((d) => {
+              const active = d.id === difficulty;
+              return (
+                <button
+                  key={d.id}
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setDifficulty(d.id)}
+                  className={`px-2 py-2 rounded-xl border-2 text-left transition-all ${
+                    active
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-panel hover:border-primary/40"
+                  }`}
+                  title={d.blurb}
+                >
+                  <div className="flex items-center gap-1.5 text-xs font-bold">
+                    <span>{d.emoji}</span>
+                    <span className={active ? "text-primary" : "text-foreground"}>{d.label}</span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                    {d.blurb}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
         <CodeBlock
           filename={q.filename}
           lines={q.code}
@@ -255,16 +320,47 @@ function Practice() {
         )}
 
         {status !== "wrong" && status !== "right" && (
-          <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
-            <button
-              onClick={handleRun}
-              disabled={!picked || status === "running"}
-              className="flex-1 h-14 bg-primary text-primary-foreground font-display text-lg rounded-2xl shadow-[0_8px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider"
-            >
-              {status === "running" ? "RUNNING…" : "▶ RUN SCRIPT"}
-            </button>
-          </div>
+          <>
+            {hintOpen && (
+              <div className="mx-3 mb-2 rounded-xl border-2 border-accent/40 bg-accent/5 p-3 animate-fade-in">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-[10px] uppercase tracking-widest text-accent font-bold">
+                    💡 Hint · {difficulty}
+                  </span>
+                  <button
+                    onClick={() => setHintOpen(false)}
+                    className="text-[10px] text-muted-foreground hover:text-foreground"
+                    aria-label="Dismiss hint"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-xs text-foreground/90 leading-snug font-mono">
+                  {getHintForQuestion(q, difficulty)}
+                </p>
+              </div>
+            )}
+            <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
+              <button
+                onClick={() => setHintOpen((v) => !v)}
+                disabled={status === "running"}
+                className="h-14 px-4 bg-panel border-2 border-border text-foreground font-display text-sm rounded-2xl tracking-wider disabled:opacity-40"
+                aria-expanded={hintOpen}
+                aria-label={`Toggle ${difficulty} hint`}
+              >
+                💡 HINT
+              </button>
+              <button
+                onClick={handleRun}
+                disabled={!picked || status === "running"}
+                className="flex-1 h-14 bg-primary text-primary-foreground font-display text-lg rounded-2xl shadow-[0_8px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider"
+              >
+                {status === "running" ? "RUNNING…" : "▶ RUN SCRIPT"}
+              </button>
+            </div>
+          </>
         )}
+
       </div>
     </div>
   );
