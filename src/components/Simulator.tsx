@@ -33,6 +33,10 @@ export function Simulator({ output, status, resultTone }: Props) {
     // Auto-expand when a new run starts
     setMinimized(false);
     const total = output.logs.length;
+    if (prefersReducedMotion) {
+      setVisibleLogs(total);
+      return;
+    }
     let i = 0;
     const id = setInterval(() => {
       i += 1;
@@ -40,7 +44,7 @@ export function Simulator({ output, status, resultTone }: Props) {
       if (i >= total) clearInterval(id);
     }, 280);
     return () => clearInterval(id);
-  }, [output]);
+  }, [output, prefersReducedMotion]);
 
   // Auto-expand whenever the simulator is actively running
   useEffect(() => {
