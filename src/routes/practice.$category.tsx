@@ -77,12 +77,35 @@ function Practice() {
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
   );
-  const [difficulty, setDifficulty] = useState<Difficulty>(() => readStoredDifficulty());
+  const search = Route.useSearch();
+  const [difficulty, setDifficultyState] = useState<Difficulty>(
+    () => search.difficulty ?? readStoredDifficulty()
+  );
+  // Sync URL → state when the search param changes (e.g., shared link, back/forward).
+  useEffect(() => {
+    if (search.difficulty && search.difficulty !== difficulty) {
+      setDifficultyState(search.difficulty);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.difficulty]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.localStorage.setItem(DIFFICULTY_STORAGE_KEY, difficulty);
     }
   }, [difficulty]);
+  // Ensure the URL reflects the active difficulty so links are shareable.
+  useEffect(() => {
+    if (search.difficulty !== difficulty) {
+      navigate({
+        to: "/practice/$category",
+        params: { category },
+        search: { difficulty },
+        replace: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, category]);
+  const setDifficulty = (d: Difficulty) => setDifficultyState(d);
 
   const questions = useMemo(() => {
     const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
