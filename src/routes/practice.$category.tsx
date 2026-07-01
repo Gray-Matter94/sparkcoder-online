@@ -16,6 +16,9 @@ function readStoredDifficulty(): Difficulty {
   const v = window.localStorage.getItem(DIFFICULTY_STORAGE_KEY);
   return v === "easy" || v === "medium" || v === "hard" ? v : "medium";
 }
+function parseDifficulty(v: unknown): Difficulty | undefined {
+  return v === "easy" || v === "medium" || v === "hard" ? v : undefined;
+}
 
 export const Route = createFileRoute("/practice/$category")({
   head: ({ params }) => {
@@ -53,6 +56,9 @@ export const Route = createFileRoute("/practice/$category")({
     };
   },
   component: Practice,
+  validateSearch: (search: Record<string, unknown>) => ({
+    difficulty: parseDifficulty(search.difficulty),
+  }),
 });
 
 type Status = "picking" | "running" | "wrong" | "right" | "done";
@@ -71,12 +77,35 @@ function Practice() {
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
   );
-  const [difficulty, setDifficulty] = useState<Difficulty>(() => readStoredDifficulty());
+  const search = Route.useSearch();
+  const [difficulty, setDifficultyState] = useState<Difficulty>(
+    () => search.difficulty ?? readStoredDifficulty()
+  );
+  // Sync URL → state when the search param changes (e.g., shared link, back/forward).
+  useEffect(() => {
+    if (search.difficulty && search.difficulty !== difficulty) {
+      setDifficultyState(search.difficulty);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.difficulty]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.localStorage.setItem(DIFFICULTY_STORAGE_KEY, difficulty);
     }
   }, [difficulty]);
+  // Ensure the URL reflects the active difficulty so links are shareable.
+  useEffect(() => {
+    if (search.difficulty !== difficulty) {
+      navigate({
+        to: "/practice/$category",
+        params: { category },
+        search: { difficulty },
+        replace: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, category]);
+  const setDifficulty = (d: Difficulty) => setDifficultyState(d);
 
   const questions = useMemo(() => {
     const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
