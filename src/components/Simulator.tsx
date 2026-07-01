@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const toneClass: Record<string, string> = {
   info: "text-muted-foreground",
