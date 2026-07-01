@@ -16,6 +16,9 @@ function readStoredDifficulty(): Difficulty {
   const v = window.localStorage.getItem(DIFFICULTY_STORAGE_KEY);
   return v === "easy" || v === "medium" || v === "hard" ? v : "medium";
 }
+function parseDifficulty(v: unknown): Difficulty | undefined {
+  return v === "easy" || v === "medium" || v === "hard" ? v : undefined;
+}
 
 export const Route = createFileRoute("/practice/$category")({
   head: ({ params }) => {
