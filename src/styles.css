@@ -101,6 +101,34 @@
 .animate-tap-line-in { animation: tap-line-in 0.35s var(--ease-spring) both; transform-origin: center; }
 .animate-tap-shimmer { animation: tap-shimmer 1.8s ease-in-out infinite; }
 
+@keyframes reduced-motion-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sim-expand {
+    animation: reduced-motion-fade 0.2s ease-out both;
+    max-height: 18rem;
+    transform-origin: bottom;
+    overflow: hidden;
+  }
+  .animate-tap-line-in {
+    animation: reduced-motion-fade 0.2s ease-out both;
+    transform-origin: center;
+  }
+  .animate-log-in {
+    animation: reduced-motion-fade 0.15s ease-out both;
+  }
+  .animate-tap-shimmer {
+    animation: none;
+    opacity: 0;
+  }
+  .animate-pulse {
+    animation: none;
+  }
+}
+
 
 .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
