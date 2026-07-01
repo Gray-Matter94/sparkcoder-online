@@ -320,16 +320,47 @@ function Practice() {
         )}
 
         {status !== "wrong" && status !== "right" && (
-          <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
-            <button
-              onClick={handleRun}
-              disabled={!picked || status === "running"}
-              className="flex-1 h-14 bg-primary text-primary-foreground font-display text-lg rounded-2xl shadow-[0_8px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider"
-            >
-              {status === "running" ? "RUNNING…" : "▶ RUN SCRIPT"}
-            </button>
-          </div>
+          <>
+            {hintOpen && (
+              <div className="mx-3 mb-2 rounded-xl border-2 border-accent/40 bg-accent/5 p-3 animate-fade-in">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-[10px] uppercase tracking-widest text-accent font-bold">
+                    💡 Hint · {difficulty}
+                  </span>
+                  <button
+                    onClick={() => setHintOpen(false)}
+                    className="text-[10px] text-muted-foreground hover:text-foreground"
+                    aria-label="Dismiss hint"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <p className="text-xs text-foreground/90 leading-snug font-mono">
+                  {getHintForQuestion(q, difficulty)}
+                </p>
+              </div>
+            )}
+            <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
+              <button
+                onClick={() => setHintOpen((v) => !v)}
+                disabled={status === "running"}
+                className="h-14 px-4 bg-panel border-2 border-border text-foreground font-display text-sm rounded-2xl tracking-wider disabled:opacity-40"
+                aria-expanded={hintOpen}
+                aria-label={`Toggle ${difficulty} hint`}
+              >
+                💡 HINT
+              </button>
+              <button
+                onClick={handleRun}
+                disabled={!picked || status === "running"}
+                className="flex-1 h-14 bg-primary text-primary-foreground font-display text-lg rounded-2xl shadow-[0_8px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider"
+              >
+                {status === "running" ? "RUNNING…" : "▶ RUN SCRIPT"}
+              </button>
+            </div>
+          </>
         )}
+
       </div>
     </div>
   );
