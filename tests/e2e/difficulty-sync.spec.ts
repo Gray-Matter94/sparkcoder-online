@@ -67,6 +67,11 @@ test.describe("difficulty selector stays in sync", () => {
     await expect(
       page.getByRole("radiogroup", { name: /Puzzle difficulty/i })
     ).toBeVisible();
+    // Wait for client hydration — the mount effect writes the default to
+    // localStorage, and only after that do click handlers fire reliably.
+    await expect
+      .poll(() => readStorage(page), { timeout: 7_000 })
+      .not.toBeNull();
 
     for (const level of LEVELS) {
       await page
