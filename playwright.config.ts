@@ -10,7 +10,7 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 7_000 },
   fullyParallel: true,
-  retries: 0,
+  retries: process.env.CI ? 2 : 0,
   reporter: [["list"]],
   use: {
     baseURL: "http://localhost:8080",
@@ -19,7 +19,15 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+          ? { launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } }
+          : {}),
+      },
+    },
   ],
   webServer: {
     command: "bun run dev",
