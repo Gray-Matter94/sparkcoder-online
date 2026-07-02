@@ -5,38 +5,50 @@ const STORAGE_KEY = "snscript_difficulty_v1";
 const LEVELS = ["easy", "medium", "hard"] as const;
 type Level = (typeof LEVELS)[number];
 
-async function readState(page: Page) {
-  const url = new URL(page.url());
-  const urlDifficulty = url.searchParams.get("difficulty");
-  const storage = await page.evaluate(
-    (k) => window.localStorage.getItem(k),
-    STORAGE_KEY
-  );
-  const active = await page
-    .locator('[role="radio"][aria-checked="true"]')
-    .getAttribute("aria-label")
-    .catch(() => null);
-  // Fallback: read the label text if aria-label isn't present.
-  const activeText = active
-    ? active.toLowerCase()
-    : (
-        await page
-          .locator('[role="radio"][aria-checked="true"]')
-          .innerText()
-      ).toLowerCase();
-  const selector = LEVELS.find((l) => activeText.includes(l)) ?? null;
-  return { urlDifficulty, storage, selector };
+const LABEL: Record<Level, RegExp> = {
+  easy: /easy/i,
+  medium: /medium/i,
+  hard: /hard/i,
+};
+
+async function readSelector(page: Page): Promise<Level | null> {
+  const text = (
+    await page
+      .locator('[role="radio"][aria-checked="true"]')
+      .first()
+      .innerText()
+      .catch(() => "")
+  ).toLowerCase();
+  return LEVELS.find((l) => text.includes(l)) ?? null;
+}
+
+async function readStorage(page: Page): Promise<string | null> {
+  return page.evaluate((k) => window.localStorage.getItem(k), STORAGE_KEY);
+}
+
+function readUrl(page: Page): string | null {
+  return new URL(page.url()).searchParams.get("difficulty");
 }
 
 async function expectSynced(page: Page, expected: Level) {
   await expect
-    .poll(async () => (await readState(page)).selector, {
+    .poll(() => readSelector(page), {
       message: `selector should be ${expected}`,
+      timeout: 7_000,
     })
     .toBe(expected);
-  const state = await readState(page);
-  expect(state.urlDifficulty).toBe(expected);
-  expect(state.storage).toBe(expected);
+  await expect
+    .poll(() => readUrl(page), {
+      message: `URL ?difficulty should be ${expected}`,
+      timeout: 7_000,
+    })
+    .toBe(expected);
+  await expect
+    .poll(() => readStorage(page), {
+      message: `localStorage should be ${expected}`,
+      timeout: 7_000,
+    })
+    .toBe(expected);
 }
 
 test.describe("difficulty selector stays in sync", () => {
@@ -58,18 +70,9 @@ test.describe("difficulty selector stays in sync", () => {
 
     for (const level of LEVELS) {
       await page
-        .getByRole("radio", { name: new RegExp(`Toggle ${level} hint|${level}`, "i") })
+        .getByRole("radio", { name: LABEL[level] })
         .first()
-        .click()
-        .catch(async () => {
-          // Fallback: click the radio whose visible text contains the level label.
-          await page
-            .locator('[role="radio"]', {
-              hasText: new RegExp(`^\\s*(🟢|🟡|🔴)?\\s*${level}`, "i"),
-            })
-            .first()
-            .click();
-        });
+        .click();
       await expectSynced(page, level);
     }
   });
