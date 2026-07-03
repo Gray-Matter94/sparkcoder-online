@@ -228,7 +228,7 @@ function Home() {
                 <Link
                   key={c.id}
                   to="/practice/$category"
-                  params={{ category: c.id }}
+                  params={{ category: c.id }} search={{ difficulty: undefined }}
                   className={`group p-4 rounded-2xl border-2 border-border bg-panel transition-all flex items-center gap-4 ${ringColor} active:translate-y-0.5`}
                 >
                   <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">

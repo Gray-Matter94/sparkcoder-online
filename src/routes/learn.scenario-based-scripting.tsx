@@ -248,7 +248,7 @@ function ScenarioGuide() {
           </p>
           <p className="text-[11px] font-mono text-muted-foreground">
             Tap a scenario to inspect the simulator trace. Want timed drills? Try the{" "}
-            <Link to="/practice/$category" params={{ category: "gliderecord" }} className="text-accent underline">
+            <Link to="/practice/$category" params={{ category: "gliderecord" }} search={{ difficulty: undefined }} className="text-accent underline">
               GlideRecord practice set
             </Link>
             .

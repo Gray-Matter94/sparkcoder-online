@@ -187,21 +187,21 @@ function CsaInterviewPage() {
           <div className="flex flex-wrap gap-2 pt-2">
             <Link
               to="/practice/$category"
-              params={{ category: "acl" }}
+              params={{ category: "acl" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Practice: ACLs
             </Link>
             <Link
               to="/practice/$category"
-              params={{ category: "ui-policy" }}
+              params={{ category: "ui-policy" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Practice: UI Policies
             </Link>
             <Link
               to="/practice/$category"
-              params={{ category: "update-set" }}
+              params={{ category: "update-set" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Practice: Update Sets
