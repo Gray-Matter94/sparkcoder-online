@@ -3,6 +3,7 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { IRM_CATEGORIES } from "@/lib/content/irm";
 import { setActiveTrack } from "@/lib/tracks";
+import { useProgress } from "@/lib/progress";
 import { useEffect } from "react";
 
 const TITLE = "ServiceNow IRM Architect Practice Track — SparkCoder";
