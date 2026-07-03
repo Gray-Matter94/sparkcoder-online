@@ -10,12 +10,17 @@ export function TeachCard({ tone, title, explain, onContinue, continueLabel }: P
   const isOk = tone === "ok";
   return (
     <div
+      data-testid="teach-card"
+      role={isOk ? "status" : "alert"}
+      aria-live={isOk ? "polite" : "assertive"}
+      aria-label={isOk ? "Correct answer feedback" : "Incorrect answer feedback"}
       className={`p-5 rounded-3xl border-2 shadow-2xl animate-pop ${
         isOk
           ? "bg-primary/10 border-primary shadow-primary/20"
           : "bg-destructive/10 border-destructive shadow-destructive/20"
       }`}
     >
+
       <div
         className={`flex items-center gap-2 mb-2 font-bold uppercase tracking-widest text-xs ${
           isOk ? "text-primary" : "text-destructive"

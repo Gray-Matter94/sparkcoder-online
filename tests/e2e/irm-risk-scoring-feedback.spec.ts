@@ -1,4 +1,6 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
+import { expectSimulatorAndTeachCardAccessible } from "./utils/a11y";
+
 
 /**
  * Verifies that both IRM risk-scoring puzzles surface the enriched
@@ -102,6 +104,15 @@ test.describe("IRM risk-scoring puzzles show detailed simulator + teach feedback
     // Puzzle 2 is level-3 → seed 2 weekly badges to unlock GlideRecord Wizard.
     await seedProgress(page, 2);
   });
+
+  // Assert screen-reader affordances + axe-clean feedback surfaces after
+  // every test's final render (both simulator trace and TeachCard are on
+  // screen at this point since tests advance through to the correct answer).
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) return;
+    await expectSimulatorAndTeachCardAccessible(page, testInfo.title);
+  });
+
 
   test("puzzle 1 (residual risk): wrong subtract, wrong divide, and correct answer all render enriched feedback", async ({
     page,
