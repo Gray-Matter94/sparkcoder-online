@@ -56,6 +56,10 @@ jobs:
     name: IRM Simulator E2E (focused)
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+
 
     steps:
       - uses: actions/checkout@v4
