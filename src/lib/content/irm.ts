@@ -1,0 +1,369 @@
+import type { CategoryMeta, Question } from "../questions";
+
+export const IRM_CATEGORIES: CategoryMeta[] = [
+  { id: "grc-tables", name: "GRC Tables", emoji: "🗂️", blurb: "Risk, control, entity model", color: "primary", track: "servicenow-irm" },
+  { id: "risk-scoring", name: "Risk Scoring", emoji: "📊", blurb: "Inherent vs residual math", color: "accent", track: "servicenow-irm" },
+  { id: "policy-compliance", name: "Policy & Compliance", emoji: "📜", blurb: "Authority docs, citations, controls", color: "secondary", track: "servicenow-irm" },
+];
+
+const T = (offset = 0) => {
+  const base = new Date(2024, 0, 1, 9, 0, 0).getTime() + offset * 1000;
+  const d = new Date(base);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+};
+
+export const IRM_QUESTIONS: Question[] = [
+  // ============ GRC Tables ============
+  {
+    id: "irm-grc-1",
+    category: "grc-tables",
+    level: 1,
+    filename: "risk_lookup.js",
+    title: "Query the correct table for risk records associated with an entity.",
+    code: [
+      "var gr = new GlideRecord('{{SLOT}}');",
+      "gr.addQuery('profile', entitySysId);",
+      "gr.query();",
+      "while (gr.next()) gs.info(gr.number + ' → ' + gr.state);",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "sn_risk_risk",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "sn_grc_risk",
+        correct: false,
+        feedback: {
+          title: "Legacy GRC table",
+          explain:
+            "`sn_grc_risk` was the pre-IRM table. On modern IRM (Risk Management Advanced) risks live in `sn_risk_risk`. Querying the legacy table returns nothing on a current instance.",
+          sim: {
+            table: "sn_grc_risk",
+            rows: [],
+            logs: [
+              { time: T(0), text: "Query returned 0 records", tone: "warn" },
+              { time: T(1), text: "Legacy table — data migrated to sn_risk_risk", tone: "bad" },
+            ],
+          },
+        },
+      },
+      {
+        id: "c",
+        text: "sn_compliance_control",
+        correct: false,
+        feedback: {
+          title: "Wrong domain",
+          explain:
+            "`sn_compliance_control` holds Control instances (Policy & Compliance app), not risks. Risks and their scores live under the Risk Management module in `sn_risk_risk`.",
+          sim: {
+            table: "sn_compliance_control",
+            rows: [
+              { number: "CTRL0001001", state: "Attested", updated: "1h ago", highlight: "warn" },
+            ],
+            logs: [
+              { time: T(0), text: "Returned control records — not what caller wanted", tone: "warn" },
+            ],
+          },
+        },
+      },
+    ],
+    correctSim: {
+      table: "sn_risk_risk",
+      rows: [
+        { number: "RISK0001001", state: "Analyze", updated: "just now", highlight: "ok" },
+        { number: "RISK0001002", state: "Monitor", updated: "5m ago", highlight: "ok" },
+      ],
+      logs: [
+        { time: T(0), text: "Query returned 2 risks for entity", tone: "info" },
+        { time: T(1), text: "*** Script: RISK0001001 → Analyze", tone: "ok" },
+        { time: T(2), text: "*** Script: RISK0001002 → Monitor", tone: "ok" },
+      ],
+    },
+    correctTeach: {
+      title: "sn_risk_risk is the modern risk table",
+      explain:
+        "The IRM Advanced apps use scoped tables prefixed `sn_risk_*`, `sn_compliance_*`, and `sn_policy_*`. Profiles (entities) live in `sn_grc_profile` — the join field on a risk is `profile`.",
+    },
+  },
+  {
+    id: "irm-grc-2",
+    category: "grc-tables",
+    level: 2,
+    filename: "entity_profile.js",
+    title: "Where do IRM entities (assets, processes, vendors) live?",
+    code: [
+      "var gr = new GlideRecord('{{SLOT}}');",
+      "gr.addQuery('profile_type.name', 'Vendor');",
+      "gr.query();",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "sn_grc_profile",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "cmdb_ci",
+        correct: false,
+        feedback: {
+          title: "CMDB ≠ GRC profile",
+          explain:
+            "CMDB stores technical CIs. IRM wraps any scoped entity — CI, process, vendor, business unit — in a `sn_grc_profile` record so risks, controls, and issues can attach uniformly.",
+          sim: {
+            table: "cmdb_ci",
+            rows: [{ number: "SRV-APP-01", state: "Operational", updated: "—", highlight: "warn" }],
+            logs: [{ time: T(0), text: "Returned CIs, not IRM entities", tone: "warn" }],
+          },
+        },
+      },
+      {
+        id: "c",
+        text: "sn_risk_entity",
+        correct: false,
+        feedback: {
+          title: "Not a real table",
+          explain:
+            "There's no `sn_risk_entity` table. IRM uses one central `sn_grc_profile` table with a `profile_type` reference to categorize (Vendor, Process, Asset, etc.).",
+          sim: { rows: [], logs: [{ time: T(0), text: "Invalid table name", tone: "bad" }] },
+        },
+      },
+    ],
+    correctSim: {
+      table: "sn_grc_profile",
+      rows: [
+        { number: "PRF0001001", state: "Vendor · Acme", updated: "now", highlight: "ok" },
+        { number: "PRF0001002", state: "Vendor · Globex", updated: "now", highlight: "ok" },
+      ],
+      logs: [
+        { time: T(0), text: "Filtered profiles by type=Vendor", tone: "info" },
+        { time: T(1), text: "Returned 2 profile(s)", tone: "ok" },
+      ],
+    },
+    correctTeach: {
+      title: "Everything scoped in IRM is a Profile",
+      explain:
+        "A `sn_grc_profile` record is the anchor. It references a `profile_type` and can point back at a CMDB CI, vendor, or process. Risks, controls, and issues all attach to a profile — not the underlying CI directly.",
+    },
+  },
+
+  // ============ Risk Scoring ============
+  {
+    id: "irm-score-1",
+    category: "risk-scoring",
+    level: 2,
+    filename: "residual_risk.js",
+    title: "Compute residual risk correctly (inherent reduced by control effectiveness).",
+    code: [
+      "var inherent = current.inherent_score;   // 0-100",
+      "var effectiveness = current.control_effectiveness; // 0-1",
+      "",
+      "current.residual_score = {{SLOT}};",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "inherent * (1 - effectiveness)",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "inherent - effectiveness",
+        correct: false,
+        feedback: {
+          title: "Unit mismatch",
+          explain:
+            "Effectiveness is a 0-1 fraction, not a score. Subtracting it barely moves the number — a 90 inherent with 0.8 effectiveness would come out 89.2 instead of the correct 18.",
+          sim: {
+            table: "sn_risk_risk",
+            rows: [{ number: "RISK0001010", state: "Residual = 89.2 ❌", updated: "now", highlight: "bad" }],
+            logs: [
+              { time: T(0), text: "Residual almost equal to inherent — controls ignored", tone: "bad" },
+            ],
+          },
+        },
+      },
+      {
+        id: "c",
+        text: "inherent / effectiveness",
+        correct: false,
+        feedback: {
+          title: "Divides risk UP as controls improve",
+          explain:
+            "Higher effectiveness would make residual larger, and division by 0 (no controls tested) crashes the script. The formula must scale DOWN as controls get stronger.",
+          sim: {
+            rows: [],
+            logs: [
+              { time: T(0), text: "Division produced residual=112.5", tone: "bad" },
+              { time: T(1), text: "Effectiveness=0 → DivideByZero", tone: "bad" },
+            ],
+          },
+        },
+      },
+    ],
+    correctSim: {
+      table: "sn_risk_risk",
+      rows: [
+        { number: "RISK0001010", state: "Inherent=90 → Residual=18", updated: "now", highlight: "ok" },
+      ],
+      logs: [
+        { time: T(0), text: "inherent=90, effectiveness=0.8", tone: "info" },
+        { time: T(1), text: "residual = 90 * (1 - 0.8) = 18", tone: "ok" },
+        { time: T(2), text: "Risk moved from High → Low", tone: "ok" },
+      ],
+    },
+    correctTeach: {
+      title: "Residual = Inherent × (1 − Effectiveness)",
+      explain:
+        "The stronger the control, the closer effectiveness is to 1 and the smaller the residual. Store effectiveness as a fraction (0-1) and inherent on a 0-100 scale so the multiplication produces a comparable residual score.",
+    },
+  },
+  {
+    id: "irm-score-2",
+    category: "risk-scoring",
+    level: 3,
+    filename: "risk_level.js",
+    title: "Map a residual score to the IRM risk level bucket.",
+    code: [
+      "function riskLevel(score) {",
+      "  {{SLOT}}",
+      "}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "if (score >= 70) return 'High'; if (score >= 30) return 'Medium'; return 'Low';",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "if (score > 30) return 'High'; if (score > 70) return 'Medium'; return 'Low';",
+        correct: false,
+        feedback: {
+          title: "Unreachable branch",
+          explain:
+            "Because `> 30` is checked first, any score above 70 already returned 'High' and the Medium branch is dead code. Order thresholds from highest to lowest.",
+          sim: {
+            rows: [],
+            logs: [
+              { time: T(0), text: "score=85 → returned 'High' ✓ (accidentally)", tone: "warn" },
+              { time: T(1), text: "score=50 → returned 'High' ❌ (should be Medium)", tone: "bad" },
+            ],
+          },
+        },
+      },
+      {
+        id: "c",
+        text: "return score > 50 ? 'High' : 'Low';",
+        correct: false,
+        feedback: {
+          title: "Missing Medium tier",
+          explain:
+            "IRM defaults ship with 3 tiers (Low / Medium / High) and often 5 with Very Low / Very High. Collapsing to 2 loses reporting granularity and breaks the standard risk heatmap.",
+          sim: {
+            rows: [],
+            logs: [{ time: T(0), text: "No Medium ever returned — heatmap has gap", tone: "warn" }],
+          },
+        },
+      },
+    ],
+    correctSim: {
+      rows: [],
+      logs: [
+        { time: T(0), text: "score=85 → 'High'", tone: "ok" },
+        { time: T(1), text: "score=50 → 'Medium'", tone: "ok" },
+        { time: T(2), text: "score=10 → 'Low'", tone: "ok" },
+      ],
+    },
+    correctTeach: {
+      title: "Order thresholds high → low",
+      explain:
+        "Cascading `if` checks return on the first match. Start with the toughest bar (High) so lower buckets act as fallthroughs. This mirrors how IRM's out-of-box Risk Score field maps to the risk level choice list.",
+    },
+  },
+
+  // ============ Policy & Compliance ============
+  {
+    id: "irm-pc-1",
+    category: "policy-compliance",
+    level: 1,
+    filename: "control_attest.js",
+    title: "Trigger an attestation when a control's next review date arrives.",
+    code: [
+      "// Scheduled job — daily",
+      "var gr = new GlideRecord('sn_compliance_control');",
+      "gr.addQuery('next_review_date', '<=', gs.nowDateTime());",
+      "gr.addQuery('state', 'monitor');",
+      "gr.query();",
+      "while (gr.next()) {",
+      "  {{SLOT}};",
+      "}",
+    ],
+    options: [
+      {
+        id: "a",
+        text: "new sn_grc.AttestationUtils().createAttestation(gr.getUniqueValue(), 'control')",
+        correct: true,
+        feedback: { title: "", explain: "", sim: { rows: [], logs: [] } },
+      },
+      {
+        id: "b",
+        text: "gr.state = 'attested'; gr.update()",
+        correct: false,
+        feedback: {
+          title: "Skips the evidence step",
+          explain:
+            "Flipping the state pretends the control was reviewed. Auditors need the attestation record with responses and timestamps — created via `AttestationUtils`, not a manual state change.",
+          sim: {
+            table: "sn_compliance_control",
+            rows: [
+              { number: "CTRL0001001", state: "Attested (no evidence)", updated: "now", highlight: "bad" },
+            ],
+            logs: [
+              { time: T(0), text: "State changed but no sn_grc_attestation row created", tone: "bad" },
+              { time: T(1), text: "Audit trail broken — SOX finding likely", tone: "bad" },
+            ],
+          },
+        },
+      },
+      {
+        id: "c",
+        text: "gs.eventQueue('control.review', gr)",
+        correct: false,
+        feedback: {
+          title: "Fires nothing by itself",
+          explain:
+            "There's no OOB `control.review` event. Custom events need matching Script Actions or Notifications to do anything. The proper API for a repeatable, auditable attestation is `AttestationUtils`.",
+          sim: {
+            rows: [],
+            logs: [{ time: T(0), text: "Event queued — no handler registered", tone: "warn" }],
+          },
+        },
+      },
+    ],
+    correctSim: {
+      table: "sn_grc_attestation",
+      rows: [
+        { number: "ATT0001001", state: "Ready · CTRL0001001", updated: "now", highlight: "ok" },
+        { number: "ATT0001002", state: "Ready · CTRL0001002", updated: "now", highlight: "ok" },
+      ],
+      logs: [
+        { time: T(0), text: "Found 2 controls due for review", tone: "info" },
+        { time: T(1), text: "AttestationUtils.createAttestation() → ATT0001001", tone: "ok" },
+        { time: T(2), text: "AttestationUtils.createAttestation() → ATT0001002", tone: "ok" },
+      ],
+    },
+    correctTeach: {
+      title: "AttestationUtils writes the audit trail",
+      explain:
+        "`sn_grc.AttestationUtils` creates the attestation record, links it to the source (control, risk, or policy), and clones the questionnaire template. That's the artifact auditors ask for — not a state flip on the source record.",
+    },
+  },
+];
