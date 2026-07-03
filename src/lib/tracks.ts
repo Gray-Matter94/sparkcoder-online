@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-export type TrackId = "servicenow-dev" | "servicenow-admin" | "java-dev" | "angular-dev";
+export type TrackId = "servicenow-dev" | "servicenow-admin" | "servicenow-irm" | "java-dev" | "angular-dev";
 
 export interface Track {
   id: TrackId;
@@ -31,6 +31,15 @@ export const TRACKS: Track[] = [
     heading: ["ServiceNow Admin", "Interview Practice."],
     emoji: "🛡️",
     accent: "accent",
+  },
+  {
+    id: "servicenow-irm",
+    name: "ServiceNow IRM Architect",
+    short: "IRM",
+    tagline: "GRC tables, risk scoring, control attestation.",
+    heading: ["ServiceNow IRM Architect", "Interview Practice."],
+    emoji: "🛡️",
+    accent: "primary",
   },
   {
     id: "java-dev",
