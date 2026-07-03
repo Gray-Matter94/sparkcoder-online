@@ -174,7 +174,7 @@ export const BLOG_POSTS: BlogPost[] = [
     subtitle: "Days 11–15 of the 20-Day ServiceNow Scripting Curriculum",
     description:
       "Days 11–15: onLoad / onChange / onSubmit Client Scripts, async GlideAjax calls, and the DOM-free patterns ServiceNow expects.",
-    ogTitle: "Week 3: Client-Side and GlideAjax (Days 11–15) — SparkCoder",
+    ogTitle: "Week 3: Client-Side & GlideAjax (Days 11–15) — SparkCoder",
     publishedAt: "2026-06-16T09:00:00Z",
     updatedAt: "2026-06-27T09:00:00Z",
     readMinutes: 9,
