@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
 import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as DailyRouteImport } from './routes/daily'
@@ -37,6 +38,12 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicenowIrmArchitectPracticeRoute =
+  ServicenowIrmArchitectPracticeRouteImport.update({
+    id: '/servicenow-irm-architect-practice',
+    path: '/servicenow-irm-architect-practice',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ServicenowCsaInterviewQuestions2026Route =
   ServicenowCsaInterviewQuestions2026RouteImport.update({
     id: '/servicenow-csa-interview-questions-2026',
@@ -158,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -182,6 +190,7 @@ export interface FileRoutesByTo {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -207,6 +216,7 @@ export interface FileRoutesById {
   '/daily': typeof DailyRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -281,6 +293,7 @@ export interface FileRouteTypes {
     | '/daily'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -306,6 +319,7 @@ export interface RootRouteChildren {
   DailyRoute: typeof DailyRoute
   PlayRoute: typeof PlayRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
+  ServicenowIrmArchitectPracticeRoute: typeof ServicenowIrmArchitectPracticeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -331,6 +345,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-irm-architect-practice': {
+      id: '/servicenow-irm-architect-practice'
+      path: '/servicenow-irm-architect-practice'
+      fullPath: '/servicenow-irm-architect-practice'
+      preLoaderRoute: typeof ServicenowIrmArchitectPracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/servicenow-csa-interview-questions-2026': {
@@ -491,6 +512,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlayRoute: PlayRoute,
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,
+  ServicenowIrmArchitectPracticeRoute: ServicenowIrmArchitectPracticeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
