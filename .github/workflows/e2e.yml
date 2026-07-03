@@ -90,10 +90,61 @@ jobs:
       - name: Run IRM simulator E2E tests
         run: bun run test:e2e:irm
 
+      # Playwright's `retain-on-failure` keeps per-attempt artifacts for every
+      # failed retry. We only care about the FINAL attempt (the one that
+      # decided the run), so prune earlier `-retryN` siblings and keep the
+      # highest-numbered attempt folder per test. The base (no suffix) folder
+      # is attempt 1; `-retry1`, `-retry2`, ... are later attempts.
+      - name: Prune non-final retry artifacts
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d test-results ]; then
+            echo "No test-results directory; nothing to prune."
+            exit 0
+          fi
+          declare -A best_n=()
+          declare -A best_dir=()
+          # Enumerate top-level per-test folders only.
+          while IFS= read -r -d '' dir; do
+            name="$(basename "$dir")"
+            if [[ "$name" =~ ^(.*)-retry([0-9]+)$ ]]; then
+              base="${BASH_REMATCH[1]}"
+              n="${BASH_REMATCH[2]}"
+            else
+              base="$name"
+              n=0
+            fi
+            cur="${best_n[$base]:-}"
+            if [ -z "$cur" ] || [ "$n" -gt "$cur" ]; then
+              best_n[$base]="$n"
+              best_dir[$base]="$dir"
+            fi
+          done < <(find test-results -mindepth 1 -maxdepth 1 -type d -print0)
+
+          keep=()
+          for base in "${!best_dir[@]}"; do
+            keep+=("${best_dir[$base]}")
+          done
+          printf 'Keeping final-attempt folder: %s\n' "${keep[@]}"
+
+          while IFS= read -r -d '' dir; do
+            drop=1
+            for k in "${keep[@]}"; do
+              if [ "$dir" = "$k" ]; then drop=0; break; fi
+            done
+            if [ "$drop" = "1" ]; then
+              echo "Pruning superseded attempt: $dir"
+              rm -rf "$dir"
+            fi
+          done < <(find test-results -mindepth 1 -maxdepth 1 -type d -print0)
+
       # Debug bundle for any failing IRM test: HTML report + per-test
       # trace.zip / video.webm / screenshot.png (retain-on-failure in
-      # playwright.config.ts). Uploaded on failure only so green runs
-      # stay artifact-light.
+      # playwright.config.ts). Only the final retry attempt's artifacts
+      # remain after the prune step above.
+
       - name: Upload IRM failure debug bundle
         id: upload-debug
         if: failure()
