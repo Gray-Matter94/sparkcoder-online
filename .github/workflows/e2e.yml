@@ -26,15 +26,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lockb', 'package.json') }}
+          # The IRM edge-case specs run on chromium + webkit + firefox, and
+          # this job's `test:e2e` invocation loads the same playwright.config.ts,
+          # so all three engines must be installed here too.
+          key: ${{ runner.os }}-playwright-multibrowser-${{ hashFiles('bun.lockb', 'package.json') }}
 
-      - name: Install Playwright Chromium
+      - name: Install Playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: bunx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium webkit firefox
 
-      - name: Install system deps for cached browser
+      - name: Install system deps for cached browsers
         if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: bunx playwright install-deps chromium
+        run: bunx playwright install-deps chromium webkit firefox
+
 
       # The dev server is started automatically by playwright.config.ts
       # (webServer: bun run dev on http://localhost:8080).
@@ -77,15 +81,21 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lockb', 'package.json') }}
+          # Bump the cache key when the browser list changes so WebKit/Firefox
+          # aren't served from a stale Chromium-only cache.
+          key: ${{ runner.os }}-playwright-multibrowser-${{ hashFiles('bun.lockb', 'package.json') }}
 
-      - name: Install Playwright Chromium
+      # The IRM edge-case specs run on chromium + webkit + firefox (see the
+      # `irm-edge-cases-*` projects in playwright.config.ts) to keep
+      # keyboard-only correction feedback accessible across engines.
+      - name: Install Playwright browsers
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: bunx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium webkit firefox
 
-      - name: Install system deps for cached browser
+      - name: Install system deps for cached browsers
         if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: bunx playwright install-deps chromium
+        run: bunx playwright install-deps chromium webkit firefox
+
 
       - name: Run IRM simulator E2E tests
         run: bun run test:e2e:irm

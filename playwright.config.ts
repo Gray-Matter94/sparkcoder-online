@@ -26,28 +26,36 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
   },
   projects: [
-    {
-      // Dedicated project for the IRM risk-scoring edge-case specs so we can
-      // retry them harder than the rest of the suite and capture the most
-      // informative artifact set across every retry attempt (not just the
-      // final one). Runs first; the general `chromium` project below excludes
-      // these files via `testIgnore` so they aren't executed twice.
-      name: "irm-edge-cases",
+    // Dedicated projects for the IRM risk-scoring edge-case specs so we can
+    // retry them harder than the rest of the suite AND run them across
+    // multiple browser engines (Chromium + WebKit + Firefox). Keyboard focus,
+    // ARIA live-region announcements, and correction-feedback rendering all
+    // differ subtly across engines, so we exercise every engine to keep the
+    // accessibility guarantees honest. The general `chromium` project below
+    // excludes these files via `testIgnore` so they aren't executed twice.
+    ...(["chromium", "webkit", "firefox"] as const).map((browserName) => ({
+      name: `irm-edge-cases-${browserName}`,
       testMatch: /irm-risk-scoring-edge-cases\.spec\.ts$/,
       retries: process.env.CI ? 3 : 1,
       use: {
-        ...devices["Desktop Chrome"],
-        // Trace + video for every retry attempt so flaky failures are debuggable
-        // even when a later attempt passes. Screenshot on every action gives
-        // frame-by-frame context alongside the trace timeline.
-        trace: "on-all-retries",
-        video: "on-all-retries",
-        screenshot: "on",
-        ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+        ...devices[
+          browserName === "chromium"
+            ? "Desktop Chrome"
+            : browserName === "webkit"
+              ? "Desktop Safari"
+              : "Desktop Firefox"
+        ],
+        // Trace + video for every retry attempt so flaky failures are
+        // debuggable even when a later attempt passes. Screenshot on every
+        // action gives frame-by-frame context alongside the trace timeline.
+        trace: "on-all-retries" as const,
+        video: "on-all-retries" as const,
+        screenshot: "on" as const,
+        ...(browserName === "chromium" && process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
           ? { launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } }
           : {}),
       },
-    },
+    })),
     {
       name: "chromium",
       testIgnore: /irm-risk-scoring-edge-cases\.spec\.ts$/,
@@ -59,6 +67,7 @@ export default defineConfig({
       },
     },
   ],
+
 
   webServer: {
     command: "bun run dev",
