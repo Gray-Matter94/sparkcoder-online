@@ -244,7 +244,7 @@ export const BLOG_POSTS: BlogPost[] = [
     subtitle: "Days 16–20 of the 20-Day ServiceNow Scripting Curriculum",
     description:
       "Days 16–20: ACL scripting, Scripted REST APIs, REST Messages, debugging like a senior, and a final interview-style scenario.",
-    ogTitle: "Week 4: ACLs, Integrations, Interview (Days 16–20) — SparkCoder",
+    ogTitle: "Week 4: ACLs & Integrations (Days 16–20) — SparkCoder",
     publishedAt: "2026-06-23T09:00:00Z",
     updatedAt: "2026-06-27T09:00:00Z",
     readMinutes: 10,
