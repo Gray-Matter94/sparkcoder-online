@@ -94,6 +94,14 @@ test.describe("IRM GRC Tables + Policy puzzles show detailed simulator + teach f
     await seedProgress(page, 2);
   });
 
+  // After each passing test the simulator trace + correct-answer TeachCard
+  // are both on screen — assert SR affordances and run a scoped axe scan.
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) return;
+    await expectSimulatorAndTeachCardAccessible(page, testInfo.title);
+  });
+
+
   test("grc-tables puzzle 1 (sn_risk_risk): both wrong tables and the correct table render enriched feedback", async ({
     page,
   }) => {
