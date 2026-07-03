@@ -335,4 +335,69 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await expect(page.getByText(/score=50 → 'Medium'/)).toBeVisible();
     await expect(page.getByText(/score=10 → 'Low'/)).toBeVisible();
   });
+
+  test("puzzle 1: every wrong residual-risk choice renders its trace lines in the exact expected order", async ({
+    page,
+  }) => {
+    await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
+    await expect(
+      page.getByRole("heading", { name: /Compute residual risk correctly/i })
+    ).toBeVisible();
+
+    // Read the ordered list of log lines from the simulator trace region.
+    // Each row is `<time> <text>` — we assert on the text portion, preserving
+    // the top-to-bottom render order emitted by Simulator.tsx.
+    const traceTexts = async (): Promise<string[]> => {
+      const trace = page.getByTestId("simulator-trace");
+      await expect(trace).toBeVisible();
+      // Wait for the final expected line count (4 for each wrong choice).
+      await expect
+        .poll(async () => await trace.locator("> div").count(), {
+          timeout: 5000,
+        })
+        .toBeGreaterThanOrEqual(4);
+      const rows = trace.locator("> div");
+      const count = await rows.count();
+      const out: string[] = [];
+      for (let i = 0; i < count; i++) {
+        const spans = rows.nth(i).locator("span");
+        if ((await spans.count()) >= 2) {
+          out.push((await spans.nth(1).innerText()).trim());
+        }
+      }
+      return out;
+    };
+
+    // ---- Wrong A: subtraction (unit mismatch) ----
+    await pickOption(page, "inherent - effectiveness");
+    await runAndWait(page);
+    await expect(badTeachCard(page)).toBeVisible();
+
+    expect(await traceTexts()).toEqual([
+      "inherent=90, effectiveness=0.8",
+      "residual = 90 - 0.8 = 89.2",
+      "Bucket: High (>=70) — controls appear ignored",
+      "Expected residual = 18 (Low). Delta = 71.2 pts",
+    ]);
+
+    await tryAgain(page);
+
+    // ---- Wrong B: division (unbounded + DivideByZero) ----
+    await pickOption(page, "inherent / effectiveness");
+    await runAndWait(page);
+    await expect(badTeachCard(page)).toBeVisible();
+
+    expect(await traceTexts()).toEqual([
+      "inherent=80, effectiveness=0.8",
+      "residual = 80 / 0.8 = 100 (grew!)",
+      "Retry with effectiveness=0 → DivideByZero",
+      "Scheduled Job aborted — residual scores stale",
+    ]);
+
+    // Recover to correct so the a11y afterEach can scan the ok TeachCard.
+    await tryAgain(page);
+    await pickOption(page, "inherent * (1 - effectiveness)");
+    await runAndWait(page);
+    await expect(okTeachCard(page)).toBeVisible();
+  });
 });
