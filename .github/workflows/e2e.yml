@@ -91,10 +91,14 @@ jobs:
         run: bun run test:e2e:irm
 
       # Playwright's `retain-on-failure` keeps per-attempt artifacts for every
-      # failed retry. We only care about the FINAL attempt (the one that
-      # decided the run), so prune earlier `-retryN` siblings and keep the
-      # highest-numbered attempt folder per test. The base (no suffix) folder
-      # is attempt 1; `-retry1`, `-retry2`, ... are later attempts.
+      # failed retry. For most specs we only care about the FINAL attempt (the
+      # one that decided the run), so we prune earlier `-retryN` siblings and
+      # keep the highest-numbered attempt folder per test.
+      #
+      # EXCEPTION: the `irm-edge-cases` Playwright project (IRM risk-scoring
+      # edge-case specs) is configured with extra retries + `on-all-retries`
+      # trace/video, precisely so flaky failures stay debuggable across every
+      # attempt. Skip those folders here so all retry artifacts are preserved.
       - name: Prune non-final retry artifacts
         if: failure()
         shell: bash
@@ -107,8 +111,14 @@ jobs:
           declare -A best_n=()
           declare -A best_dir=()
           # Enumerate top-level per-test folders only.
+
           while IFS= read -r -d '' dir; do
             name="$(basename "$dir")"
+            # Preserve every attempt for the dedicated edge-case project.
+            if [[ "$name" == irm-edge-cases-* ]]; then
+              echo "Preserving all attempts for edge-case folder: $dir"
+              continue
+            fi
             if [[ "$name" =~ ^(.*)-retry([0-9]+)$ ]]; then
               base="${BASH_REMATCH[1]}"
               n="${BASH_REMATCH[2]}"
@@ -116,6 +126,7 @@ jobs:
               base="$name"
               n=0
             fi
+
             cur="${best_n[$base]:-}"
             if [ -z "$cur" ] || [ "$n" -gt "$cur" ]; then
               best_n[$base]="$n"
@@ -130,6 +141,11 @@ jobs:
           printf 'Keeping final-attempt folder: %s\n' "${keep[@]}"
 
           while IFS= read -r -d '' dir; do
+            name="$(basename "$dir")"
+            # Never prune the edge-case project — every retry is kept.
+            if [[ "$name" == irm-edge-cases-* ]]; then
+              continue
+            fi
             drop=1
             for k in "${keep[@]}"; do
               if [ "$dir" = "$k" ]; then drop=0; break; fi
@@ -139,6 +155,7 @@ jobs:
               rm -rf "$dir"
             fi
           done < <(find test-results -mindepth 1 -maxdepth 1 -type d -print0)
+
 
       # Debug bundle for any failing IRM test: HTML report + per-test
       # trace.zip / video.webm / screenshot.png (retain-on-failure in
