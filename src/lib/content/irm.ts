@@ -252,14 +252,16 @@ export const IRM_QUESTIONS: Question[] = [
         text: "if (score > 30) return 'High'; if (score > 70) return 'Medium'; return 'Low';",
         correct: false,
         feedback: {
-          title: "Unreachable branch",
+          title: "Unreachable branch — thresholds ordered low → high",
           explain:
-            "Because `> 30` is checked first, any score above 70 already returned 'High' and the Medium branch is dead code. Order thresholds from highest to lowest.",
+            "`if` chains return on the first truthy match. Because `score > 30` is checked first, EVERY score above 30 returns 'High' and the `> 70` line is dead code.\n\nTruth table for your ordering:\n  • score=85 → 85>30 ✓ → 'High'    (right answer, wrong reason)\n  • score=50 → 50>30 ✓ → 'High'    ❌ (should be 'Medium')\n  • score=31 → 31>30 ✓ → 'High'    ❌ (should be 'Medium')\n  • score=10 → both fail → 'Low'   ✓\n\nDownstream damage:\n  • The Risk Heatmap paints 70% of records red.\n  • SLA escalations for 'High' risks fire on borderline items.\n  • Executive dashboards show a fake risk spike.\n\nFix: order the thresholds from the toughest bar downward, so once a lower bucket check runs you already know the higher one failed.",
           sim: {
             rows: [],
             logs: [
               { time: T(0), text: "score=85 → returned 'High' ✓ (accidentally)", tone: "warn" },
               { time: T(1), text: "score=50 → returned 'High' ❌ (should be Medium)", tone: "bad" },
+              { time: T(2), text: "score=31 → returned 'High' ❌ (should be Medium)", tone: "bad" },
+              { time: T(3), text: "Medium branch never executed — dead code", tone: "bad" },
             ],
           },
         },
@@ -269,12 +271,17 @@ export const IRM_QUESTIONS: Question[] = [
         text: "return score > 50 ? 'High' : 'Low';",
         correct: false,
         feedback: {
-          title: "Missing Medium tier",
+          title: "Missing Medium tier — collapses the heatmap",
           explain:
-            "IRM defaults ship with 3 tiers (Low / Medium / High) and often 5 with Very Low / Very High. Collapsing to 2 loses reporting granularity and breaks the standard risk heatmap.",
+            "IRM ships a 3-tier scale by default (Low / Medium / High) and a 5-tier extended scale (Very Low → Very High). A 2-bucket function loses the middle band the whole product is calibrated for.\n\nWhat breaks:\n  • The Risk Matrix widget expects `risk_level` values matching its choice list. 'Low'/'High' only means Medium cells render blank.\n  • Filters like `risk_level=Medium` on reports return 0 rows.\n  • Escalation rules keyed to Medium (e.g. 'Medium → requires quarterly review') never trigger.\n  • Trending charts show sudden cliff jumps as scores cross 50 instead of a smooth Low→Medium→High progression.\n\nFix: match the choice list on `sn_risk_risk.risk_level` exactly — three (or five) return values with thresholds ordered high → low.",
           sim: {
             rows: [],
-            logs: [{ time: T(0), text: "No Medium ever returned — heatmap has gap", tone: "warn" }],
+            logs: [
+              { time: T(0), text: "score=85 → 'High'", tone: "warn" },
+              { time: T(1), text: "score=50 → 'Low' ❌ (should be Medium)", tone: "bad" },
+              { time: T(2), text: "score=31 → 'Low' ❌ (should be Medium)", tone: "bad" },
+              { time: T(3), text: "Report filter risk_level=Medium → 0 rows", tone: "bad" },
+            ],
           },
         },
       },
@@ -290,7 +297,7 @@ export const IRM_QUESTIONS: Question[] = [
     correctTeach: {
       title: "Order thresholds high → low",
       explain:
-        "Cascading `if` checks return on the first match. Start with the toughest bar (High) so lower buckets act as fallthroughs. This mirrors how IRM's out-of-box Risk Score field maps to the risk level choice list.",
+        "Cascading `if` checks return on the first match, so start with the toughest bar and let lower buckets act as fallthroughs.\n\nOOB IRM default bands:\n  • High    : score ≥ 70\n  • Medium  : 30 ≤ score < 70\n  • Low     : score < 30\n\nThis mirrors the choice list on `sn_risk_risk.risk_level` and the heatmap color stops. If your org uses the 5-tier scale, extend the same pattern:\n\n  if (score >= 80) return 'Very High';\n  if (score >= 60) return 'High';\n  if (score >= 40) return 'Medium';\n  if (score >= 20) return 'Low';\n  return 'Very Low';\n\nKeep the return strings identical to the choice list — a case-sensitive mismatch stores an empty value and breaks the heatmap silently.",
     },
   },
 
