@@ -160,8 +160,8 @@ test.describe("IRM risk-scoring puzzles show detailed simulator + teach feedback
     expect(divText).toMatch(/Fix:/i);
 
     // Simulator log surfaces the DivideByZero diagnostic.
-    await expect(page.getByText(/DivideByZero/)).toBeVisible();
-    await expect(page.getByText(/Scheduled Job aborted/)).toBeVisible();
+    await expect(page.locator("span").getByText(/Retry with effectiveness=0 → DivideByZero/)).toBeVisible();
+    await expect(page.locator("span").getByText(/Scheduled Job aborted/)).toBeVisible();
 
     await divCard.getByRole("button", { name: /TRY AGAIN/i }).click({ force: true });
     await expect(divCard).toBeHidden();
