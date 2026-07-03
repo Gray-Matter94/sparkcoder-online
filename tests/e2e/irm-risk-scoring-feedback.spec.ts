@@ -1,4 +1,6 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
+import { expectSimulatorAndTeachCardAccessible } from "./utils/a11y";
+
 
 /**
  * Verifies that both IRM risk-scoring puzzles surface the enriched
