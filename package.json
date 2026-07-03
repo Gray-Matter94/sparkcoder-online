@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:e2e:irm": "playwright test tests/e2e/irm-risk-scoring-feedback.spec.ts tests/e2e/irm-other-puzzles-feedback.spec.ts tests/e2e/irm-risk-scoring-edge-cases.spec.ts",
+    "test:e2e:irm": "playwright test tests/e2e/irm-risk-scoring-feedback.spec.ts tests/e2e/irm-other-puzzles-feedback.spec.ts tests/e2e/irm-risk-scoring-edge-cases.spec.ts tests/e2e/irm-risk-scoring-keyboard.spec.ts",
     "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
