@@ -105,6 +105,15 @@ test.describe("IRM risk-scoring puzzles show detailed simulator + teach feedback
     await seedProgress(page, 2);
   });
 
+  // Assert screen-reader affordances + axe-clean feedback surfaces after
+  // every test's final render (both simulator trace and TeachCard are on
+  // screen at this point since tests advance through to the correct answer).
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) return;
+    await expectSimulatorAndTeachCardAccessible(page, testInfo.title);
+  });
+
+
   test("puzzle 1 (residual risk): wrong subtract, wrong divide, and correct answer all render enriched feedback", async ({
     page,
   }) => {
