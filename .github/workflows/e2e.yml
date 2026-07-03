@@ -114,6 +114,11 @@ jobs:
 
           while IFS= read -r -d '' dir; do
             name="$(basename "$dir")"
+            # Preserve every attempt for the dedicated edge-case project.
+            if [[ "$name" == irm-edge-cases-* ]]; then
+              echo "Preserving all attempts for edge-case folder: $dir"
+              continue
+            fi
             if [[ "$name" =~ ^(.*)-retry([0-9]+)$ ]]; then
               base="${BASH_REMATCH[1]}"
               n="${BASH_REMATCH[2]}"
@@ -121,6 +126,7 @@ jobs:
               base="$name"
               n=0
             fi
+
             cur="${best_n[$base]:-}"
             if [ -z "$cur" ] || [ "$n" -gt "$cur" ]; then
               best_n[$base]="$n"
