@@ -91,6 +91,7 @@ jobs:
       # playwright.config.ts). Uploaded on failure only so green runs
       # stay artifact-light.
       - name: Upload IRM failure debug bundle
+        id: upload-debug
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -105,6 +106,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload IRM Playwright report
+        id: upload-report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -114,4 +116,53 @@ jobs:
             test-results
           retention-days: 7
           if-no-files-found: ignore
+
+      # Post (or update) a sticky PR comment linking the failed IRM test
+      # artifacts so reviewers can jump straight to trace.zip / video /
+      # screenshots / HTML report without digging through the Actions UI.
+      - name: Comment on PR with failed IRM artifact links
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          DEBUG_ARTIFACT_URL: ${{ steps.upload-debug.outputs.artifact-url }}
+          REPORT_ARTIFACT_URL: ${{ steps.upload-report.outputs.artifact-url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- irm-e2e-artifacts -->';
+            const debugUrl = process.env.DEBUG_ARTIFACT_URL || '';
+            const reportUrl = process.env.REPORT_ARTIFACT_URL || '';
+            const runUrl = process.env.RUN_URL;
+            const body = [
+              marker,
+              '### ❌ IRM Simulator E2E failed',
+              '',
+              `**Run:** [#${context.runNumber}](${runUrl}) · commit \`${context.sha.slice(0, 7)}\``,
+              '',
+              '**Failure debug bundle** (trace.zip · video.webm · screenshots · error-context.md · HTML report — 14d):',
+              debugUrl ? `- [playwright-irm-failure-debug](${debugUrl})` : '- _not produced_',
+              '',
+              '**Full Playwright HTML report** (7d):',
+              reportUrl ? `- [playwright-report-irm](${reportUrl})` : '- _not produced_',
+              '',
+              `<sub>Browse per-test folders under \`test-results/\` inside the run: ${runUrl}</sub>`,
+            ].join('\n');
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number, per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner, repo, comment_id: existing.id, body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number, body,
+              });
+            }
+
 
