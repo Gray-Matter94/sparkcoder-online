@@ -91,10 +91,14 @@ jobs:
         run: bun run test:e2e:irm
 
       # Playwright's `retain-on-failure` keeps per-attempt artifacts for every
-      # failed retry. We only care about the FINAL attempt (the one that
-      # decided the run), so prune earlier `-retryN` siblings and keep the
-      # highest-numbered attempt folder per test. The base (no suffix) folder
-      # is attempt 1; `-retry1`, `-retry2`, ... are later attempts.
+      # failed retry. For most specs we only care about the FINAL attempt (the
+      # one that decided the run), so we prune earlier `-retryN` siblings and
+      # keep the highest-numbered attempt folder per test.
+      #
+      # EXCEPTION: the `irm-edge-cases` Playwright project (IRM risk-scoring
+      # edge-case specs) is configured with extra retries + `on-all-retries`
+      # trace/video, precisely so flaky failures stay debuggable across every
+      # attempt. Skip those folders here so all retry artifacts are preserved.
       - name: Prune non-final retry artifacts
         if: failure()
         shell: bash
@@ -107,6 +111,7 @@ jobs:
           declare -A best_n=()
           declare -A best_dir=()
           # Enumerate top-level per-test folders only.
+
           while IFS= read -r -d '' dir; do
             name="$(basename "$dir")"
             if [[ "$name" =~ ^(.*)-retry([0-9]+)$ ]]; then
