@@ -11,11 +11,18 @@ export default defineConfig({
   expect: { timeout: 7_000 },
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
-  reporter: [["list"]],
+  reporter: process.env.CI
+    ? [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]]
+    : [["list"]],
   use: {
     baseURL: "http://localhost:8080",
     headless: true,
+    // On failure keep the full debug bundle: Playwright trace (.zip),
+    // video recording (.webm), and last-step screenshot (.png). These
+    // land under test-results/<test>/ and are uploaded by the CI job.
     trace: "retain-on-failure",
+    video: "retain-on-failure",
+    screenshot: "only-on-failure",
     viewport: { width: 1280, height: 900 },
   },
   projects: [

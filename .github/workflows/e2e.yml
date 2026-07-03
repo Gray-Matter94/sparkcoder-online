@@ -86,6 +86,24 @@ jobs:
       - name: Run IRM simulator E2E tests
         run: bun run test:e2e:irm
 
+      # Debug bundle for any failing IRM test: HTML report + per-test
+      # trace.zip / video.webm / screenshot.png (retain-on-failure in
+      # playwright.config.ts). Uploaded on failure only so green runs
+      # stay artifact-light.
+      - name: Upload IRM failure debug bundle
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-irm-failure-debug
+          path: |
+            playwright-report
+            test-results/**/trace.zip
+            test-results/**/video.webm
+            test-results/**/*.png
+            test-results/**/error-context.md
+          retention-days: 14
+          if-no-files-found: warn
+
       - name: Upload IRM Playwright report
         if: always()
         uses: actions/upload-artifact@v4
