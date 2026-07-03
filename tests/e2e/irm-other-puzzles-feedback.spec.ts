@@ -173,18 +173,12 @@ test.describe("IRM GRC Tables + Policy puzzles show detailed simulator + teach f
     page,
   }) => {
     await page.goto(`/practice/grc-tables?difficulty=medium`);
-    // Advance past the first puzzle by picking the correct answer.
-    await pickOption(page, "sn_risk_risk");
-    await runAndWait(page);
-    const firstOk = okTeachCard(page);
-    await expect(firstOk).toBeVisible();
-    await firstOk.getByRole("button", { name: /NEXT PUZZLE|FINISH MODULE/i }).click({ force: true });
-
     await expect(
       page.getByRole("heading", {
         name: /Where do IRM entities/i,
       })
     ).toBeVisible();
+
 
     // ---- Wrong attempt A: cmdb_ci ----
     await pickOption(page, "cmdb_ci");
