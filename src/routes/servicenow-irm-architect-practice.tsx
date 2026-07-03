@@ -102,6 +102,7 @@ export const Route = createFileRoute("/servicenow-irm-architect-practice")({
 });
 
 function IRMTrackLanding() {
+  const { progress } = useProgress();
   // Ensure the homepage/practice UI reflects the IRM track when the user
   // arrives via this landing page.
   useEffect(() => {
@@ -111,7 +112,7 @@ function IRMTrackLanding() {
   return (
     <div className="min-h-screen flex flex-col">
       <ErrorBoundary name="Stats">
-        <StatsBar back />
+        <StatsBar progress={progress} back />
       </ErrorBoundary>
 
       <main className="flex-1 max-w-4xl w-full mx-auto p-5 sm:p-8 space-y-10 pb-24">
