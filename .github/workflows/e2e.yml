@@ -141,6 +141,11 @@ jobs:
           printf 'Keeping final-attempt folder: %s\n' "${keep[@]}"
 
           while IFS= read -r -d '' dir; do
+            name="$(basename "$dir")"
+            # Never prune the edge-case project — every retry is kept.
+            if [[ "$name" == irm-edge-cases-* ]]; then
+              continue
+            fi
             drop=1
             for k in "${keep[@]}"; do
               if [ "$dir" = "$k" ]; then drop=0; break; fi
@@ -150,6 +155,7 @@ jobs:
               rm -rf "$dir"
             fi
           done < <(find test-results -mindepth 1 -maxdepth 1 -type d -print0)
+
 
       # Debug bundle for any failing IRM test: HTML report + per-test
       # trace.zip / video.webm / screenshot.png (retain-on-failure in
