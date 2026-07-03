@@ -166,6 +166,38 @@ function Learn() {
             vs identification rules, and CI reconciliation — with simulator traces.
           </p>
         </Link>
+        <Link
+          to="/servicenow-irm-architect-practice"
+          aria-label="Open the ServiceNow IRM Architect practice track"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New track
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🛡️ ServiceNow IRM Architect Practice
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            GRC tables, inherent vs residual risk scoring, and policy &amp; compliance
+            citations — three categories wired for interview prep.
+          </p>
+        </Link>
+        <Link
+          to="/learn/irm-architect-interview-questions"
+          aria-label="Open the IRM Architect Interview Questions guide"
+          className="block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 hover:border-accent/70 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            📚 IRM Architect Interview Questions
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            Common IRM/GRC architect interview loops — risk model design, control
+            testing, evidence flows, and integration patterns.
+          </p>
+        </Link>
 
         {(() => {
           const today = todayStr();
