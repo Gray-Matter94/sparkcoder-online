@@ -135,7 +135,13 @@ export function Simulator({ output, status, resultTone }: Props) {
         )}
 
         {output && (
-          <div className="mt-auto space-y-0.5 font-mono">
+          <div
+            data-testid="simulator-trace"
+            role="log"
+            aria-live="polite"
+            aria-label="Simulator output log"
+            className="mt-auto space-y-0.5 font-mono"
+          >
             {output.logs.slice(0, visibleLogs).map((l, i) => (
               <div key={i} className="flex gap-2 text-[10px] leading-relaxed animate-log-in">
                 <span className="text-muted-foreground shrink-0">{l.time}</span>
@@ -143,12 +149,13 @@ export function Simulator({ output, status, resultTone }: Props) {
               </div>
             ))}
             {status === "running" && visibleLogs < (output?.logs.length ?? 0) && (
-              <div className="text-[10px] text-muted-foreground">
+              <div className="text-[10px] text-muted-foreground" aria-hidden="true">
                 <span className="inline-block w-2 h-3 bg-primary/70 align-middle animate-[caret_0.8s_steps(1)_infinite]" />
               </div>
             )}
           </div>
         )}
+
       </div>
     </div>
   );
