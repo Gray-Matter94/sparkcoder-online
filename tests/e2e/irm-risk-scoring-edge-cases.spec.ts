@@ -229,15 +229,17 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     ).toBeVisible();
     await tryAgain(page);
 
-    // Wrong #1 again (cycle back) — enriched content must still render.
-    await pickOption(page, "inherent - effectiveness");
-    await runAndWait(page);
-    const cycled = badTeachCard(page);
-    await expect(cycled).toBeVisible();
-    const cycledText = await cycled.locator("p").first().innerText();
-    expect(cycledText).toMatch(/Worked example/i);
-    expect(cycledText).toMatch(/heatmap/i);
-    await tryAgain(page);
+    // Both wrong chips must now be disabled (line-through) — the app locks
+    // out already-tried wrong answers so the learner is nudged to the correct
+    // option without the enriched feedback getting overwritten by a re-click.
+    for (const label of ["inherent - effectiveness", "inherent / effectiveness"]) {
+      const chip = page.getByRole("button").filter({
+        has: page.locator("code").getByText(label, { exact: true }),
+      });
+      await expect(chip).toBeDisabled();
+      await expect(chip).toHaveClass(/line-through/);
+    }
+
 
     // Correct — teach card + full trace.
     await pickOption(page, "inherent * (1 - effectiveness)");
