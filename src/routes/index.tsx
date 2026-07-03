@@ -277,6 +277,26 @@ function Home() {
           </button>
         </section>
       </main>
+      <nav
+        aria-label="Explore tracks"
+        className="max-w-md mx-auto px-4 pb-4 flex flex-wrap gap-2 justify-center text-[11px]"
+      >
+        <Link to="/servicenow-irm-architect-practice" className="underline text-muted-foreground hover:text-accent">
+          IRM Architect Track
+        </Link>
+        <Link to="/practice/$category" params={{ category: "grc-tables" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
+          GRC Tables
+        </Link>
+        <Link to="/practice/$category" params={{ category: "risk-scoring" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
+          Risk Scoring
+        </Link>
+        <Link to="/practice/$category" params={{ category: "policy-compliance" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
+          Policy &amp; Compliance
+        </Link>
+        <Link to="/learn/irm-architect-interview-questions" className="underline text-muted-foreground hover:text-accent">
+          IRM Interview Q&amp;A
+        </Link>
+      </nav>
       <footer className="py-6 text-center text-[10px] text-muted-foreground uppercase tracking-widest">
         Built for thumb-driving on the train.
       </footer>
