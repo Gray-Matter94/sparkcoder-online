@@ -116,7 +116,7 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await expectSimulatorAndTeachCardAccessible(page, testInfo.title);
   });
 
-  test("puzzle 1: repicking the same wrong option after TRY AGAIN re-renders the enriched feedback", async ({
+  test("puzzle 1: previously-wrong option is disabled after TRY AGAIN so bad answers can't be re-committed", async ({
     page,
   }) => {
     await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
@@ -124,11 +124,10 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       page.getByRole("heading", { name: /Compute residual risk correctly/i })
     ).toBeVisible();
 
-    // First attempt with the subtraction option.
     await pickOption(page, "inherent - effectiveness");
     await runAndWait(page);
 
-    let card = badTeachCard(page);
+    const card = badTeachCard(page);
     await expect(card).toBeVisible();
     await expect(
       card.getByRole("heading", {
@@ -139,33 +138,36 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
 
     await tryAgain(page);
 
-    // Repick the SAME wrong option — full TeachCard + simulator trace must re-render.
-    await pickOption(page, "inherent - effectiveness");
-    await runAndWait(page);
+    // The wrong chip must now be disabled + struck-through so the learner
+    // can't silently re-commit the same wrong answer (which would blank the
+    // enriched feedback on the second click).
+    const wrongChip = page.getByRole("button").filter({
+      has: page.locator("code").getByText("inherent - effectiveness", { exact: true }),
+    });
+    await expect(wrongChip).toBeDisabled();
+    await expect(wrongChip).toHaveClass(/line-through/);
 
-    card = badTeachCard(page);
-    await expect(card).toBeVisible();
+    // Other wrong option is still available and its feedback renders fully.
+    await pickOption(page, "inherent / effectiveness");
+    await runAndWait(page);
+    const divCard = badTeachCard(page);
+    await expect(divCard).toBeVisible();
     await expect(
-      card.getByRole("heading", {
-        name: /Unit mismatch — subtracting a fraction from a score/i,
+      divCard.getByRole("heading", {
+        name: /Division scales risk the wrong direction/i,
       })
     ).toBeVisible();
-    const text = await card.locator("p").first().innerText();
-    expect(text).toMatch(/Worked example/i);
-    expect(text).toMatch(/Fix:/i);
+    const txt = await divCard.locator("p").first().innerText();
+    expect(txt).toMatch(/DivideByZero|∞|NaN/);
+    expect(txt).toMatch(/Fix:/i);
 
-    // Simulator log fully replays (not truncated / not stale from prior run).
-    await expect(page.getByText(/residual = 90 - 0\.8 = 89\.2/)).toBeVisible();
-    await expect(
-      page.getByText(/Expected residual = 18 \(Low\)\. Delta = 71\.2/)
-    ).toBeVisible();
-
-    // Recover to correct so a11y afterEach can scan the ok TeachCard too.
+    // Recover to correct so the a11y afterEach can scan the ok TeachCard too.
     await tryAgain(page);
     await pickOption(page, "inherent * (1 - effectiveness)");
     await runAndWait(page);
     await expect(okTeachCard(page)).toBeVisible();
   });
+
 
   test("puzzle 1: rapid double-click on a wrong option renders exactly one TeachCard", async ({
     page,
