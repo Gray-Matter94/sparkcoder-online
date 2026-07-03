@@ -1,4 +1,6 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
+import { expectSimulatorAndTeachCardAccessible } from "./utils/a11y";
+
 
 /**
  * Verifies enriched simulator + TeachCard feedback for the remaining
