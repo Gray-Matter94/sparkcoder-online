@@ -190,7 +190,7 @@ test.describe("IRM risk-scoring puzzles show detailed simulator + teach feedback
 
     // Continue CTA advances to the next puzzle (unlocked via seeded badges).
     await expect(
-      okCard.getByRole("button", { name: /NEXT PUZZLE/i })
+      okCard.getByRole("button", { name: /NEXT PUZZLE|FINISH MODULE/i })
     ).toBeVisible();
   });
 
