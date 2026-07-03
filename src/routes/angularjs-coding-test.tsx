@@ -157,21 +157,21 @@ function AngularCodingTestPage() {
           <div className="flex flex-wrap gap-2 pt-2">
             <Link
               to="/practice/$category"
-              params={{ category: "ng-scope" }}
+              params={{ category: "ng-scope" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Drill: Scopes
             </Link>
             <Link
               to="/practice/$category"
-              params={{ category: "ng-directives" }}
+              params={{ category: "ng-directives" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Drill: Directives
             </Link>
             <Link
               to="/practice/$category"
-              params={{ category: "ng-http" }}
+              params={{ category: "ng-http" }} search={{ difficulty: undefined }}
               className="h-9 px-3 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-xs font-display tracking-wider uppercase hover:bg-accent/20"
             >
               Drill: HTTP
@@ -199,7 +199,7 @@ function AngularCodingTestPage() {
                   )}
                   <Link
                     to="/practice/$category"
-                    params={{ category: q.practiceCategory }}
+                    params={{ category: q.practiceCategory }} search={{ difficulty: undefined }}
                     className="text-[11px] font-mono text-accent underline"
                   >
                     → Practice this topic

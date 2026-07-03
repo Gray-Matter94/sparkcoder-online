@@ -199,7 +199,7 @@ gr.query();`}</code>
           <div className="flex flex-wrap gap-2">
             <Link
               to="/practice/$category"
-              params={{ category: "gliderecord" }}
+              params={{ category: "gliderecord" }} search={{ difficulty: undefined }}
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent font-display tracking-wider text-xs uppercase hover:bg-accent/20"
             >
               GlideRecord drills

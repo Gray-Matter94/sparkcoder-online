@@ -284,7 +284,7 @@ function GlideAjaxGuide() {
             {" "}or practice{" "}
             <Link
               to="/practice/$category"
-              params={{ category: "glideajax" }}
+              params={{ category: "glideajax" }} search={{ difficulty: undefined }}
               className="text-accent underline"
             >
               GlideAjax timed questions
@@ -373,7 +373,7 @@ function GlideAjaxGuide() {
             </Link>
             <Link
               to="/practice/$category"
-              params={{ category: "glideajax" }}
+              params={{ category: "glideajax" }} search={{ difficulty: undefined }}
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
             >
               GlideAjax practice
