@@ -102,6 +102,8 @@ function LiveCoding() {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [idx, setIdx] = useState(0);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 20;
   const list = useMemo(() => {
     const bySide =
       filter === "all"
@@ -117,7 +119,14 @@ function LiveCoding() {
   }, [filter, query]);
   useEffect(() => {
     setIdx(0);
+    setPage(0);
   }, [filter, query]);
+  const pageCount = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  useEffect(() => {
+    setPage(Math.floor(idx / PAGE_SIZE));
+  }, [idx]);
+
 
   const q: LiveCodingQuestion =
     list[Math.min(idx, Math.max(0, list.length - 1))] ?? LIVE_CODING_QUESTIONS[0];
