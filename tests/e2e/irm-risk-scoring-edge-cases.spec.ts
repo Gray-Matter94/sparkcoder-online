@@ -1,5 +1,8 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
-import { expectSimulatorAndTeachCardAccessible } from "./utils/a11y";
+import {
+  expectSimulatorAndTeachCardAccessible,
+  expectKeyboardCorrectionUIAccessible,
+} from "./utils/a11y";
 
 /**
  * Edge-case coverage for the IRM risk-scoring and residual-risk puzzles.
