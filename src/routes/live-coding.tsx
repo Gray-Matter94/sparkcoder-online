@@ -501,7 +501,7 @@ function LiveCoding() {
                   </pre>
                 )}
                 <p className="mt-2 text-[11px] text-muted-foreground">
-                  Fix that line and hit RUN SCRIPT again.
+                  Fix that line and hit RUN &amp; CHECK again.
                 </p>
               </>
             )}
