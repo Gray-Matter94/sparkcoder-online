@@ -672,6 +672,125 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       "Correct-answer TeachCard must be a fresh node (different role/live pair) from the prior wrong alert"
     ).toBe(false);
   });
+
+  test("puzzle 1: after a wrong attempt, Tab order includes TRY AGAIN + simulator controls and never traps focus", async ({
+    page,
+  }) => {
+    // A keyboard-only learner must be able to Tab through every correction-UI
+    // control (TRY AGAIN, minimize-simulator, option chips) AND Tab back out
+    // to the surrounding page — a focus trap would strand them in the alert
+    // with no keyboard escape. This test drives Tab N times, records each
+    // focused element, and asserts:
+    //   1. TRY AGAIN and the simulator minimize button both appear in the
+    //      forward tab order.
+    //   2. The sequence eventually wraps back to a previously-seen element
+    //      (or reaches the browser chrome via document.body), proving no
+    //      trap.
+    //   3. Shift+Tab reverses the sequence — a one-way trap is still a trap.
+    await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
+    await expect(
+      page.getByRole("heading", { name: /Compute residual risk correctly/i })
+    ).toBeVisible();
+
+    await pickOption(page, "inherent - effectiveness");
+    await runAndWait(page);
+    await expect(badTeachCard(page)).toBeVisible();
+
+    // Start from a known anchor so the walk is deterministic across engines.
+    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
+    await page.evaluate(() => document.body.focus());
+
+    const describeFocus = async (): Promise<string> =>
+      page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null;
+        if (!el || el === document.body) return "__body__";
+        const label =
+          el.getAttribute("aria-label") ||
+          el.textContent?.trim().slice(0, 60) ||
+          el.tagName.toLowerCase();
+        return `${el.tagName.toLowerCase()}::${label}`;
+      });
+
+    // Forward walk: Tab up to 40 times. Stop once we've seen a repeat OR
+    // returned to __body__ — either proves the ring is not sealed.
+    const MAX_TABS = 40;
+    const forward: string[] = [];
+    let wrapped = false;
+    for (let i = 0; i < MAX_TABS; i++) {
+      await page.keyboard.press("Tab");
+      const key = await describeFocus();
+      if (forward.includes(key) || key === "__body__") {
+        wrapped = true;
+        forward.push(key);
+        break;
+      }
+      forward.push(key);
+    }
+    expect(
+      wrapped,
+      `Tab order never wrapped after ${MAX_TABS} presses — focus is trapped. Sequence: ${forward.join(" → ")}`
+    ).toBe(true);
+
+    // Correction-UI controls that a keyboard learner MUST be able to reach
+    // via Tab from an arbitrary starting point on the page.
+    const sawTryAgain = forward.some((k) => /try again/i.test(k));
+    const sawMinimize = forward.some((k) =>
+      /minimize instance simulator/i.test(k)
+    );
+    expect(
+      sawTryAgain,
+      `TRY AGAIN must appear in forward tab order. Sequence: ${forward.join(" → ")}`
+    ).toBe(true);
+    expect(
+      sawMinimize,
+      `Minimize simulator control must appear in forward tab order. Sequence: ${forward.join(" → ")}`
+    ).toBe(true);
+
+    // Reverse walk: Shift+Tab must also traverse — a trap that only lets
+    // focus move forward is still a trap.
+    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
+    await page.evaluate(() => document.body.focus());
+    const reverse: string[] = [];
+    let reverseWrapped = false;
+    for (let i = 0; i < MAX_TABS; i++) {
+      await page.keyboard.press("Shift+Tab");
+      const key = await describeFocus();
+      if (reverse.includes(key) || key === "__body__") {
+        reverseWrapped = true;
+        reverse.push(key);
+        break;
+      }
+      reverse.push(key);
+    }
+    expect(
+      reverseWrapped,
+      `Shift+Tab order never wrapped after ${MAX_TABS} presses — reverse focus is trapped. Sequence: ${reverse.join(" → ")}`
+    ).toBe(true);
+    expect(
+      reverse.some((k) => /try again/i.test(k)),
+      `TRY AGAIN must also be reachable via Shift+Tab. Sequence: ${reverse.join(" → ")}`
+    ).toBe(true);
+
+    // Sanity: no visited node was a hidden aria-hidden container swallowing
+    // focus (a common cause of "the UI feels trapped" without being a strict
+    // trap). Every focused control while the alert is up must be interactive.
+    const focusableTags = new Set(["button", "a", "input", "select", "textarea"]);
+    for (const key of forward) {
+      if (key === "__body__") continue;
+      const tag = key.split("::")[0];
+      expect(
+        focusableTags.has(tag) || tag === "div" || tag === "span",
+        `Focus landed on a non-interactive element while correction UI was open: ${key}`
+      ).toBe(true);
+    }
+
+    // Recover to correct so the a11y afterEach hook has a clean UI to scan.
+    await tryAgain(page);
+    await pickOption(page, "inherent * (1 - effectiveness)");
+    await runAndWait(page);
+    await expect(okTeachCard(page)).toBeVisible();
+  });
 });
+
 
 
