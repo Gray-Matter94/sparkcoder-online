@@ -469,6 +469,32 @@ function LiveCoding() {
                     <span className="pl-3 pr-4 whitespace-pre">
                       {line.length === 0 ? (
                         <span>&nbsp;</span>
+                      ) : isErr && correction && correction.columnEnd > correction.columnStart ? (
+                        // Split the error line into pre / [range] / post so we
+                        // can bg-highlight the exact failing chars while still
+                        // syntax-coloring each segment.
+                        (() => {
+                          const pre = line.slice(0, correction.columnStart);
+                          const mid = line.slice(correction.columnStart, correction.columnEnd);
+                          const post = line.slice(correction.columnEnd);
+                          const paint = (s: string, extra = "") =>
+                            s.length === 0
+                              ? null
+                              : highlightLine(s).map((tok, j) => (
+                                  <span key={j} className={`${tok.c} ${extra}`}>
+                                    {tok.t}
+                                  </span>
+                                ));
+                          return (
+                            <>
+                              {paint(pre)}
+                              <span className="bg-destructive/60 rounded-sm underline decoration-wavy decoration-destructive-foreground/80">
+                                {paint(mid) ?? <span>&nbsp;</span>}
+                              </span>
+                              {paint(post)}
+                            </>
+                          );
+                        })()
                       ) : (
                         highlightLine(line).map((tok, j) => (
                           <Fragment key={j}>
