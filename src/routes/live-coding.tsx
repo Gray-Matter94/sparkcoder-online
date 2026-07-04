@@ -89,7 +89,7 @@ function highlightLine(line: string): Tok[] {
     return tokens;
   })();
 
-  if (commentPart) arr.push({ t: commentPart, c: "text-zinc-500 italic" });
+  if (commentPart) arr.push({ t: commentPart, c: "text-zinc-400 italic" });
   return arr;
 }
 
