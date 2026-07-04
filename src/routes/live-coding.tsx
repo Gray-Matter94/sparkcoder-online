@@ -102,6 +102,8 @@ function LiveCoding() {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [idx, setIdx] = useState(0);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 20;
   const list = useMemo(() => {
     const bySide =
       filter === "all"
@@ -117,7 +119,14 @@ function LiveCoding() {
   }, [filter, query]);
   useEffect(() => {
     setIdx(0);
+    setPage(0);
   }, [filter, query]);
+  const pageCount = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  useEffect(() => {
+    setPage(Math.floor(idx / PAGE_SIZE));
+  }, [idx]);
+
 
   const q: LiveCodingQuestion =
     list[Math.min(idx, Math.max(0, list.length - 1))] ?? LIVE_CODING_QUESTIONS[0];
@@ -407,6 +416,96 @@ function LiveCoding() {
             </button>
           </section>
         )}
+
+        {!noResults && (
+          <section
+            aria-label="Browse tasks"
+            className="rounded-2xl border-2 border-border bg-panel p-3 space-y-3"
+          >
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <p className="text-[11px] font-bold tracking-widest text-muted-foreground">
+                BROWSE · showing {currentPage * PAGE_SIZE + 1}–
+                {Math.min(list.length, (currentPage + 1) * PAGE_SIZE)} of {list.length}
+              </p>
+              <div className="flex items-center gap-1 font-mono text-xs">
+                <button
+                  onClick={() => setPage(0)}
+                  disabled={currentPage === 0}
+                  aria-label="First page"
+                  className="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 disabled:opacity-30 hover:border-accent"
+                >
+                  «
+                </button>
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={currentPage === 0}
+                  aria-label="Previous page"
+                  className="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 disabled:opacity-30 hover:border-accent"
+                >
+                  ‹
+                </button>
+                <span aria-live="polite" className="px-2 text-muted-foreground">
+                  page {currentPage + 1}/{pageCount}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                  disabled={currentPage >= pageCount - 1}
+                  aria-label="Next page"
+                  className="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 disabled:opacity-30 hover:border-accent"
+                >
+                  ›
+                </button>
+                <button
+                  onClick={() => setPage(pageCount - 1)}
+                  disabled={currentPage >= pageCount - 1}
+                  aria-label="Last page"
+                  className="h-7 px-2 rounded-md bg-zinc-800 border border-zinc-700 disabled:opacity-30 hover:border-accent"
+                >
+                  »
+                </button>
+              </div>
+            </div>
+            <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
+              {list
+                .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
+                .map((item, i) => {
+                  const globalIdx = currentPage * PAGE_SIZE + i;
+                  const active = globalIdx === idx;
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => setIdx(globalIdx)}
+                        aria-current={active ? "true" : undefined}
+                        className={`w-full text-left px-2.5 py-2 rounded-lg border font-mono text-[11px] transition-colors ${
+                          active
+                            ? "bg-amber-500/15 border-amber-500/60 text-amber-200"
+                            : "bg-zinc-900/60 border-zinc-800 hover:border-accent"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground shrink-0">
+                            #{globalIdx + 1}
+                          </span>
+                          <span
+                            className={`shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-widest ${
+                              item.side === "server"
+                                ? "bg-emerald-500/15 text-emerald-300"
+                                : "bg-sky-500/15 text-sky-300"
+                            }`}
+                          >
+                            {item.side === "server" ? "SRV" : "CLI"}
+                          </span>
+                          <span className="truncate">{item.title}</span>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        )}
+
+
 
 
         {/* Interviewer prompt */}
