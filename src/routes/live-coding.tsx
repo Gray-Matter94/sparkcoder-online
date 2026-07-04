@@ -735,10 +735,14 @@ function LiveCoding() {
               </p>
               <pre className="text-[12px] font-mono p-3 rounded-lg bg-zinc-950 border border-destructive/40 overflow-x-auto">
                 <div className="flex">
-                  <span className="text-zinc-600 select-none w-8 shrink-0 text-right pr-2">
+                  <span
+                    className="text-destructive-foreground bg-destructive font-bold select-none w-10 shrink-0 text-right pr-2"
+                    aria-label={`Line ${correction.errorLine + 1}, needs fix`}
+                  >
+                    <span aria-hidden="true">⚠ </span>
                     {String(correction.errorLine + 1).padStart(2, "0")}
                   </span>
-                  <span>
+                  <span className="pl-2">
                     {highlightLine(correction.line.slice(0, correction.columnStart)).map(
                       (t, j) => (
                         <span key={`p${j}`} className={t.c}>
@@ -746,7 +750,10 @@ function LiveCoding() {
                         </span>
                       ),
                     )}
-                    <span className="bg-destructive/60 rounded-sm">
+                    <span
+                      className="bg-destructive text-destructive-foreground font-bold rounded-sm underline decoration-wavy decoration-destructive-foreground underline-offset-2 px-0.5"
+                      aria-label={`Failing range: ${correction.line.slice(correction.columnStart, correction.columnEnd) || "empty"}`}
+                    >
                       {correction.line.slice(correction.columnStart, correction.columnEnd) ||
                         " "}
                     </span>
