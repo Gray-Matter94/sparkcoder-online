@@ -471,6 +471,16 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await expect(trace).toHaveAttribute("aria-live", "polite");
     await expect(trace).toHaveAttribute("aria-label", /simulator/i);
 
+    // Inline axe scan on the wrong-answer correction UI — catches
+    // keyboard/name-role-value/aria violations while focus is still on the
+    // wrong-answer path, before TRY AGAIN dismisses the alert.
+    await expectKeyboardCorrectionUIAccessible(
+      page,
+      `${engine}: wrong-answer correction UI`
+    );
+
+
+
     // Keyboard-only recovery: TRY AGAIN must be focusable and render a
     // visible focus indicator so learners can dismiss the alert without a
     // mouse.
