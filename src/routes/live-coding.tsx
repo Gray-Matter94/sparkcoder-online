@@ -220,57 +220,116 @@ function LiveCoding() {
           </p>
         </header>
 
-        {/* filter + navigator */}
-        <div className="flex flex-wrap items-center gap-2 justify-between">
-          <div
-            role="tablist"
-            aria-label="Filter tasks"
-            className="inline-flex p-1 rounded-xl border-2 border-border bg-panel"
-          >
-            {(
-              [
-                { id: "all" as const, label: "ALL", count: LIVE_CODING_TOTAL },
-                { id: "server" as const, label: "SERVER", count: serverCount },
-                { id: "client" as const, label: "CLIENT", count: clientCount },
-              ]
-            ).map((t) => (
+        {/* search + filters + navigator */}
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2 justify-between">
+            <div
+              role="tablist"
+              aria-label="Filter tasks by side"
+              className="inline-flex p-1 rounded-xl border-2 border-border bg-panel"
+            >
+              {(
+                [
+                  { id: "all" as const, label: "ALL", count: LIVE_CODING_TOTAL },
+                  { id: "server" as const, label: "SERVER", count: serverCount },
+                  { id: "client" as const, label: "CLIENT", count: clientCount },
+                ]
+              ).map((t) => (
+                <button
+                  key={t.id}
+                  role="tab"
+                  aria-selected={filter === t.id}
+                  onClick={() => setFilter(t.id)}
+                  className={`px-3 py-1.5 rounded-lg text-[11px] font-bold tracking-widest transition-all ${
+                    filter === t.id
+                      ? "bg-amber-500/20 text-amber-300"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {t.label} · {t.count}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
               <button
-                key={t.id}
-                role="tab"
-                aria-selected={filter === t.id}
-                onClick={() => setFilter(t.id)}
-                className={`px-3 py-1.5 rounded-lg text-[11px] font-bold tracking-widest transition-all ${
-                  filter === t.id
-                    ? "bg-amber-500/20 text-amber-300"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                onClick={prevQuestion}
+                disabled={idx === 0 || noResults}
+                aria-label="Previous task"
+                className="size-8 grid place-items-center rounded-lg bg-panel border border-border disabled:opacity-30 hover:border-accent"
               >
-                {t.label} · {t.count}
+                ‹
               </button>
-            ))}
+              <span aria-live="polite">
+                {noResults ? "0/0" : `#${idx + 1}/${list.length}`}
+              </span>
+              <button
+                onClick={nextQuestion}
+                disabled={idx >= list.length - 1 || noResults}
+                aria-label="Next task"
+                className="size-8 grid place-items-center rounded-lg bg-panel border border-border disabled:opacity-30 hover:border-accent"
+              >
+                ›
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
-            <button
-              onClick={prevQuestion}
-              disabled={idx === 0}
-              aria-label="Previous task"
-              className="size-8 grid place-items-center rounded-lg bg-panel border border-border disabled:opacity-30 hover:border-accent"
+
+          <div className="relative">
+            <span
+              aria-hidden="true"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
             >
-              ‹
-            </button>
-            <span>
-              #{idx + 1}/{list.length}
+              🔍
             </span>
-            <button
-              onClick={nextQuestion}
-              disabled={idx >= list.length - 1}
-              aria-label="Next task"
-              className="size-8 grid place-items-center rounded-lg bg-panel border border-border disabled:opacity-30 hover:border-accent"
-            >
-              ›
-            </button>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search 500 tasks — try 'GlideAggregate', 'onChange', 'incident'…"
+              aria-label="Search live coding tasks by keyword"
+              className="w-full h-10 pl-9 pr-24 rounded-xl bg-panel border-2 border-border text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:border-amber-500/60"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2 rounded-lg bg-zinc-800 text-[10px] font-bold tracking-widest text-muted-foreground hover:text-foreground border border-zinc-700"
+              >
+                CLEAR
+              </button>
+            )}
           </div>
+          {query && (
+            <p className="text-[11px] text-muted-foreground font-mono">
+              {noResults
+                ? `No tasks match "${query}"${filter !== "all" ? ` in ${filter.toUpperCase()}` : ""}.`
+                : `${list.length} match${list.length === 1 ? "" : "es"} for "${query}"${
+                    filter !== "all" ? ` in ${filter.toUpperCase()}` : ""
+                  }.`}
+            </p>
+          )}
         </div>
+
+        {noResults && (
+          <section
+            role="status"
+            className="rounded-2xl border-2 border-dashed border-border bg-panel p-6 text-center space-y-2"
+          >
+            <p className="text-sm font-bold">No matching tasks</p>
+            <p className="text-xs text-muted-foreground">
+              Try a broader keyword, or reset the SERVER/CLIENT filter.
+            </p>
+            <button
+              onClick={() => {
+                setQuery("");
+                setFilter("all");
+              }}
+              className="mt-2 px-3 h-9 rounded-lg bg-zinc-800 text-amber-300 text-[11px] font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50"
+            >
+              RESET FILTERS
+            </button>
+          </section>
+        )}
+
 
         {/* Interviewer prompt */}
         <section
