@@ -576,5 +576,102 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       maxDiffPixelRatio: 0.02,
     });
   });
+
+  test("puzzle 1: TeachCard aria-live re-announces on every new wrong attempt (fresh DOM node, alert role, updated content)", async ({
+    page,
+  }) => {
+    // Screen readers only re-announce an aria-live="assertive" region when
+    // either (a) the region node itself is inserted into the DOM, or
+    // (b) its text content changes while it remains mounted. If TRY AGAIN
+    // left the TeachCard in place and only mutated its children, some AT
+    // engines (notably VoiceOver + NVDA in polite-buffer mode) silently
+    // dedupe successive alerts and the learner never hears the second
+    // correction. This test locks in the contract: each wrong attempt must
+    // yield a *new* alert node (remount) with a *different* accessible name,
+    // so the announcement fires again.
+    await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
+    await expect(
+      page.getByRole("heading", { name: /Compute residual risk correctly/i })
+    ).toBeVisible();
+
+    // Helper: capture the current TeachCard element as a JSHandle so we can
+    // compare DOM identity across attempts, plus its live-region contract
+    // (role/aria-live) and full announced text.
+    const captureAlert = async () => {
+      const card = page.getByTestId("teach-card");
+      await expect(card).toBeVisible();
+      await expect(card).toHaveAttribute("role", "alert");
+      await expect(card).toHaveAttribute("aria-live", "assertive");
+      const handle = await card.elementHandle();
+      expect(handle).not.toBeNull();
+      const text = (await card.innerText()).trim();
+      const heading = (
+        await card.getByRole("heading").first().innerText()
+      ).trim();
+      return { handle: handle!, text, heading };
+    };
+
+    // Attempt 1 — subtraction. First announcement.
+    await pickOption(page, "inherent - effectiveness");
+    await runAndWait(page);
+    const first = await captureAlert();
+    expect(first.heading).toMatch(/Unit mismatch/i);
+
+    await tryAgain(page);
+    // After dismissal the old node must be detached — otherwise a stale
+    // aria-live region hangs around and the next mount can't re-announce.
+    await expect
+      .poll(async () => await first.handle.evaluate((el) => el.isConnected))
+      .toBe(false);
+
+    // Attempt 2 — division. Second announcement must be a fresh DOM node
+    // with different accessible content.
+    await pickOption(page, "inherent / effectiveness");
+    await runAndWait(page);
+    const second = await captureAlert();
+    expect(second.heading).toMatch(/Division scales risk the wrong direction/i);
+
+    // DOM identity check: the two alert nodes must be distinct so AT
+    // engines fire a fresh assertive announcement instead of dedup'ing.
+    const sameNode = await page.evaluate(
+      ([a, b]) => a === b,
+      [first.handle, second.handle] as const
+    );
+    expect(
+      sameNode,
+      "Second wrong-answer TeachCard must be a fresh DOM node so aria-live re-announces"
+    ).toBe(false);
+
+    // Announced text must differ so a screen reader speaking the new alert
+    // doesn't repeat identical audio (which some AT collapses to silence).
+    expect(second.text).not.toEqual(first.text);
+    expect(second.heading).not.toEqual(first.heading);
+
+    // Recover to correct — the ok TeachCard must ALSO be a fresh node with
+    // its own role/live pair (status/polite), not a mutation of the wrong
+    // alert region.
+    await tryAgain(page);
+    await expect
+      .poll(async () => await second.handle.evaluate((el) => el.isConnected))
+      .toBe(false);
+
+    await pickOption(page, "inherent * (1 - effectiveness)");
+    await runAndWait(page);
+    const okCard = page.getByTestId("teach-card");
+    await expect(okCard).toBeVisible();
+    await expect(okCard).toHaveAttribute("role", "status");
+    await expect(okCard).toHaveAttribute("aria-live", "polite");
+    const okHandle = await okCard.elementHandle();
+    expect(okHandle).not.toBeNull();
+    const okIsSecond = await page.evaluate(
+      ([a, b]) => a === b,
+      [second.handle, okHandle!] as const
+    );
+    expect(
+      okIsSecond,
+      "Correct-answer TeachCard must be a fresh node (different role/live pair) from the prior wrong alert"
+    ).toBe(false);
+  });
 });
+
 
