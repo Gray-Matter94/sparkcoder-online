@@ -119,8 +119,10 @@ function LiveCoding() {
     setIdx(0);
   }, [filter, query]);
 
+  const q: LiveCodingQuestion =
+    list[Math.min(idx, Math.max(0, list.length - 1))] ?? LIVE_CODING_QUESTIONS[0];
+  const noResults = list.length === 0;
 
-  const q: LiveCodingQuestion = list[Math.min(idx, list.length - 1)];
 
   const [code, setCode] = useState<string>(q.starter);
   const [result, setResult] = useState<ValidationResult | null>(null);
