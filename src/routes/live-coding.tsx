@@ -765,10 +765,11 @@ function LiveCoding() {
                   </span>
                 </div>
                 <div className="flex" aria-hidden="true">
-                  <span className="w-8 shrink-0" />
-                  <span className="text-destructive whitespace-pre">
+                  <span className="w-10 shrink-0" />
+                  <span className="text-destructive font-bold whitespace-pre pl-2">
                     {" ".repeat(correction.columnStart) +
-                      "^".repeat(Math.max(1, correction.columnEnd - correction.columnStart))}
+                      "^".repeat(Math.max(1, correction.columnEnd - correction.columnStart)) +
+                      " FIX"}
                   </span>
                 </div>
               </pre>
