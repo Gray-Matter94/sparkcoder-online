@@ -255,14 +255,22 @@ jobs:
         if: failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         env:
-          DEBUG_ARTIFACT_URL: ${{ steps.upload-debug.outputs.artifact-url }}
+          DEBUG_CHROMIUM_URL: ${{ steps.upload-debug-chromium.outputs.artifact-url }}
+          DEBUG_WEBKIT_URL: ${{ steps.upload-debug-webkit.outputs.artifact-url }}
+          DEBUG_FIREFOX_URL: ${{ steps.upload-debug-firefox.outputs.artifact-url }}
+          DEBUG_OTHER_URL: ${{ steps.upload-debug.outputs.artifact-url }}
           REPORT_ARTIFACT_URL: ${{ steps.upload-report.outputs.artifact-url }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const marker = '<!-- irm-e2e-artifacts -->';
-            const debugUrl = process.env.DEBUG_ARTIFACT_URL || '';
+            const perBrowser = [
+              ['chromium', process.env.DEBUG_CHROMIUM_URL],
+              ['webkit', process.env.DEBUG_WEBKIT_URL],
+              ['firefox', process.env.DEBUG_FIREFOX_URL],
+            ];
+            const otherUrl = process.env.DEBUG_OTHER_URL || '';
             const reportUrl = process.env.REPORT_ARTIFACT_URL || '';
             const runUrl = process.env.RUN_URL;
             const body = [
@@ -271,14 +279,22 @@ jobs:
               '',
               `**Run:** [#${context.runNumber}](${runUrl}) · commit \`${context.sha.slice(0, 7)}\``,
               '',
-              '**Failure debug bundle** (trace.zip · video.webm · screenshots · error-context.md · HTML report — 14d):',
-              debugUrl ? `- [playwright-irm-failure-debug](${debugUrl})` : '- _not produced_',
+              '**Per-browser failure debug bundles** (trace.zip · video.webm · screenshots · error-context.md — 14d):',
+              ...perBrowser.map(([name, url]) =>
+                url
+                  ? `- [playwright-irm-failure-debug-${name}](${url})`
+                  : `- _${name}: not produced_`
+              ),
+              '',
+              '**Other IRM failures** (non edge-case specs — 14d):',
+              otherUrl ? `- [playwright-irm-failure-debug-other](${otherUrl})` : '- _not produced_',
               '',
               '**Full Playwright HTML report** (7d):',
               reportUrl ? `- [playwright-report-irm](${reportUrl})` : '- _not produced_',
               '',
               `<sub>Browse per-test folders under \`test-results/\` inside the run: ${runUrl}</sub>`,
             ].join('\n');
+
 
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
