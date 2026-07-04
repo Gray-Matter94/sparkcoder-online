@@ -274,10 +274,6 @@ function LiveCoding() {
   const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
   const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
 
-
-  const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
-  const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
-
   return (
     <div className="min-h-screen flex flex-col">
       <ErrorBoundary name="Stats">
