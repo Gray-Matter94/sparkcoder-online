@@ -11,6 +11,8 @@ import {
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
+import { runSandbox, type SandboxRunResult } from "@/lib/live-coding-sandbox";
+
 
 export const Route = createFileRoute("/live-coding")({
   head: () => ({
