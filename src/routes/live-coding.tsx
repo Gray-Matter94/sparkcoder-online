@@ -116,6 +116,7 @@ function LiveCoding() {
 
   const [code, setCode] = useState<string>(q.starter);
   const [result, setResult] = useState<ValidationResult | null>(null);
+  const [sandbox, setSandbox] = useState<SandboxRunResult | null>(null);
   const [ran, setRan] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
@@ -124,15 +125,28 @@ function LiveCoding() {
   useEffect(() => {
     setCode(q.starter);
     setResult(null);
+    setSandbox(null);
     setRan(false);
     setShowSolution(false);
   }, [q.id]);
 
   function handleRun() {
-    const res = validateSolution(q, code);
+    const sb = runSandbox(code);
+    setSandbox(sb);
+    // If the sandbox crashed, skip pattern checks — candidate must fix the
+    // crash first. The error line comes from the real stack trace.
+    const res: ValidationResult = sb.ok
+      ? validateSolution(q, code)
+      : {
+          ok: false,
+          passedCount: 0,
+          totalChecks: q.checks.length,
+          errorLine: sb.errorLine,
+          message: `${sb.errorName ?? "Error"}: ${sb.errorMessage ?? "Script failed to execute."}`,
+        };
     setResult(res);
     setRan(true);
-    if (res.ok) {
+    if (sb.ok && res.ok) {
       award(`live-${q.id}`, 40);
     }
   }
