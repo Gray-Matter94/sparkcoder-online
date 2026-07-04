@@ -266,9 +266,9 @@ jobs:
           script: |
             const marker = '<!-- irm-e2e-artifacts -->';
             const perBrowser = [
-              ['chromium', process.env.DEBUG_CHROMIUM_URL],
-              ['webkit', process.env.DEBUG_WEBKIT_URL],
-              ['firefox', process.env.DEBUG_FIREFOX_URL],
+              { name: 'Chromium', project: 'irm-edge-cases-chromium', url: process.env.DEBUG_CHROMIUM_URL },
+              { name: 'WebKit', project: 'irm-edge-cases-webkit', url: process.env.DEBUG_WEBKIT_URL },
+              { name: 'Firefox', project: 'irm-edge-cases-firefox', url: process.env.DEBUG_FIREFOX_URL },
             ];
             const otherUrl = process.env.DEBUG_OTHER_URL || '';
             const reportUrl = process.env.REPORT_ARTIFACT_URL || '';
@@ -280,10 +280,10 @@ jobs:
               `**Run:** [#${context.runNumber}](${runUrl}) · commit \`${context.sha.slice(0, 7)}\``,
               '',
               '**Per-browser failure debug bundles** (trace.zip · video.webm · screenshots · error-context.md — 14d):',
-              ...perBrowser.map(([name, url]) =>
+              ...perBrowser.map(({ name, project, url }) =>
                 url
-                  ? `- [playwright-irm-failure-debug-${name}](${url})`
-                  : `- _${name}: not produced_`
+                  ? `- **${name}** (${project}): [download debug bundle](${url})`
+                  : `- **${name}** (${project}): _not produced_`
               ),
               '',
               '**Other IRM failures** (non edge-case specs — 14d):',
