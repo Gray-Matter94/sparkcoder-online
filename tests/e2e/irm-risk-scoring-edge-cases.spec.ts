@@ -1,5 +1,8 @@
 import { test, expect, type Page, type Locator } from "@playwright/test";
-import { expectSimulatorAndTeachCardAccessible } from "./utils/a11y";
+import {
+  expectSimulatorAndTeachCardAccessible,
+  expectKeyboardCorrectionUIAccessible,
+} from "./utils/a11y";
 
 /**
  * Edge-case coverage for the IRM risk-scoring and residual-risk puzzles.
@@ -468,6 +471,16 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await expect(trace).toHaveAttribute("aria-live", "polite");
     await expect(trace).toHaveAttribute("aria-label", /simulator/i);
 
+    // Inline axe scan on the wrong-answer correction UI — catches
+    // keyboard/name-role-value/aria violations while focus is still on the
+    // wrong-answer path, before TRY AGAIN dismisses the alert.
+    await expectKeyboardCorrectionUIAccessible(
+      page,
+      `${engine}: wrong-answer correction UI`
+    );
+
+
+
     // Keyboard-only recovery: TRY AGAIN must be focusable and render a
     // visible focus indicator so learners can dismiss the alert without a
     // mouse.
@@ -511,6 +524,14 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await expect(okTeach).toHaveAttribute(
       "aria-label",
       /correct answer feedback/i
+    );
+
+    // Inline axe scan on the correct-answer correction UI — the ok TeachCard
+    // uses a different role/live pair and must independently pass keyboard-
+    // relevant a11y rules on every engine.
+    await expectKeyboardCorrectionUIAccessible(
+      page,
+      `${engine}: correct-answer correction UI`
     );
   });
 });

@@ -51,3 +51,43 @@ export async function expectSimulatorAndTeachCardAccessible(
     `${label}: axe violations\n${JSON.stringify(results.violations, null, 2)}`
   ).toEqual([]);
 }
+
+/**
+ * Keyboard-only correction-UI scan. Runs axe scoped to the TeachCard +
+ * simulator trace with the WCAG keyboard/focus rule families explicitly
+ * enabled so violations that only bite keyboard users (missing focusable
+ * controls, positive tabindex, aria-hidden focus traps, name-role-value
+ * gaps on the interactive controls inside the alert) are surfaced.
+ *
+ * Call inline from a keyboard-driven test AFTER the feedback surface has
+ * rendered, in addition to the passive afterEach scan.
+ */
+export async function expectKeyboardCorrectionUIAccessible(
+  page: Page,
+  label: string
+) {
+  const teach = page.getByTestId("teach-card");
+  const trace = page.getByTestId("simulator-trace");
+  await expect(teach, `${label}: TeachCard present`).toBeVisible();
+  await expect(trace, `${label}: simulator trace present`).toBeVisible();
+
+  const results = await new AxeBuilder({ page })
+    .include('[data-testid="teach-card"]')
+    .include('[data-testid="simulator-trace"]')
+    .withTags([
+      "wcag2a",
+      "wcag2aa",
+      "wcag21a",
+      "wcag21aa",
+      "cat.keyboard",
+      "cat.name-role-value",
+      "cat.aria",
+    ])
+    .disableRules(["color-contrast"])
+    .analyze();
+
+  expect(
+    results.violations,
+    `${label}: keyboard-only axe violations\n${JSON.stringify(results.violations, null, 2)}`
+  ).toEqual([]);
+}
