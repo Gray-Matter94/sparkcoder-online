@@ -681,6 +681,137 @@ function LiveCoding() {
           </section>
         )}
 
+        {/* Correction mode — editable suggested patch */}
+        {ran && result && !result.ok && correction && !correctionDismissed && (
+          <section
+            aria-label="Correction mode with suggested patch"
+            className="rounded-2xl border-2 border-amber-500/60 bg-amber-500/5 p-4 space-y-3 shadow-2xl shadow-amber-500/10"
+          >
+            <div className="flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-amber-300">
+              <span className="text-base">🩹</span>
+              <span>Correction mode</span>
+              <span className="ml-auto font-mono text-muted-foreground normal-case tracking-normal">
+                Line {correction.errorLine + 1} · cols{" "}
+                {correction.columnStart + 1}–{correction.columnEnd + 1}
+              </span>
+            </div>
+
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">
+                Failing range
+              </p>
+              <pre className="text-[12px] font-mono p-3 rounded-lg bg-zinc-950 border border-destructive/40 overflow-x-auto">
+                <div className="flex">
+                  <span className="text-zinc-600 select-none w-8 shrink-0 text-right pr-2">
+                    {String(correction.errorLine + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    {highlightLine(correction.line.slice(0, correction.columnStart)).map(
+                      (t, j) => (
+                        <span key={`p${j}`} className={t.c}>
+                          {t.t}
+                        </span>
+                      ),
+                    )}
+                    <span className="bg-destructive/60 rounded-sm">
+                      {correction.line.slice(correction.columnStart, correction.columnEnd) ||
+                        " "}
+                    </span>
+                    {highlightLine(correction.line.slice(correction.columnEnd)).map((t, j) => (
+                      <span key={`s${j}`} className={t.c}>
+                        {t.t}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+                <div className="flex" aria-hidden="true">
+                  <span className="w-8 shrink-0" />
+                  <span className="text-destructive whitespace-pre">
+                    {" ".repeat(correction.columnStart) +
+                      "^".repeat(Math.max(1, correction.columnEnd - correction.columnStart))}
+                  </span>
+                </div>
+              </pre>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="patch-editor"
+                  className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold"
+                >
+                  Suggested patch (editable)
+                </label>
+                <div
+                  role="radiogroup"
+                  aria-label="Patch mode"
+                  className="inline-flex p-0.5 rounded-lg border border-border bg-panel"
+                >
+                  {(
+                    [
+                      { id: "replace" as const, label: `REPLACE L${correction.errorLine + 1}` },
+                      { id: "insert" as const, label: `INSERT AFTER L${correction.errorLine + 1}` },
+                    ]
+                  ).map((m) => (
+                    <button
+                      key={m.id}
+                      role="radio"
+                      aria-checked={patchMode === m.id}
+                      onClick={() => setPatchMode(m.id)}
+                      className={`px-2 py-1 rounded-md text-[10px] font-bold tracking-widest transition-all ${
+                        patchMode === m.id
+                          ? "bg-amber-500/20 text-amber-300"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <textarea
+                id="patch-editor"
+                value={patch}
+                onChange={(e) => setPatch(e.target.value)}
+                spellCheck={false}
+                rows={Math.min(8, Math.max(2, patch.split("\n").length + 1))}
+                aria-label="Editable suggested patch"
+                className="w-full font-mono text-[12px] leading-6 p-3 rounded-lg bg-zinc-950 border-2 border-amber-500/40 text-amber-100 caret-amber-300 outline-none focus:border-amber-500 resize-y whitespace-pre"
+                style={{ tabSize: 2 }}
+              />
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                Tweak the snippet if needed. Apply will {patchMode === "replace" ? "replace" : "insert after"}{" "}
+                line {correction.errorLine + 1} and re-run.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={applyPatchAndRun}
+                className="px-4 h-10 rounded-lg bg-amber-500 text-amber-950 font-display tracking-wider text-sm shadow-[0_4px_0_#92400e] active:translate-y-0.5 active:shadow-none"
+              >
+                🩹 APPLY PATCH &amp; RE-RUN
+              </button>
+              <button
+                onClick={() => {
+                  setPatch(correction.suggestedPatch);
+                  setPatchMode(correction.defaultMode);
+                }}
+                className="px-3 h-10 rounded-lg bg-zinc-800 text-zinc-200 text-xs font-bold tracking-widest border border-zinc-700 hover:border-zinc-500"
+              >
+                RESET PATCH
+              </button>
+              <button
+                onClick={() => setCorrectionDismissed(true)}
+                className="ml-auto px-3 h-10 rounded-lg bg-transparent text-muted-foreground text-xs font-bold tracking-widest hover:text-foreground"
+              >
+                DISMISS
+              </button>
+            </div>
+          </section>
+        )}
+
+
         {showSolution && (
           <section
             aria-label="Reference solution"
