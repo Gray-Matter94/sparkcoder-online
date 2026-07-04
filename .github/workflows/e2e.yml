@@ -167,16 +167,8 @@ jobs:
           done < <(find test-results -mindepth 1 -maxdepth 1 -type d -print0)
 
 
-      # Debug bundle for any failing IRM test: HTML report + per-test
-      # trace.zip / video.webm / screenshot.png (retain-on-failure in
-      # playwright.config.ts). Only the final retry attempt's artifacts
-      # remain after the prune step above.
 
-      - name: Upload IRM failure debug bundle
-        id: upload-debug
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
+
       # Per-browser debug bundles: one artifact per irm-edge-cases-<browser>
       # project so failures on Chromium, WebKit, and Firefox stay isolated.
       # Playwright names each per-test folder with its project prefix
