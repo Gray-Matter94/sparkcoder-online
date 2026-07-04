@@ -129,6 +129,9 @@ function LiveCoding() {
   const [sandbox, setSandbox] = useState<SandboxRunResult | null>(null);
   const [ran, setRan] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  const [patch, setPatch] = useState<string>("");
+  const [patchMode, setPatchMode] = useState<"replace" | "insert">("replace");
+  const [correctionDismissed, setCorrectionDismissed] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const preRef = useRef<HTMLPreElement>(null);
 
@@ -138,15 +141,19 @@ function LiveCoding() {
     setSandbox(null);
     setRan(false);
     setShowSolution(false);
+    setPatch("");
+    setPatchMode("replace");
+    setCorrectionDismissed(false);
   }, [q.id]);
 
-  function handleRun() {
-    const sb = runSandbox(code);
+  function handleRun(nextCode: string = code) {
+    if (nextCode !== code) setCode(nextCode);
+    const sb = runSandbox(nextCode);
     setSandbox(sb);
     // If the sandbox crashed, skip pattern checks — candidate must fix the
     // crash first. The error line comes from the real stack trace.
     const res: ValidationResult = sb.ok
-      ? validateSolution(q, code)
+      ? validateSolution(q, nextCode)
       : {
           ok: false,
           passedCount: 0,
@@ -156,6 +163,7 @@ function LiveCoding() {
         };
     setResult(res);
     setRan(true);
+    setCorrectionDismissed(false);
     if (sb.ok && res.ok) {
       award(`live-${q.id}`, 40);
     }
@@ -192,6 +200,80 @@ function LiveCoding() {
 
   const lines = code.split("\n");
   const errorLine = ran && result && !result.ok ? result.errorLine : undefined;
+
+  // ---- Correction mode: derive column range + suggested patch ------------
+  const correction = useMemo(() => {
+    if (!ran || !result || result.ok || errorLine === undefined) return null;
+    const line = lines[errorLine] ?? "";
+
+    // Column range: try to locate a keyword from the needle inside the line
+    // so we can highlight the exact character range that's off. Falls back to
+    // the sandbox column, then the whole line.
+    let columnStart = 0;
+    let columnEnd = line.length;
+    if (result.needle) {
+      const kw = result.needle.split(/[^A-Za-z_]/).find((w) => w.length > 3);
+      if (kw) {
+        const idxIn = line.indexOf(kw);
+        if (idxIn >= 0) {
+          columnStart = idxIn;
+          columnEnd = idxIn + kw.length;
+        }
+      }
+    } else if (sandbox && !sandbox.ok && typeof sandbox.errorColumn === "number") {
+      columnStart = Math.max(0, sandbox.errorColumn - 1);
+      columnEnd = Math.min(line.length, columnStart + 1);
+    }
+
+    // Suggested patch: the exact solution line where the missing pattern
+    // lives, or (for sandbox crashes) the aligned solution line, or the
+    // whole reference solution as a last resort.
+    const solutionLines = q.solution.split("\n");
+    let suggestedPatch = "";
+    if (typeof result.solutionLine === "number" && solutionLines[result.solutionLine]) {
+      suggestedPatch = solutionLines[result.solutionLine];
+    } else if (solutionLines[errorLine]) {
+      suggestedPatch = solutionLines[errorLine];
+    } else {
+      suggestedPatch = q.solution;
+    }
+
+    // Choose default mode: replace when the user's line is blank/comment,
+    // otherwise insert after it so we don't clobber real work.
+    const looksBlank = /^\s*(\/\/.*)?$/.test(line);
+    return {
+      line,
+      errorLine,
+      columnStart,
+      columnEnd,
+      suggestedPatch,
+      defaultMode: looksBlank ? ("replace" as const) : ("insert" as const),
+    };
+  }, [ran, result, errorLine, lines, sandbox, q.solution]);
+
+  // Prime the editable patch whenever a new correction becomes active.
+  useEffect(() => {
+    if (correction) {
+      setPatch(correction.suggestedPatch);
+      setPatchMode(correction.defaultMode);
+    }
+  }, [correction?.suggestedPatch, correction?.defaultMode, correction]);
+
+  function applyPatchAndRun() {
+    if (!correction) return;
+    const src = lines.slice();
+    if (patchMode === "replace") {
+      src.splice(correction.errorLine, 1, ...patch.split("\n"));
+    } else {
+      src.splice(correction.errorLine + 1, 0, ...patch.split("\n"));
+    }
+    const nextCode = src.join("\n");
+    handleRun(nextCode);
+  }
+
+  const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
+  const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
+
 
   const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
   const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
