@@ -509,7 +509,7 @@ function LiveCoding() {
 
           <div className="flex flex-wrap items-center gap-2 px-4 py-3 bg-zinc-900 border-t border-border">
             <button
-              onClick={handleRun}
+              onClick={() => handleRun()}
               aria-label="Run script in sandbox and check against required patterns"
               className="px-4 h-10 rounded-lg bg-emerald-500 text-emerald-950 font-display tracking-wider text-sm shadow-[0_4px_0_#065f46] active:translate-y-0.5 active:shadow-none"
             >
