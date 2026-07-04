@@ -400,4 +400,117 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await runAndWait(page);
     await expect(okTeachCard(page)).toBeVisible();
   });
+
+  test("puzzle 1: keyboard-only learner receives correction feedback via visible focus + aria-live regions", async ({
+    page,
+  }, testInfo) => {
+    await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
+    await expect(
+      page.getByRole("heading", { name: /Compute residual risk correctly/i })
+    ).toBeVisible();
+
+    // Drive selection with the keyboard only — no pointer events. Focus the
+    // wrong chip programmatically (Tab traversal length varies per engine),
+    // commit with Enter, then focus RUN SCRIPT and fire it. Mirrors a
+    // screen-reader / keyboard-only learner across Chromium/WebKit/Firefox.
+    const engine = testInfo.project.name;
+    const wrongChip = page.getByRole("button").filter({
+      has: page.locator("code").getByText("inherent - effectiveness", { exact: true }),
+    });
+    await expect(wrongChip).toBeVisible();
+    await wrongChip.focus();
+    await expect(wrongChip).toBeFocused();
+
+    // Focus-visible indicator must render for keyboard focus — never
+    // outline:none with no replacement. Assert either an outline OR a
+    // ring-style boxShadow is present.
+    const chipFocusRing = await wrongChip.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return {
+        outlineStyle: cs.outlineStyle,
+        outlineWidth: cs.outlineWidth,
+        boxShadow: cs.boxShadow,
+      };
+    });
+    expect(
+      chipFocusRing.outlineStyle !== "none" ||
+        (chipFocusRing.boxShadow && chipFocusRing.boxShadow !== "none"),
+      `${engine}: focused chip must render a visible focus indicator (got ${JSON.stringify(chipFocusRing)})`
+    ).toBeTruthy();
+    await page.keyboard.press("Enter");
+
+    const runBtn = page.getByRole("button", { name: /RUN SCRIPT/i });
+    await expect(runBtn).toBeEnabled();
+    await runBtn.focus();
+    await expect(runBtn).toBeFocused();
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(2200);
+
+    // Correction feedback must reach SR/keyboard users via aria-live.
+    // Wrong TeachCard = assertive alert with an accessible name so users are
+    // told WHY their answer failed without needing to see the visual card.
+    const teach = page.getByTestId("teach-card");
+    await expect(teach).toBeVisible();
+    await expect(teach).toHaveAttribute("role", "alert");
+    await expect(teach).toHaveAttribute("aria-live", "assertive");
+    await expect(teach).toHaveAttribute(
+      "aria-label",
+      /incorrect answer feedback/i
+    );
+    await expect(
+      teach.getByRole("heading", { name: /Unit mismatch/i })
+    ).toBeVisible();
+
+    // Simulator trace = polite log so the trace lines are announced in order
+    // after the alert (never silently updated).
+    const trace = page.getByTestId("simulator-trace");
+    await expect(trace).toHaveAttribute("role", "log");
+    await expect(trace).toHaveAttribute("aria-live", "polite");
+    await expect(trace).toHaveAttribute("aria-label", /simulator/i);
+
+    // Keyboard-only recovery: TRY AGAIN must be focusable and render a
+    // visible focus indicator so learners can dismiss the alert without a
+    // mouse.
+    const tryAgainBtn = teach.getByRole("button", { name: /TRY AGAIN/i });
+    await tryAgainBtn.focus();
+    await expect(tryAgainBtn).toBeFocused();
+    const tryAgainFocusRing = await tryAgainBtn.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return {
+        outlineStyle: cs.outlineStyle,
+        outlineWidth: cs.outlineWidth,
+        boxShadow: cs.boxShadow,
+      };
+    });
+    expect(
+      tryAgainFocusRing.outlineStyle !== "none" ||
+        (tryAgainFocusRing.boxShadow &&
+          tryAgainFocusRing.boxShadow !== "none"),
+      `${engine}: TRY AGAIN must render a visible focus indicator (got ${JSON.stringify(tryAgainFocusRing)})`
+    ).toBeTruthy();
+    await page.keyboard.press("Enter");
+    await expect(teach).toBeHidden();
+
+    // Keyboard-only correct attempt — polite status region announces success.
+    const correctChip = page.getByRole("button").filter({
+      has: page
+        .locator("code")
+        .getByText("inherent * (1 - effectiveness)", { exact: true }),
+    });
+    await correctChip.focus();
+    await expect(correctChip).toBeFocused();
+    await page.keyboard.press("Enter");
+    await runBtn.focus();
+    await page.keyboard.press("Enter");
+    await page.waitForTimeout(2200);
+
+    const okTeach = page.getByTestId("teach-card");
+    await expect(okTeach).toBeVisible();
+    await expect(okTeach).toHaveAttribute("role", "status");
+    await expect(okTeach).toHaveAttribute("aria-live", "polite");
+    await expect(okTeach).toHaveAttribute(
+      "aria-label",
+      /correct answer feedback/i
+    );
+  });
 });
