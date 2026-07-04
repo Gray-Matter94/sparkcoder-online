@@ -100,17 +100,25 @@ type Filter = "all" | Side;
 function LiveCoding() {
   const { progress, award } = useProgress();
   const [filter, setFilter] = useState<Filter>("all");
+  const [query, setQuery] = useState("");
   const [idx, setIdx] = useState(0);
-  const list = useMemo(
-    () =>
+  const list = useMemo(() => {
+    const bySide =
       filter === "all"
         ? LIVE_CODING_QUESTIONS
-        : LIVE_CODING_QUESTIONS.filter((q) => q.side === filter),
-    [filter],
-  );
+        : LIVE_CODING_QUESTIONS.filter((q) => q.side === filter);
+    const needle = query.trim().toLowerCase();
+    if (!needle) return bySide;
+    const terms = needle.split(/\s+/).filter(Boolean);
+    return bySide.filter((q) => {
+      const hay = `${q.title} ${q.task} ${q.scriptType} ${q.filename} ${q.id}`.toLowerCase();
+      return terms.every((t) => hay.includes(t));
+    });
+  }, [filter, query]);
   useEffect(() => {
     setIdx(0);
-  }, [filter]);
+  }, [filter, query]);
+
 
   const q: LiveCodingQuestion = list[Math.min(idx, list.length - 1)];
 
