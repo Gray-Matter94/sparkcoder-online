@@ -479,6 +479,30 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       `${engine}: wrong-answer correction UI`
     );
 
+    // Visual regression snapshot of the keyboard correction UI — one baseline
+    // per Playwright project so Chromium/WebKit/Firefox each own their own
+    // rendering. Playwright namespaces snapshots by project name automatically
+    // (tests/e2e/__screenshots__/<spec>/<project>/...), so a single call here
+    // produces a per-engine baseline. Timestamps in each simulator trace row
+    // are masked (the leading `<time>` element) so wall-clock differences
+    // don't flake the diff. Animations disabled so the diff is stable.
+    const wrongTeachSnapshot = async (label: string) => {
+      await expect(teach).toHaveScreenshot(`teach-card-wrong-${label}.png`, {
+        animations: "disabled",
+        caret: "hide",
+        maxDiffPixelRatio: 0.02,
+      });
+      await expect(trace).toHaveScreenshot(`simulator-trace-wrong-${label}.png`, {
+        animations: "disabled",
+        caret: "hide",
+        mask: [trace.locator("> div > span").first()],
+        maxDiffPixelRatio: 0.02,
+      });
+    };
+    await wrongTeachSnapshot("unit-mismatch");
+
+
+
 
 
     // Keyboard-only recovery: TRY AGAIN must be focusable and render a
@@ -533,5 +557,24 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       page,
       `${engine}: correct-answer correction UI`
     );
+
+    // Visual regression baseline for the correct-answer correction UI, per
+    // engine. The ok TeachCard uses a different border/role and must be
+    // pixel-tracked separately from the wrong-answer variant. The simulator
+    // trace is re-snapshotted because the correct run writes a fresh set of
+    // trace lines that a keyboard user must see.
+    const okTrace = page.getByTestId("simulator-trace");
+    await expect(okTeach).toHaveScreenshot(`teach-card-correct.png`, {
+      animations: "disabled",
+      caret: "hide",
+      maxDiffPixelRatio: 0.02,
+    });
+    await expect(okTrace).toHaveScreenshot(`simulator-trace-correct.png`, {
+      animations: "disabled",
+      caret: "hide",
+      mask: [okTrace.locator("> div > span").first()],
+      maxDiffPixelRatio: 0.02,
+    });
   });
 });
+
