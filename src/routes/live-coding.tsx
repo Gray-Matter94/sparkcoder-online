@@ -455,41 +455,63 @@ function LiveCoding() {
                 return (
                   <div
                     key={i}
-                    className={`flex ${isErr ? "bg-destructive/25" : ""}`}
+                    className={`flex ${isErr ? "bg-destructive/30 border-l-4 border-l-destructive" : ""}`}
                   >
                     <span
-                      className={`select-none px-3 py-0 text-right w-12 shrink-0 border-r border-zinc-800 ${
+                      role={isErr ? "img" : undefined}
+                      aria-label={
+                        isErr ? `Line ${i + 1} — error, needs fix` : undefined
+                      }
+                      className={`select-none px-2 py-0 text-right w-12 shrink-0 border-r border-zinc-800 font-bold ${
                         isErr
-                          ? "text-destructive-foreground bg-destructive/60"
-                          : "text-zinc-600 bg-zinc-900/60"
+                          ? "text-destructive-foreground bg-destructive"
+                          : "text-zinc-400 bg-zinc-900/60"
                       }`}
                     >
-                      {isErr ? "▶" : String(i + 1).padStart(2, "0")}
+                      {isErr ? (
+                        <span className="inline-flex items-center gap-0.5 justify-end">
+                          <span aria-hidden="true">⚠</span>
+                          <span>{String(i + 1).padStart(2, "0")}</span>
+                        </span>
+                      ) : (
+                        String(i + 1).padStart(2, "0")
+                      )}
                     </span>
                     <span className="pl-3 pr-4 whitespace-pre">
+                      {isErr && (
+                        <span className="sr-only">
+                          Error on line {i + 1}. Fix required.{" "}
+                        </span>
+                      )}
                       {line.length === 0 ? (
                         <span>&nbsp;</span>
                       ) : isErr && correction && correction.columnEnd > correction.columnStart ? (
                         // Split the error line into pre / [range] / post so we
                         // can bg-highlight the exact failing chars while still
-                        // syntax-coloring each segment.
+                        // syntax-coloring the outer segments. Inside the range
+                        // we force the destructive-foreground so contrast on
+                        // the red block stays AA-compliant regardless of the
+                        // underlying syntax token color.
                         (() => {
                           const pre = line.slice(0, correction.columnStart);
                           const mid = line.slice(correction.columnStart, correction.columnEnd);
                           const post = line.slice(correction.columnEnd);
-                          const paint = (s: string, extra = "") =>
+                          const paint = (s: string) =>
                             s.length === 0
                               ? null
                               : highlightLine(s).map((tok, j) => (
-                                  <span key={j} className={`${tok.c} ${extra}`}>
+                                  <span key={j} className={tok.c}>
                                     {tok.t}
                                   </span>
                                 ));
                           return (
                             <>
                               {paint(pre)}
-                              <span className="bg-destructive/60 rounded-sm underline decoration-wavy decoration-destructive-foreground/80">
-                                {paint(mid) ?? <span>&nbsp;</span>}
+                              <span
+                                className="bg-destructive text-destructive-foreground font-bold rounded-sm underline decoration-wavy decoration-destructive-foreground underline-offset-2 px-0.5"
+                                aria-label={`Failing range: ${mid}`}
+                              >
+                                {mid || " "}
                               </span>
                               {paint(post)}
                             </>
