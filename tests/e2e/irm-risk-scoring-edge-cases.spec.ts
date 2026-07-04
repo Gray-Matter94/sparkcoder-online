@@ -2,7 +2,9 @@ import { test, expect, type Page, type Locator } from "@playwright/test";
 import {
   expectSimulatorAndTeachCardAccessible,
   expectKeyboardCorrectionUIAccessible,
+  expectCorrectionColorContrastAccessible,
 } from "./utils/a11y";
+
 
 /**
  * Edge-case coverage for the IRM risk-scoring and residual-risk puzzles.
@@ -790,7 +792,46 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
     await runAndWait(page);
     await expect(okTeachCard(page)).toBeVisible();
   });
+
+  test("puzzle 1: correction TeachCard + tone-highlighted simulator rows meet WCAG AA color contrast on both wrong and correct states", async ({
+    page,
+  }) => {
+    // Corrected states use `text-destructive` (wrong) and `text-primary`
+    // (correct) on tinted backgrounds, plus a solid-fill TRY AGAIN /
+    // NEXT PUZZLE button. Every one of those foreground+background pairs
+    // must clear WCAG 1.4.3 AA (4.5:1 body, 3:1 large/UI) — a token
+    // regression that dims any of them would strand color-blind and
+    // low-vision learners on the feedback screen. Scan BOTH tones so the
+    // destructive and primary palettes are each locked in.
+    await page.goto(`/practice/${CATEGORY}?difficulty=medium`);
+    await expect(
+      page.getByRole("heading", { name: /Compute residual risk correctly/i })
+    ).toBeVisible();
+
+    // Wrong state — destructive tone: subtracting units so the trace
+    // renders tone=bad log rows in addition to the TeachCard alert.
+    await pickOption(page, "inherent - effectiveness");
+    await runAndWait(page);
+    await expect(badTeachCard(page)).toBeVisible();
+    await expectCorrectionColorContrastAccessible(
+      page,
+      "wrong-answer correction UI (destructive tone)"
+    );
+
+    // Correct state — primary tone: the residual formula lands in Low,
+    // so ok-toned rows and the primary-fill NEXT PUZZLE button both
+    // paint. Distinct token pair from destructive, so validate independently.
+    await tryAgain(page);
+    await pickOption(page, "inherent * (1 - effectiveness)");
+    await runAndWait(page);
+    await expect(okTeachCard(page)).toBeVisible();
+    await expectCorrectionColorContrastAccessible(
+      page,
+      "correct-answer correction UI (primary tone)"
+    );
+  });
 });
+
 
 
 
