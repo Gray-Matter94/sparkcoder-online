@@ -89,7 +89,7 @@ function highlightLine(line: string): Tok[] {
     return tokens;
   })();
 
-  if (commentPart) arr.push({ t: commentPart, c: "text-zinc-500 italic" });
+  if (commentPart) arr.push({ t: commentPart, c: "text-zinc-400 italic" });
   return arr;
 }
 
@@ -455,41 +455,63 @@ function LiveCoding() {
                 return (
                   <div
                     key={i}
-                    className={`flex ${isErr ? "bg-destructive/25" : ""}`}
+                    className={`flex ${isErr ? "bg-destructive/30 border-l-4 border-l-destructive" : ""}`}
                   >
                     <span
-                      className={`select-none px-3 py-0 text-right w-12 shrink-0 border-r border-zinc-800 ${
+                      role={isErr ? "img" : undefined}
+                      aria-label={
+                        isErr ? `Line ${i + 1} — error, needs fix` : undefined
+                      }
+                      className={`select-none px-2 py-0 text-right w-12 shrink-0 border-r border-zinc-800 font-bold ${
                         isErr
-                          ? "text-destructive-foreground bg-destructive/60"
-                          : "text-zinc-600 bg-zinc-900/60"
+                          ? "text-destructive-foreground bg-destructive"
+                          : "text-zinc-400 bg-zinc-900/60"
                       }`}
                     >
-                      {isErr ? "▶" : String(i + 1).padStart(2, "0")}
+                      {isErr ? (
+                        <span className="inline-flex items-center gap-0.5 justify-end">
+                          <span aria-hidden="true">⚠</span>
+                          <span>{String(i + 1).padStart(2, "0")}</span>
+                        </span>
+                      ) : (
+                        String(i + 1).padStart(2, "0")
+                      )}
                     </span>
                     <span className="pl-3 pr-4 whitespace-pre">
+                      {isErr && (
+                        <span className="sr-only">
+                          Error on line {i + 1}. Fix required.{" "}
+                        </span>
+                      )}
                       {line.length === 0 ? (
                         <span>&nbsp;</span>
                       ) : isErr && correction && correction.columnEnd > correction.columnStart ? (
                         // Split the error line into pre / [range] / post so we
                         // can bg-highlight the exact failing chars while still
-                        // syntax-coloring each segment.
+                        // syntax-coloring the outer segments. Inside the range
+                        // we force the destructive-foreground so contrast on
+                        // the red block stays AA-compliant regardless of the
+                        // underlying syntax token color.
                         (() => {
                           const pre = line.slice(0, correction.columnStart);
                           const mid = line.slice(correction.columnStart, correction.columnEnd);
                           const post = line.slice(correction.columnEnd);
-                          const paint = (s: string, extra = "") =>
+                          const paint = (s: string) =>
                             s.length === 0
                               ? null
                               : highlightLine(s).map((tok, j) => (
-                                  <span key={j} className={`${tok.c} ${extra}`}>
+                                  <span key={j} className={tok.c}>
                                     {tok.t}
                                   </span>
                                 ));
                           return (
                             <>
                               {paint(pre)}
-                              <span className="bg-destructive/60 rounded-sm underline decoration-wavy decoration-destructive-foreground/80">
-                                {paint(mid) ?? <span>&nbsp;</span>}
+                              <span
+                                className="bg-destructive text-destructive-foreground font-bold rounded-sm underline decoration-wavy decoration-destructive-foreground underline-offset-2 px-0.5"
+                                aria-label={`Failing range: ${mid}`}
+                              >
+                                {mid || " "}
                               </span>
                               {paint(post)}
                             </>
@@ -596,25 +618,36 @@ function LiveCoding() {
             )}
             {sandbox.logs.length > 0 ? (
               <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800 max-h-56">
-                {sandbox.logs.map((l, i) => (
-                  <div
-                    key={i}
-                    className={
-                      l.level === "error"
-                        ? "text-destructive"
-                        : l.level === "warn"
-                          ? "text-amber-300"
-                          : l.level === "info"
-                            ? "text-emerald-300"
-                            : "text-zinc-300"
-                    }
-                  >
-                    <span className="text-zinc-600 mr-2">
-                      [{l.level.toUpperCase().padEnd(5)}]
-                    </span>
-                    {l.message}
-                  </div>
-                ))}
+                {sandbox.logs.map((l, i) => {
+                  const glyph =
+                    l.level === "error"
+                      ? "✕"
+                      : l.level === "warn"
+                        ? "⚠"
+                        : l.level === "info"
+                          ? "ℹ"
+                          : "›";
+                  const tone =
+                    l.level === "error"
+                      ? "text-destructive"
+                      : l.level === "warn"
+                        ? "text-amber-300"
+                        : l.level === "info"
+                          ? "text-emerald-300"
+                          : "text-zinc-300";
+                  return (
+                    <div key={i} className={tone}>
+                      <span aria-hidden="true" className="inline-block w-4 mr-1 font-bold">
+                        {glyph}
+                      </span>
+                      <span className="text-zinc-400 mr-2 font-bold">
+                        [{l.level.toUpperCase().padEnd(5)}]
+                      </span>
+                      <span className="sr-only">{l.level}: </span>
+                      {l.message}
+                    </div>
+                  );
+                })}
               </pre>
             ) : sandbox.ok ? (
               <p className="text-[11px] text-muted-foreground font-mono">
@@ -702,10 +735,14 @@ function LiveCoding() {
               </p>
               <pre className="text-[12px] font-mono p-3 rounded-lg bg-zinc-950 border border-destructive/40 overflow-x-auto">
                 <div className="flex">
-                  <span className="text-zinc-600 select-none w-8 shrink-0 text-right pr-2">
+                  <span
+                    className="text-destructive-foreground bg-destructive font-bold select-none w-10 shrink-0 text-right pr-2"
+                    aria-label={`Line ${correction.errorLine + 1}, needs fix`}
+                  >
+                    <span aria-hidden="true">⚠ </span>
                     {String(correction.errorLine + 1).padStart(2, "0")}
                   </span>
-                  <span>
+                  <span className="pl-2">
                     {highlightLine(correction.line.slice(0, correction.columnStart)).map(
                       (t, j) => (
                         <span key={`p${j}`} className={t.c}>
@@ -713,7 +750,10 @@ function LiveCoding() {
                         </span>
                       ),
                     )}
-                    <span className="bg-destructive/60 rounded-sm">
+                    <span
+                      className="bg-destructive text-destructive-foreground font-bold rounded-sm underline decoration-wavy decoration-destructive-foreground underline-offset-2 px-0.5"
+                      aria-label={`Failing range: ${correction.line.slice(correction.columnStart, correction.columnEnd) || "empty"}`}
+                    >
                       {correction.line.slice(correction.columnStart, correction.columnEnd) ||
                         " "}
                     </span>
@@ -725,10 +765,11 @@ function LiveCoding() {
                   </span>
                 </div>
                 <div className="flex" aria-hidden="true">
-                  <span className="w-8 shrink-0" />
-                  <span className="text-destructive whitespace-pre">
+                  <span className="w-10 shrink-0" />
+                  <span className="text-destructive font-bold whitespace-pre pl-2">
                     {" ".repeat(correction.columnStart) +
-                      "^".repeat(Math.max(1, correction.columnEnd - correction.columnStart))}
+                      "^".repeat(Math.max(1, correction.columnEnd - correction.columnStart)) +
+                      " FIX"}
                   </span>
                 </div>
               </pre>
@@ -823,7 +864,7 @@ function LiveCoding() {
             <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-zinc-950 border border-zinc-800">
               {q.solution.split("\n").map((line, i) => (
                 <div key={i} className="flex">
-                  <span className="text-zinc-600 select-none w-8 shrink-0">
+                  <span className="text-zinc-400 select-none w-8 shrink-0 font-bold">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>
