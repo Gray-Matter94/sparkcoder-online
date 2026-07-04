@@ -82,6 +82,10 @@ export async function expectKeyboardCorrectionUIAccessible(
       "cat.keyboard",
       "cat.name-role-value",
       "cat.aria",
+      "cat.structure",
+      "cat.time-and-media",
+      "cat.semantics",
+      "best-practice",
     ])
     .disableRules(["color-contrast"])
     .analyze();
