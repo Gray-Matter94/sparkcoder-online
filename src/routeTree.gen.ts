@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
 import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as PlayRouteImport } from './routes/play'
+import { Route as LiveCodingRouteImport } from './routes/live-coding'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
@@ -53,6 +54,11 @@ const ServicenowCsaInterviewQuestions2026Route =
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveCodingRoute = LiveCodingRouteImport.update({
+  id: '/live-coding',
+  path: '/live-coding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyRoute = DailyRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
@@ -317,6 +329,7 @@ export interface RootRouteChildren {
   AngularjsCodingTestRoute: typeof AngularjsCodingTestRoute
   AuthRoute: typeof AuthRoute
   DailyRoute: typeof DailyRoute
+  LiveCodingRoute: typeof LiveCodingRoute
   PlayRoute: typeof PlayRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
   ServicenowIrmArchitectPracticeRoute: typeof ServicenowIrmArchitectPracticeRoute
@@ -366,6 +379,13 @@ declare module '@tanstack/react-router' {
       path: '/play'
       fullPath: '/play'
       preLoaderRoute: typeof PlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-coding': {
+      id: '/live-coding'
+      path: '/live-coding'
+      fullPath: '/live-coding'
+      preLoaderRoute: typeof LiveCodingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily': {
@@ -509,6 +529,7 @@ const rootRouteChildren: RootRouteChildren = {
   AngularjsCodingTestRoute: AngularjsCodingTestRoute,
   AuthRoute: AuthRoute,
   DailyRoute: DailyRoute,
+  LiveCodingRoute: LiveCodingRoute,
   PlayRoute: PlayRoute,
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,

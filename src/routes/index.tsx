@@ -196,6 +196,31 @@ function Home() {
           </div>
         </Link>
 
+        {track === "servicenow-dev" && (
+          <Link
+            to="/live-coding"
+            className="block p-4 rounded-2xl border-2 border-amber-500/60 bg-amber-500/5 hover:border-amber-400 transition-all active:translate-y-0.5 relative overflow-hidden shadow-[0_0_24px_rgba(245,158,11,0.12)]"
+          >
+            <div className="absolute -top-6 -right-6 text-7xl opacity-10">💻</div>
+            <div className="flex items-center gap-3 relative">
+              <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+                🤖
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="font-display text-lg tracking-wide text-amber-300">
+                    LIVE CODING SIMULATOR
+                  </h2>
+                  <span className="text-[10px] text-muted-foreground font-mono">500 TASKS</span>
+                </div>
+                <p className="text-xs text-muted-foreground truncate">
+                  Instance-style editor · AI points at the exact line to fix.
+                </p>
+              </div>
+            </div>
+          </Link>
+        )}
+
         <DifficultyCard progress={progress} />
 
 
