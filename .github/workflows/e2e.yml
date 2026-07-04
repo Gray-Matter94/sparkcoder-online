@@ -177,15 +177,71 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-irm-failure-debug
+      # Per-browser debug bundles: one artifact per irm-edge-cases-<browser>
+      # project so failures on Chromium, WebKit, and Firefox stay isolated.
+      # Playwright names each per-test folder with its project prefix
+      # (e.g. `test-results/irm-edge-cases-webkit-...-retry2/`), so a glob
+      # on that prefix yields only that engine's traces/videos/screenshots.
+      - name: Upload IRM failure debug bundle (chromium)
+        id: upload-debug-chromium
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-irm-failure-debug-chromium
+          path: |
+            test-results/irm-edge-cases-chromium-*/**/trace.zip
+            test-results/irm-edge-cases-chromium-*/**/video.webm
+            test-results/irm-edge-cases-chromium-*/**/*.png
+            test-results/irm-edge-cases-chromium-*/**/error-context.md
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload IRM failure debug bundle (webkit)
+        id: upload-debug-webkit
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-irm-failure-debug-webkit
+          path: |
+            test-results/irm-edge-cases-webkit-*/**/trace.zip
+            test-results/irm-edge-cases-webkit-*/**/video.webm
+            test-results/irm-edge-cases-webkit-*/**/*.png
+            test-results/irm-edge-cases-webkit-*/**/error-context.md
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload IRM failure debug bundle (firefox)
+        id: upload-debug-firefox
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-irm-failure-debug-firefox
+          path: |
+            test-results/irm-edge-cases-firefox-*/**/trace.zip
+            test-results/irm-edge-cases-firefox-*/**/video.webm
+            test-results/irm-edge-cases-firefox-*/**/*.png
+            test-results/irm-edge-cases-firefox-*/**/error-context.md
+          retention-days: 14
+          if-no-files-found: ignore
+
+      # Debug bundle for non-edge-case specs (chromium-only project + any
+      # other failing IRM tests). Excludes the per-browser edge-case folders
+      # above so those artifacts aren't duplicated here.
+      - name: Upload IRM failure debug bundle (other)
+        id: upload-debug
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-irm-failure-debug-other
           path: |
             playwright-report
             test-results/**/trace.zip
             test-results/**/video.webm
             test-results/**/*.png
             test-results/**/error-context.md
+            !test-results/irm-edge-cases-*/**
           retention-days: 14
-          if-no-files-found: warn
+          if-no-files-found: ignore
 
       - name: Upload IRM Playwright report
         id: upload-report
@@ -198,6 +254,7 @@ jobs:
             test-results
           retention-days: 7
           if-no-files-found: ignore
+
 
       # Post (or update) a sticky PR comment linking the failed IRM test
       # artifacts so reviewers can jump straight to trace.zip / video /
