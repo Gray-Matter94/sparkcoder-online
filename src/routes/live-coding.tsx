@@ -363,14 +363,16 @@ function LiveCoding() {
           <div className="flex flex-wrap items-center gap-2 px-4 py-3 bg-zinc-900 border-t border-border">
             <button
               onClick={handleRun}
+              aria-label="Run script in sandbox and check against required patterns"
               className="px-4 h-10 rounded-lg bg-emerald-500 text-emerald-950 font-display tracking-wider text-sm shadow-[0_4px_0_#065f46] active:translate-y-0.5 active:shadow-none"
             >
-              ▶ RUN SCRIPT
+              ▶ RUN &amp; CHECK
             </button>
             <button
               onClick={() => {
                 setCode(q.starter);
                 setResult(null);
+                setSandbox(null);
                 setRan(false);
               }}
               className="px-3 h-10 rounded-lg bg-zinc-800 text-zinc-200 text-xs font-bold tracking-widest border border-zinc-700 hover:border-zinc-500"
@@ -385,9 +387,70 @@ function LiveCoding() {
             </button>
             <span className="ml-auto text-[10px] text-muted-foreground font-mono">
               {lines.length} lines · {code.length} chars
+              {sandbox && ` · ${sandbox.durationMs.toFixed(0)}ms`}
             </span>
           </div>
         </section>
+
+        {/* Sandbox execution output */}
+        {ran && sandbox && (
+          <section
+            aria-label="Sandbox execution output"
+            className={`rounded-2xl border-2 p-4 shadow-2xl ${
+              sandbox.ok
+                ? "bg-zinc-950 border-emerald-500/40"
+                : "bg-zinc-950 border-destructive/60"
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2 font-bold uppercase tracking-widest text-xs">
+              <span className="text-base">{sandbox.ok ? "🟢" : "🔴"}</span>
+              <span className={sandbox.ok ? "text-emerald-400" : "text-destructive"}>
+                {sandbox.ok ? "Sandbox: passed" : "Sandbox: failed"}
+              </span>
+              <span className="ml-auto font-mono text-muted-foreground normal-case tracking-normal">
+                {sandbox.logs.length} log{sandbox.logs.length === 1 ? "" : "s"} ·{" "}
+                {sandbox.durationMs.toFixed(0)}ms
+              </span>
+            </div>
+            {!sandbox.ok && (
+              <p className="text-sm text-destructive/90 mb-2">
+                <strong>
+                  {sandbox.errorName ?? "Error"} at line {(sandbox.errorLine ?? 0) + 1}
+                  {sandbox.errorColumn ? `:${sandbox.errorColumn}` : ""}:
+                </strong>{" "}
+                {sandbox.errorMessage}
+              </p>
+            )}
+            {sandbox.logs.length > 0 ? (
+              <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800 max-h-56">
+                {sandbox.logs.map((l, i) => (
+                  <div
+                    key={i}
+                    className={
+                      l.level === "error"
+                        ? "text-destructive"
+                        : l.level === "warn"
+                          ? "text-amber-300"
+                          : l.level === "info"
+                            ? "text-emerald-300"
+                            : "text-zinc-300"
+                    }
+                  >
+                    <span className="text-zinc-600 mr-2">
+                      [{l.level.toUpperCase().padEnd(5)}]
+                    </span>
+                    {l.message}
+                  </div>
+                ))}
+              </pre>
+            ) : sandbox.ok ? (
+              <p className="text-[11px] text-muted-foreground font-mono">
+                Script executed cleanly with no output. Add gs.info(...) calls to trace values.
+              </p>
+            ) : null}
+          </section>
+        )}
+
 
         {/* AI coach feedback */}
         {ran && result && (
