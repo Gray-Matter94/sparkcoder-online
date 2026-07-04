@@ -525,5 +525,13 @@ test.describe("IRM risk-scoring — edge-case correction feedback", () => {
       "aria-label",
       /correct answer feedback/i
     );
+
+    // Inline axe scan on the correct-answer correction UI — the ok TeachCard
+    // uses a different role/live pair and must independently pass keyboard-
+    // relevant a11y rules on every engine.
+    await expectKeyboardCorrectionUIAccessible(
+      page,
+      `${engine}: correct-answer correction UI`
+    );
   });
 });
