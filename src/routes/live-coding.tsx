@@ -618,25 +618,36 @@ function LiveCoding() {
             )}
             {sandbox.logs.length > 0 ? (
               <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800 max-h-56">
-                {sandbox.logs.map((l, i) => (
-                  <div
-                    key={i}
-                    className={
-                      l.level === "error"
-                        ? "text-destructive"
-                        : l.level === "warn"
-                          ? "text-amber-300"
-                          : l.level === "info"
-                            ? "text-emerald-300"
-                            : "text-zinc-300"
-                    }
-                  >
-                    <span className="text-zinc-600 mr-2">
-                      [{l.level.toUpperCase().padEnd(5)}]
-                    </span>
-                    {l.message}
-                  </div>
-                ))}
+                {sandbox.logs.map((l, i) => {
+                  const glyph =
+                    l.level === "error"
+                      ? "✕"
+                      : l.level === "warn"
+                        ? "⚠"
+                        : l.level === "info"
+                          ? "ℹ"
+                          : "›";
+                  const tone =
+                    l.level === "error"
+                      ? "text-destructive"
+                      : l.level === "warn"
+                        ? "text-amber-300"
+                        : l.level === "info"
+                          ? "text-emerald-300"
+                          : "text-zinc-300";
+                  return (
+                    <div key={i} className={tone}>
+                      <span aria-hidden="true" className="inline-block w-4 mr-1 font-bold">
+                        {glyph}
+                      </span>
+                      <span className="text-zinc-400 mr-2 font-bold">
+                        [{l.level.toUpperCase().padEnd(5)}]
+                      </span>
+                      <span className="sr-only">{l.level}: </span>
+                      {l.message}
+                    </div>
+                  );
+                })}
               </pre>
             ) : sandbox.ok ? (
               <p className="text-[11px] text-muted-foreground font-mono">
