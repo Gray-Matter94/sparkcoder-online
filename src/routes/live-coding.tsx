@@ -864,7 +864,7 @@ function LiveCoding() {
             <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-zinc-950 border border-zinc-800">
               {q.solution.split("\n").map((line, i) => (
                 <div key={i} className="flex">
-                  <span className="text-zinc-600 select-none w-8 shrink-0">
+                  <span className="text-zinc-400 select-none w-8 shrink-0 font-bold">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>
