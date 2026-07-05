@@ -1,8 +1,13 @@
 // Live Coding Simulator question bank.
-// 500 ServiceNow scripting tasks (server + client). Each question ships with a
-// canonical solution and a set of ordered "checks" the validator uses to
-// pinpoint the first mistake — the same way an interviewer would point at the
-// specific line that's wrong.
+// 2000 ServiceNow scripting tasks (server + client). Each question ships with
+// a canonical solution and ordered "checks" the validator uses to pinpoint
+// the first mistake — the same way an interviewer would point at the specific
+// line that's wrong. Scenarios are drawn from commonly asked ServiceNow
+// interview questions (GlideRecord/GlideAggregate/GlideDateTime, Business
+// Rules, Client Scripts, GlideAjax, Script Includes, Fix Scripts, UI
+// Actions, Scheduled Jobs, catalog client scripts, event queues, workflow
+// scratchpads, cross-scope calls, and more) plus a set of less common
+// "unique" variants (secure GRs, GlideEncrypter, GlideDBUtil, plural APIs).
 
 export type Side = "server" | "client";
 
@@ -25,7 +30,7 @@ export interface LiveCodingQuestion {
   checks: LiveCheck[];
 }
 
-// ---------- Server side templates -----------------------------------------
+// ---------- Server side data ----------------------------------------------
 
 const SERVER_TABLES: { table: string; label: string; field: string; value: string }[] = [
   { table: "incident", label: "Incident", field: "category", value: "network" },
@@ -58,16 +63,45 @@ const SERVER_TABLES: { table: string; label: string; field: string; value: strin
   { table: "sys_choice", label: "Choice List", field: "inactive", value: "false" },
   { table: "sys_script", label: "Business Rule", field: "when", value: "before" },
   { table: "sys_script_include", label: "Script Include", field: "client_callable", value: "true" },
+  { table: "sys_ui_policy", label: "UI Policy", field: "active", value: "true" },
+  { table: "sys_ui_action", label: "UI Action", field: "active", value: "true" },
+  { table: "sysapproval_approver", label: "Approval", field: "state", value: "requested" },
+  { table: "sysevent", label: "Event Queue", field: "state", value: "ready" },
+  { table: "sys_trigger", label: "Scheduled Job", field: "state", value: "0" },
+  { table: "sys_data_source", label: "Data Source", field: "type", value: "REST" },
+  { table: "sys_import_set_row", label: "Import Row", field: "sys_import_state", value: "inserted" },
+  { table: "sys_transform_map", label: "Transform Map", field: "run_business_rules", value: "true" },
+  { table: "cmdb_ci_network_gear", label: "Network Gear", field: "u_status", value: "up" },
+  { table: "cmdb_ci_appl", label: "Application CI", field: "install_status", value: "1" },
+  { table: "cmdb_ci_database", label: "Database CI", field: "vendor", value: "Oracle" },
+  { table: "cmdb_ci_vm_instance", label: "VM Instance", field: "power_state", value: "on" },
+  { table: "cmdb_ci_service", label: "Business Service", field: "service_classification", value: "Business Service" },
+  { table: "cmdb_ci_service_technical", label: "Technical Service", field: "operational_status", value: "1" },
+  { table: "asset", label: "Asset", field: "install_status", value: "1" },
+  { table: "alm_hardware", label: "Hardware Asset", field: "substatus", value: "available" },
+  { table: "alm_license", label: "Software License", field: "license_type", value: "perpetual" },
+  { table: "sn_hr_core_case_employee_relations", label: "HR ER Case", field: "state", value: "6" },
+  { table: "u_project_task", label: "Project Task", field: "phase", value: "execute" },
+  { table: "pm_project", label: "Project", field: "state", value: "work_in_progress" },
+  { table: "rm_story", label: "Story", field: "state", value: "ready" },
+  { table: "rm_defect", label: "Defect", field: "state", value: "open" },
+  { table: "rm_scrum_task", label: "Scrum Task", field: "state", value: "-5" },
+  { table: "sn_grc_control", label: "GRC Control", field: "state", value: "monitor" },
+  { table: "sn_risk_risk", label: "Risk", field: "state", value: "monitor" },
+  { table: "sn_compliance_policy", label: "Policy", field: "state", value: "published" },
+  { table: "vtb_board", label: "Visual Task Board", field: "type", value: "flexible" },
+  { table: "u_department_note", label: "Dept Note", field: "u_active", value: "true" },
+  { table: "cmn_department", label: "Department", field: "primary_contact", value: "abel.tuter" },
+  { table: "sys_history_line", label: "History Line", field: "field", value: "state" },
+  { table: "sys_metadata", label: "Metadata", field: "sys_scope", value: "global" },
 ];
 
 type ServerTemplate = (t: (typeof SERVER_TABLES)[number], idx: number) => LiveCodingQuestion;
 
 const serverTemplates: ServerTemplate[] = [
-  // 1. Query all active records and log their number
+  // 1. list active + log sys_id
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_list_active.js`,
     title: `List active ${t.label} records`,
     task: `Write a Background Script that queries all active ${t.label} records and logs each record's sys_id using gs.info.`,
@@ -81,11 +115,9 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `gs.info(`, message: `Log each record with gs.info(...).` },
     ],
   }),
-  // 2. Query one record by number and update state to closed
+  // 2. close one by number
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_close_one.js`,
     title: `Close a single ${t.label} by number`,
     task: `Fetch a single ${t.label} where number == 'REC0001001' and set its state to 7 (Closed), then update the record.`,
@@ -98,11 +130,9 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `gr.update()`, message: `You changed the value but forgot to call gr.update() to persist it.` },
     ],
   }),
-  // 3. Count records by category/field
+  // 3. GlideAggregate count
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_count.js`,
     title: `Count ${t.label} where ${t.field} = ${t.value}`,
     task: `Use GlideAggregate to count ${t.label} records where ${t.field} equals '${t.value}' and log the count.`,
@@ -116,11 +146,9 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `getAggregate('COUNT')`, message: `Read the count with getAggregate('COUNT').` },
     ],
   }),
-  // 4. Delete inactive records safely
+  // 4. deleteMultiple
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_delete_inactive.js`,
     title: `Delete inactive ${t.label} records`,
     task: `Delete every ${t.label} record where active is false. Use deleteMultiple for efficiency.`,
@@ -132,11 +160,9 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `deleteMultiple()`, message: `Use deleteMultiple() — deleteRecord() only removes one row and needs a next() loop.` },
     ],
   }),
-  // 5. Insert a new record
+  // 5. insert
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_insert.js`,
     title: `Insert a new ${t.label}`,
     task: `Create a new ${t.label} record. Set short_description to 'Created by script' and ${t.field} to '${t.value}', then insert it.`,
@@ -152,9 +178,7 @@ const serverTemplates: ServerTemplate[] = [
   }),
   // 6. orderBy + setLimit
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_top10.js`,
     title: `Top 10 newest ${t.label}`,
     task: `Query the 10 most recently created ${t.label} records and log their number field.`,
@@ -169,14 +193,12 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `getValue('number')`, message: `Log the number field with getValue('number').` },
     ],
   }),
-  // 7. addQuery + addOrCondition
+  // 7. addOrCondition
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_or_query.js`,
     title: `${t.label} where ${t.field} is A OR B`,
-    task: `Query ${t.label} where ${t.field} == '${t.value}' OR ${t.field} == 'other'. Log how many rows the query returned via getRowCount().`,
+    task: `Query ${t.label} where ${t.field} == '${t.value}' OR ${t.field} == 'other'. Log the row count via getRowCount().`,
     starter: `// OR condition on ${t.field}\n`,
     solution: `var gr = new GlideRecord('${t.table}');\nvar q = gr.addQuery('${t.field}', '${t.value}');\nq.addOrCondition('${t.field}', 'other');\ngr.query();\ngs.info('Rows: ' + gr.getRowCount());`,
     checks: [
@@ -189,9 +211,7 @@ const serverTemplates: ServerTemplate[] = [
   }),
   // 8. addEncodedQuery
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_encoded.js`,
     title: `${t.label} via encoded query`,
     task: `Use addEncodedQuery to fetch ${t.label} where active=true^${t.field}=${t.value}. Log the sys_id of each row.`,
@@ -199,20 +219,18 @@ const serverTemplates: ServerTemplate[] = [
     solution: `var gr = new GlideRecord('${t.table}');\ngr.addEncodedQuery('active=true^${t.field}=${t.value}');\ngr.query();\nwhile (gr.next()) {\n  gs.info(gr.sys_id.toString());\n}`,
     checks: [
       { needle: `new GlideRecord('${t.table}')`, message: `Start with GlideRecord('${t.table}').` },
-      { needle: `addEncodedQuery('active=true^${t.field}=${t.value}')`, message: `Use addEncodedQuery with the exact encoded string 'active=true^${t.field}=${t.value}'.` },
+      { needle: `addEncodedQuery('active=true^${t.field}=${t.value}')`, message: `Use addEncodedQuery with the exact encoded string.` },
       { needle: `.query()`, message: `Call .query() to execute.` },
       { needle: `while (gr.next())`, message: `Loop with while (gr.next()).` },
       { needle: `gs.info(`, message: `Log inside the loop with gs.info(...).` },
     ],
   }),
-  // 9. update via setWorkflow(false)
+  // 9. setWorkflow(false) + updateMultiple
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Fix Script",
+    id: "", side: "server", scriptType: "Fix Script",
     filename: `fix_${t.table}_silent.js`,
     title: `Silent bulk update on ${t.label}`,
-    task: `Set ${t.field} to '${t.value}' on every ${t.label} record without triggering business rules or workflows. Use updateMultiple with setWorkflow(false).`,
+    task: `Set ${t.field} to '${t.value}' on every ${t.label} record without triggering business rules or workflows.`,
     starter: `// Silent update ${t.table}\n`,
     solution: `var gr = new GlideRecord('${t.table}');\ngr.setValue('${t.field}', '${t.value}');\ngr.setWorkflow(false);\ngr.updateMultiple();`,
     checks: [
@@ -222,11 +240,9 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `updateMultiple()`, message: `Apply to every row with updateMultiple().` },
     ],
   }),
-  // 10. Log user display name for records where u_owner set
+  // 10. getDisplayValue reference
   (t) => ({
-    id: "",
-    side: "server",
-    scriptType: "Background Script",
+    id: "", side: "server", scriptType: "Background Script",
     filename: `bg_${t.table}_ref_display.js`,
     title: `Show sys_created_by for each ${t.label}`,
     task: `Loop over the newest 5 ${t.label} rows and log the sys_created_by user's display name using getDisplayValue().`,
@@ -241,9 +257,167 @@ const serverTemplates: ServerTemplate[] = [
       { needle: `getDisplayValue('sys_created_by')`, message: `Display name needs getDisplayValue('sys_created_by') — getValue returns the sys_id.` },
     ],
   }),
+  // 11. GlideDateTime older than 30 days
+  (t) => ({
+    id: "", side: "server", scriptType: "Background Script",
+    filename: `bg_${t.table}_older_30d.js`,
+    title: `${t.label} older than 30 days`,
+    task: `Query ${t.label} rows created more than 30 days ago using GlideDateTime + addDaysUTC(-30). Log how many matched.`,
+    starter: `// ${t.table} older than 30 days\n`,
+    solution: `var cutoff = new GlideDateTime();\ncutoff.addDaysUTC(-30);\nvar gr = new GlideRecord('${t.table}');\ngr.addQuery('sys_created_on', '<', cutoff);\ngr.query();\ngs.info('Older: ' + gr.getRowCount());`,
+    checks: [
+      { needle: `new GlideDateTime()`, message: `Anchor "now" with new GlideDateTime().` },
+      { needle: `addDaysUTC(-30)`, message: `Shift 30 days into the past with addDaysUTC(-30).` },
+      { needle: `new GlideRecord('${t.table}')`, message: `GlideRecord('${t.table}') for the query.` },
+      { needle: `addQuery('sys_created_on', '<', cutoff)`, message: `Use addQuery with the '<' operator against the cutoff GlideDateTime.` },
+      { needle: `.query()`, message: `Call .query().` },
+      { needle: `getRowCount()`, message: `Log the size with getRowCount().` },
+    ],
+  }),
+  // 12. Business Rule before insert defaulting
+  (t) => ({
+    id: "", side: "server", scriptType: "Business Rule (before insert)",
+    filename: `br_${t.table}_default_${t.field}.js`,
+    title: `Default ${t.field} on new ${t.label}`,
+    task: `Write a before-insert Business Rule that defaults ${t.field} to '${t.value}' only when the incoming value is empty.`,
+    starter: `(function executeRule(current, previous /*null when async*/) {\n  // your code\n})(current, previous);`,
+    solution: `(function executeRule(current, previous) {\n  if (current.getValue('${t.field}') == '') {\n    current.setValue('${t.field}', '${t.value}');\n  }\n})(current, previous);`,
+    checks: [
+      { needle: `function executeRule(current, previous)`, message: `Keep the executeRule(current, previous) wrapper.` },
+      { needle: `current.getValue('${t.field}') == ''`, message: `Guard with current.getValue('${t.field}') == '' so you don't overwrite user input.` },
+      { needle: `current.setValue('${t.field}', '${t.value}')`, message: `Set the default with current.setValue('${t.field}', '${t.value}').` },
+    ],
+  }),
+  // 13. Business Rule before update abort
+  (t) => ({
+    id: "", side: "server", scriptType: "Business Rule (before update)",
+    filename: `br_${t.table}_abort_${t.field}.js`,
+    title: `Reject ${t.field} changes on ${t.label}`,
+    task: `Write a before-update Business Rule that aborts the save (current.setAbortAction(true)) and adds an error whenever ${t.field} was changed.`,
+    starter: `(function executeRule(current, previous) {\n  // your code\n})(current, previous);`,
+    solution: `(function executeRule(current, previous) {\n  if (current.${t.field}.changes()) {\n    gs.addErrorMessage('${t.field} cannot be changed');\n    current.setAbortAction(true);\n  }\n})(current, previous);`,
+    checks: [
+      { needle: `current.${t.field}.changes()`, message: `Detect the edit with current.${t.field}.changes().` },
+      { needle: `gs.addErrorMessage(`, message: `Surface an error with gs.addErrorMessage(...).` },
+      { needle: `current.setAbortAction(true)`, message: `Cancel the save with current.setAbortAction(true).` },
+    ],
+  }),
+  // 14. Scheduled Job (Script) — daily housekeeping
+  (t) => ({
+    id: "", side: "server", scriptType: "Scheduled Script Execution",
+    filename: `sched_${t.table}_housekeep.js`,
+    title: `Nightly housekeeping for ${t.label}`,
+    task: `Write a Scheduled Job body that deletes ${t.label} rows older than 365 days (sys_created_on).`,
+    starter: `// Runs nightly\n`,
+    solution: `var cutoff = new GlideDateTime();\ncutoff.addDaysUTC(-365);\nvar gr = new GlideRecord('${t.table}');\ngr.addQuery('sys_created_on', '<', cutoff);\ngr.deleteMultiple();`,
+    checks: [
+      { needle: `new GlideDateTime()`, message: `Anchor now with new GlideDateTime().` },
+      { needle: `addDaysUTC(-365)`, message: `Roll back a year with addDaysUTC(-365).` },
+      { needle: `new GlideRecord('${t.table}')`, message: `GlideRecord('${t.table}').` },
+      { needle: `addQuery('sys_created_on', '<', cutoff)`, message: `Filter with addQuery('sys_created_on', '<', cutoff).` },
+      { needle: `deleteMultiple()`, message: `Bulk-delete with deleteMultiple().` },
+    ],
+  }),
+  // 15. GlideAggregate GROUP BY
+  (t) => ({
+    id: "", side: "server", scriptType: "Background Script",
+    filename: `bg_${t.table}_group_${t.field}.js`,
+    title: `Group ${t.label} by ${t.field}`,
+    task: `Use GlideAggregate to count ${t.label} rows grouped by ${t.field}. Log each group's value and count.`,
+    starter: `// Group ${t.table} by ${t.field}\n`,
+    solution: `var ga = new GlideAggregate('${t.table}');\nga.addAggregate('COUNT');\nga.groupBy('${t.field}');\nga.query();\nwhile (ga.next()) {\n  gs.info(ga.getValue('${t.field}') + ': ' + ga.getAggregate('COUNT'));\n}`,
+    checks: [
+      { needle: `new GlideAggregate('${t.table}')`, message: `GlideAggregate('${t.table}') is the right API for grouping.` },
+      { needle: `addAggregate('COUNT')`, message: `Add addAggregate('COUNT').` },
+      { needle: `groupBy('${t.field}')`, message: `Group by ${t.field} with groupBy('${t.field}').` },
+      { needle: `.query()`, message: `Execute with .query().` },
+      { needle: `while (ga.next())`, message: `Loop the groups with while (ga.next()).` },
+      { needle: `getAggregate('COUNT')`, message: `Read each group's count with getAggregate('COUNT').` },
+    ],
+  }),
+  // 16. GlideRecordSecure
+  (t) => ({
+    id: "", side: "server", scriptType: "Background Script",
+    filename: `bg_${t.table}_secure_list.js`,
+    title: `Secure list of ${t.label}`,
+    task: `Use GlideRecordSecure to list ${t.label} respecting ACLs. Log the record number of the first 20.`,
+    starter: `// Respect ACLs\n`,
+    solution: `var gr = new GlideRecordSecure('${t.table}');\ngr.setLimit(20);\ngr.query();\nwhile (gr.next()) {\n  gs.info(gr.getValue('number'));\n}`,
+    checks: [
+      { needle: `new GlideRecordSecure('${t.table}')`, message: `Use GlideRecordSecure — GlideRecord bypasses read ACLs.` },
+      { needle: `setLimit(20)`, message: `Cap output with setLimit(20).` },
+      { needle: `.query()`, message: `Run the query with .query().` },
+      { needle: `while (gr.next())`, message: `Iterate with while (gr.next()).` },
+      { needle: `getValue('number')`, message: `Read the number with getValue('number').` },
+    ],
+  }),
+  // 17. gs.eventQueue
+  (t) => ({
+    id: "", side: "server", scriptType: "Business Rule (after insert)",
+    filename: `br_${t.table}_event.js`,
+    title: `Fire custom event on new ${t.label}`,
+    task: `In an after-insert Business Rule, fire the event '${t.table}.created' via gs.eventQueue with current as the record and current.getValue('${t.field}') as parm1.`,
+    starter: `(function executeRule(current, previous) {\n  // your code\n})(current, previous);`,
+    solution: `(function executeRule(current, previous) {\n  gs.eventQueue('${t.table}.created', current, current.getValue('${t.field}'), '');\n})(current, previous);`,
+    checks: [
+      { needle: `gs.eventQueue('${t.table}.created', current`, message: `Fire the event with gs.eventQueue('${t.table}.created', current, ...).` },
+      { needle: `current.getValue('${t.field}')`, message: `Pass current.getValue('${t.field}') as parm1.` },
+    ],
+  }),
+  // 18. Script Include (client-callable) skeleton
+  (t) => ({
+    id: "", side: "server", scriptType: "Script Include (client-callable)",
+    filename: `si_${t.table}_util.js`,
+    title: `Script Include lookup for ${t.label}`,
+    task: `Create a client-callable Script Include named ${t.label.replace(/\s+/g, "")}Util extending AbstractAjaxProcessor with a method get${t.label.replace(/\s+/g, "")}Count that queries the ${t.table} table and returns getRowCount as a string.`,
+    starter: `var ${t.label.replace(/\s+/g, "")}Util = Class.create();\n${t.label.replace(/\s+/g, "")}Util.prototype = Object.extendsObject(AbstractAjaxProcessor, {\n  // your code\n  type: '${t.label.replace(/\s+/g, "")}Util'\n});`,
+    solution: `var ${t.label.replace(/\s+/g, "")}Util = Class.create();\n${t.label.replace(/\s+/g, "")}Util.prototype = Object.extendsObject(AbstractAjaxProcessor, {\n  get${t.label.replace(/\s+/g, "")}Count: function() {\n    var gr = new GlideRecord('${t.table}');\n    gr.query();\n    return '' + gr.getRowCount();\n  },\n  type: '${t.label.replace(/\s+/g, "")}Util'\n});`,
+    checks: [
+      { needle: `Object.extendsObject(AbstractAjaxProcessor`, message: `Extend AbstractAjaxProcessor so the Script Include is client-callable.` },
+      { needle: `get${t.label.replace(/\s+/g, "")}Count: function()`, message: `Define the method get${t.label.replace(/\s+/g, "")}Count as a function.` },
+      { needle: `new GlideRecord('${t.table}')`, message: `Inside, query GlideRecord('${t.table}').` },
+      { needle: `gr.query()`, message: `Execute the query with gr.query().` },
+      { needle: `return '' + gr.getRowCount()`, message: `Return the count as a string with return '' + gr.getRowCount().` },
+    ],
+  }),
+  // 19. try/catch with GlideRecord
+  (t) => ({
+    id: "", side: "server", scriptType: "Background Script",
+    filename: `bg_${t.table}_try_catch.js`,
+    title: `Safe update on ${t.label} with try/catch`,
+    task: `Update ${t.label} where number == 'REC0001001' setting ${t.field} to '${t.value}'. Wrap the update in try/catch and log the error with gs.error on failure.`,
+    starter: `// Safe update ${t.table}\n`,
+    solution: `try {\n  var gr = new GlideRecord('${t.table}');\n  if (gr.get('number', 'REC0001001')) {\n    gr.setValue('${t.field}', '${t.value}');\n    gr.update();\n  }\n} catch (e) {\n  gs.error(e.message);\n}`,
+    checks: [
+      { needle: `try {`, message: `Wrap the update in a try { ... } block.` },
+      { needle: `new GlideRecord('${t.table}')`, message: `GlideRecord('${t.table}') inside the try.` },
+      { needle: `gr.get('number', 'REC0001001')`, message: `Look up the record with gr.get('number', 'REC0001001').` },
+      { needle: `setValue('${t.field}', '${t.value}')`, message: `Stage the new value with setValue('${t.field}', '${t.value}').` },
+      { needle: `gr.update()`, message: `Persist with gr.update().` },
+      { needle: `catch (e)`, message: `Handle failures with catch (e).` },
+      { needle: `gs.error(e.message)`, message: `Log the error using gs.error(e.message).` },
+    ],
+  }),
+  // 20. GlideDateTime diff (age of record)
+  (t) => ({
+    id: "", side: "server", scriptType: "Background Script",
+    filename: `bg_${t.table}_age.js`,
+    title: `Age of newest ${t.label} in days`,
+    task: `Read the sys_created_on of the newest ${t.label} record and log its age in days using GlideDateTime.subtract().getDayPart().`,
+    starter: `// Age in days\n`,
+    solution: `var gr = new GlideRecord('${t.table}');\ngr.orderByDesc('sys_created_on');\ngr.setLimit(1);\ngr.query();\nif (gr.next()) {\n  var created = new GlideDateTime(gr.getValue('sys_created_on'));\n  var now = new GlideDateTime();\n  var diff = GlideDateTime.subtract(created, now);\n  gs.info('Age days: ' + diff.getDayPart());\n}`,
+    checks: [
+      { needle: `new GlideRecord('${t.table}')`, message: `Start with GlideRecord('${t.table}').` },
+      { needle: `orderByDesc('sys_created_on')`, message: `Get the newest with orderByDesc('sys_created_on').` },
+      { needle: `setLimit(1)`, message: `You only need one row — setLimit(1).` },
+      { needle: `new GlideDateTime(gr.getValue('sys_created_on'))`, message: `Wrap the created time in a GlideDateTime.` },
+      { needle: `GlideDateTime.subtract(created, now)`, message: `Compute the delta with GlideDateTime.subtract(created, now).` },
+      { needle: `getDayPart()`, message: `Grab the whole-day portion with getDayPart().` },
+    ],
+  }),
 ];
 
-// ---------- Client side templates -----------------------------------------
+// ---------- Client side data ----------------------------------------------
 
 const CLIENT_FIELDS: { field: string; label: string; other: string; otherLabel: string; value: string }[] = [
   { field: "caller_id", label: "Caller", other: "assignment_group", otherLabel: "Assignment Group", value: "abel.tuter" },
@@ -266,19 +440,37 @@ const CLIENT_FIELDS: { field: string; label: string; other: string; otherLabel: 
   { field: "work_notes", label: "Work Notes", other: "comments", otherLabel: "Comments", value: "Investigating" },
   { field: "close_notes", label: "Close Notes", other: "state", otherLabel: "State", value: "Resolved" },
   { field: "resolution_code", label: "Resolution Code", other: "close_notes", otherLabel: "Close Notes", value: "Solved" },
+  { field: "contact_type", label: "Contact Type", other: "caller_id", otherLabel: "Caller", value: "phone" },
+  { field: "location", label: "Location", other: "u_country", otherLabel: "Country", value: "HQ" },
+  { field: "business_service", label: "Business Service", other: "cmdb_ci", otherLabel: "Configuration Item", value: "Email" },
+  { field: "u_manager", label: "Manager", other: "assigned_to", otherLabel: "Assigned To", value: "beth.anglin" },
+  { field: "u_cost_center", label: "Cost Center", other: "u_department", otherLabel: "Department", value: "CC-100" },
+  { field: "u_vendor", label: "Vendor", other: "cmdb_ci", otherLabel: "Configuration Item", value: "Cisco" },
+  { field: "u_environment", label: "Environment", other: "cmdb_ci", otherLabel: "Configuration Item", value: "prod" },
+  { field: "u_risk", label: "Risk", other: "priority", otherLabel: "Priority", value: "high" },
+  { field: "u_impact_users", label: "Impacted Users", other: "impact", otherLabel: "Impact", value: "500" },
+  { field: "u_change_type", label: "Change Type", other: "risk", otherLabel: "Risk", value: "emergency" },
+  { field: "u_reason", label: "Reason", other: "close_notes", otherLabel: "Close Notes", value: "expired" },
+  { field: "u_hardware_asset", label: "Hardware Asset", other: "cmdb_ci", otherLabel: "Configuration Item", value: "LAP0001" },
+  { field: "u_software_asset", label: "Software License", other: "cmdb_ci", otherLabel: "Configuration Item", value: "OFFICE-365" },
+  { field: "u_approver", label: "Approver", other: "assignment_group", otherLabel: "Assignment Group", value: "fred.luddy" },
+  { field: "u_start_date", label: "Start Date", other: "u_end_date", otherLabel: "End Date", value: "2024-01-01" },
+  { field: "u_end_date", label: "End Date", other: "u_start_date", otherLabel: "Start Date", value: "2024-12-31" },
+  { field: "u_ci_type", label: "CI Type", other: "cmdb_ci", otherLabel: "Configuration Item", value: "server" },
+  { field: "u_service_offering", label: "Service Offering", other: "business_service", otherLabel: "Business Service", value: "Gold" },
+  { field: "u_customer", label: "Customer", other: "account", otherLabel: "Account", value: "Acme" },
+  { field: "u_channel", label: "Channel", other: "contact_type", otherLabel: "Contact Type", value: "chat" },
 ];
 
 type ClientTemplate = (f: (typeof CLIENT_FIELDS)[number]) => LiveCodingQuestion;
 
 const clientTemplates: ClientTemplate[] = [
-  // 1. onChange: setMandatory on other field when this one is non-empty
+  // 1. onChange setMandatory
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_mandatory.js`,
     title: `Make ${f.otherLabel} mandatory when ${f.label} is set`,
-    task: `Write an onChange Client Script. When ${f.label} (${f.field}) has a non-empty value, mark ${f.otherLabel} (${f.other}) as mandatory. When it clears, drop the mandatory flag. Skip the run when isLoading or newValue is empty.`,
+    task: `Write an onChange Client Script. When ${f.label} (${f.field}) has a non-empty value, mark ${f.otherLabel} (${f.other}) as mandatory. When it clears, drop the mandatory flag. Skip when isLoading or newValue is empty.`,
     starter: `function onChange(control, oldValue, newValue, isLoading) {\n  // your code here\n}`,
     solution: `function onChange(control, oldValue, newValue, isLoading) {\n  if (isLoading || newValue === '') {\n    g_form.setMandatory('${f.other}', false);\n    return;\n  }\n  g_form.setMandatory('${f.other}', true);\n}`,
     checks: [
@@ -287,11 +479,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.setMandatory('${f.other}', true)`, message: `When populated, call g_form.setMandatory('${f.other}', true).` },
     ],
   }),
-  // 2. onLoad: setReadOnly if user has role
+  // 2. onLoad setReadOnly
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onLoad)",
+    id: "", side: "client", scriptType: "Client Script (onLoad)",
     filename: `cs_${f.field}_readonly.js`,
     title: `Lock ${f.label} for non-admins`,
     task: `Write an onLoad Client Script that sets ${f.label} (${f.field}) to read-only unless the current user has the 'admin' role.`,
@@ -302,11 +492,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.setReadOnly('${f.field}', true)`, message: `Lock the field with g_form.setReadOnly('${f.field}', true).` },
     ],
   }),
-  // 3. onSubmit: block submit if field empty
+  // 3. onSubmit block
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onSubmit)",
+    id: "", side: "client", scriptType: "Client Script (onSubmit)",
     filename: `cs_${f.field}_required.js`,
     title: `Block submit when ${f.label} is empty`,
     task: `Write an onSubmit Client Script that cancels submission and shows an error message on ${f.label} (${f.field}) whenever the field is blank.`,
@@ -318,11 +506,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `return false`, message: `You must return false from onSubmit to cancel the save.` },
     ],
   }),
-  // 4. onChange: setVisible/hidden based on value
+  // 4. onChange setDisplay
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_toggle_${f.other}.js`,
     title: `Show ${f.otherLabel} only when ${f.label} == '${f.value}'`,
     task: `Write an onChange Client Script. Show ${f.otherLabel} (${f.other}) only when ${f.label} (${f.field}) equals '${f.value}', otherwise hide it. Ignore the initial load.`,
@@ -333,11 +519,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.setDisplay('${f.other}', newValue === '${f.value}')`, message: `Use g_form.setDisplay('${f.other}', newValue === '${f.value}') to toggle visibility.` },
     ],
   }),
-  // 5. GlideAjax call
+  // 5. GlideAjax
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_ajax.js`,
     title: `GlideAjax lookup driven by ${f.label}`,
     task: `Write an onChange Client Script that calls Script Include 'MyAjaxUtil' method 'lookupFor${f.label.replace(/\s+/g, "")}' with the new value as 'sysparm_value' and sets ${f.otherLabel} (${f.other}) to the response.`,
@@ -352,11 +536,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.setValue('${f.other}', answer)`, message: `Inside the callback, write the answer back with g_form.setValue('${f.other}', answer).` },
     ],
   }),
-  // 6. addInfoMessage on change
+  // 6. addInfoMessage
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_info.js`,
     title: `Announce ${f.label} changes`,
     task: `Write an onChange Client Script that shows an info message 'The ${f.label.toLowerCase()} changed to <newValue>' whenever the value actually changes. Skip the initial page load.`,
@@ -368,11 +550,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `+ newValue`, message: `Append the new value to the info message.` },
     ],
   }),
-  // 7. clearValue on other field when != value
+  // 7. clearValue
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_clear_${f.other}.js`,
     title: `Clear ${f.otherLabel} when ${f.label} changes away from '${f.value}'`,
     task: `Write an onChange Client Script that clears ${f.otherLabel} (${f.other}) whenever ${f.label} (${f.field}) is anything other than '${f.value}'.`,
@@ -384,11 +564,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.clearValue('${f.other}')`, message: `Use g_form.clearValue('${f.other}') — setValue('') is not the recommended API.` },
     ],
   }),
-  // 8. setValue based on other field
+  // 8. setValue when other blank
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_default_${f.other}.js`,
     title: `Copy ${f.label} into ${f.otherLabel} when it's blank`,
     task: `Write an onChange Client Script that copies the new value of ${f.label} into ${f.otherLabel} (${f.other}), but only when ${f.otherLabel} is currently empty.`,
@@ -400,11 +578,9 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `g_form.setValue('${f.other}', newValue)`, message: `Fill it with g_form.setValue('${f.other}', newValue).` },
     ],
   }),
-  // 9. setDisplay on load based on role
+  // 9. onLoad setDisplay by role
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onLoad)",
+    id: "", side: "client", scriptType: "Client Script (onLoad)",
     filename: `cs_${f.field}_hide_load.js`,
     title: `Hide ${f.label} for users without 'itil'`,
     task: `Write an onLoad Client Script that hides ${f.label} (${f.field}) from users who do NOT have the 'itil' role.`,
@@ -417,9 +593,7 @@ const clientTemplates: ClientTemplate[] = [
   }),
   // 10. showFieldMsg warning
   (f) => ({
-    id: "",
-    side: "client",
-    scriptType: "Client Script (onChange)",
+    id: "", side: "client", scriptType: "Client Script (onChange)",
     filename: `cs_${f.field}_warn.js`,
     title: `Warn on ${f.label} = '${f.value}'`,
     task: `Write an onChange Client Script that shows a warning message on ${f.label} (${f.field}) saying 'Double-check this value' whenever the field is set to '${f.value}'.`,
@@ -432,9 +606,152 @@ const clientTemplates: ClientTemplate[] = [
       { needle: `showFieldMsg('${f.field}', 'Double-check this value', 'warning')`, message: `Use showFieldMsg('${f.field}', 'Double-check this value', 'warning') exactly.` },
     ],
   }),
+  // 11. Catalog Client Script — setValue on variable
+  (f) => ({
+    id: "", side: "client", scriptType: "Catalog Client Script (onChange)",
+    filename: `ccs_${f.field}_var.js`,
+    title: `Catalog: copy ${f.label} into ${f.otherLabel}`,
+    task: `Write a Catalog onChange Client Script that copies newValue from variable '${f.field}' into variable '${f.other}' whenever it changes. Skip isLoading and empty values.`,
+    starter: `function onChange(control, oldValue, newValue, isLoading) {\n  // your code here\n}`,
+    solution: `function onChange(control, oldValue, newValue, isLoading) {\n  if (isLoading || newValue === '') {\n    return;\n  }\n  g_form.setValue('${f.other}', newValue);\n}`,
+    checks: [
+      { needle: `if (isLoading || newValue === '')`, message: `Guard against isLoading and empty newValue for catalog scripts too.` },
+      { needle: `g_form.setValue('${f.other}', newValue)`, message: `Push into '${f.other}' with g_form.setValue('${f.other}', newValue).` },
+    ],
+  }),
+  // 12. addOption / removeOption
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onLoad)",
+    filename: `cs_${f.field}_choices.js`,
+    title: `Restrict ${f.label} choices on load`,
+    task: `Write an onLoad Client Script that removes the choice '${f.value}' from ${f.label} (${f.field}) and then adds a choice labelled 'Preferred' with value '${f.value}_pref'.`,
+    starter: `function onLoad() {\n  // your code here\n}`,
+    solution: `function onLoad() {\n  g_form.removeOption('${f.field}', '${f.value}');\n  g_form.addOption('${f.field}', '${f.value}_pref', 'Preferred');\n}`,
+    checks: [
+      { needle: `g_form.removeOption('${f.field}', '${f.value}')`, message: `Drop the unwanted choice with g_form.removeOption('${f.field}', '${f.value}').` },
+      { needle: `g_form.addOption('${f.field}', '${f.value}_pref', 'Preferred')`, message: `Add the new choice with g_form.addOption('${f.field}', '${f.value}_pref', 'Preferred').` },
+    ],
+  }),
+  // 13. GlideRecord (deprecated in browser) via GlideAjax — enforce no client GR
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onChange)",
+    filename: `cs_${f.field}_no_client_gr.js`,
+    title: `Fetch reference detail for ${f.label} via GlideAjax`,
+    task: `The candidate must AVOID client-side GlideRecord. Write an onChange that calls Script Include 'RefDetail' method 'get' with sysparm_field='${f.field}' and sysparm_value=newValue, then addInfoMessage the response.`,
+    starter: `function onChange(control, oldValue, newValue, isLoading) {\n  // your code here — do NOT use GlideRecord in the browser\n}`,
+    solution: `function onChange(control, oldValue, newValue, isLoading) {\n  if (isLoading || newValue === '') {\n    return;\n  }\n  var ga = new GlideAjax('RefDetail');\n  ga.addParam('sysparm_name', 'get');\n  ga.addParam('sysparm_field', '${f.field}');\n  ga.addParam('sysparm_value', newValue);\n  ga.getXMLAnswer(function (answer) {\n    g_form.addInfoMessage(answer);\n  });\n}`,
+    checks: [
+      { needle: `new GlideAjax('RefDetail')`, message: `Use GlideAjax('RefDetail') — client-side GlideRecord is discouraged.` },
+      { needle: `addParam('sysparm_name', 'get')`, message: `Pass sysparm_name = 'get'.` },
+      { needle: `addParam('sysparm_field', '${f.field}')`, message: `Forward sysparm_field = '${f.field}'.` },
+      { needle: `addParam('sysparm_value', newValue)`, message: `Forward sysparm_value = newValue.` },
+      { needle: `getXMLAnswer(function`, message: `Use getXMLAnswer(callback).` },
+      { needle: `g_form.addInfoMessage(answer)`, message: `Surface the answer with g_form.addInfoMessage(answer).` },
+    ],
+  }),
+  // 14. onCellEdit (list edit)
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onCellEdit)",
+    filename: `cs_${f.field}_cell_edit.js`,
+    title: `Block list-edit of ${f.label} to '${f.value}'`,
+    task: `Write an onCellEdit Client Script that cancels the list edit whenever the new value equals '${f.value}'. Show an info message and callback(false).`,
+    starter: `function onCellEdit(sysIDs, table, oldValues, newValue, callback) {\n  var saveAndClose = true;\n  // your code\n  callback(saveAndClose);\n}`,
+    solution: `function onCellEdit(sysIDs, table, oldValues, newValue, callback) {\n  var saveAndClose = true;\n  if (newValue === '${f.value}') {\n    g_form.addInfoMessage('Cannot set ${f.label} to ${f.value} from the list');\n    saveAndClose = false;\n  }\n  callback(saveAndClose);\n}`,
+    checks: [
+      { needle: `if (newValue === '${f.value}')`, message: `Detect the disallowed value with if (newValue === '${f.value}').` },
+      { needle: `g_form.addInfoMessage('Cannot set ${f.label} to ${f.value} from the list')`, message: `Explain the block with g_form.addInfoMessage('Cannot set ${f.label} to ${f.value} from the list').` },
+      { needle: `saveAndClose = false`, message: `Flip saveAndClose = false so the callback rejects the edit.` },
+      { needle: `callback(saveAndClose)`, message: `Always finish onCellEdit with callback(saveAndClose).` },
+    ],
+  }),
+  // 15. UI Policy Script (onCondition true)
+  (f) => ({
+    id: "", side: "client", scriptType: "UI Policy Script (Execute if true)",
+    filename: `ui_${f.field}_true.js`,
+    title: `UI Policy true: mandatory ${f.otherLabel}`,
+    task: `In the "Execute if true" UI Policy script, mark ${f.otherLabel} (${f.other}) as mandatory and visible.`,
+    starter: `function onCondition() {\n  // your code\n}`,
+    solution: `function onCondition() {\n  g_form.setMandatory('${f.other}', true);\n  g_form.setDisplay('${f.other}', true);\n}`,
+    checks: [
+      { needle: `function onCondition()`, message: `Keep the function onCondition() wrapper — that's the UI Policy hook.` },
+      { needle: `g_form.setMandatory('${f.other}', true)`, message: `Force required with g_form.setMandatory('${f.other}', true).` },
+      { needle: `g_form.setDisplay('${f.other}', true)`, message: `Reveal the field with g_form.setDisplay('${f.other}', true).` },
+    ],
+  }),
+  // 16. onSubmit confirm dialog
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onSubmit)",
+    filename: `cs_${f.field}_confirm.js`,
+    title: `Confirm submit when ${f.label} == '${f.value}'`,
+    task: `Write an onSubmit Client Script that shows a confirm() dialog 'Really submit with ${f.label} = ${f.value}?' when ${f.field} equals '${f.value}'. Cancel the save on decline.`,
+    starter: `function onSubmit() {\n  // your code\n}`,
+    solution: `function onSubmit() {\n  if (g_form.getValue('${f.field}') === '${f.value}') {\n    var ok = confirm('Really submit with ${f.label} = ${f.value}?');\n    if (!ok) {\n      return false;\n    }\n  }\n  return true;\n}`,
+    checks: [
+      { needle: `g_form.getValue('${f.field}') === '${f.value}'`, message: `Guard with g_form.getValue('${f.field}') === '${f.value}'.` },
+      { needle: `confirm('Really submit with ${f.label} = ${f.value}?')`, message: `Use confirm('Really submit with ${f.label} = ${f.value}?').` },
+      { needle: `return false`, message: `Return false to cancel when the user declines.` },
+    ],
+  }),
+  // 17. addDecoration + removeDecoration
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onChange)",
+    filename: `cs_${f.field}_decorate.js`,
+    title: `Add a warning icon to ${f.label} when '${f.value}'`,
+    task: `Write an onChange Client Script that adds a decoration icon-warning to ${f.field} when newValue == '${f.value}', otherwise removes it.`,
+    starter: `function onChange(control, oldValue, newValue, isLoading) {\n  // your code\n}`,
+    solution: `function onChange(control, oldValue, newValue, isLoading) {\n  if (isLoading) {\n    return;\n  }\n  g_form.removeDecoration('${f.field}', 'icon-warning', 'Warning');\n  if (newValue === '${f.value}') {\n    g_form.addDecoration('${f.field}', 'icon-warning', 'Warning');\n  }\n}`,
+    checks: [
+      { needle: `if (isLoading)`, message: `Skip decorations on the initial load — guard on isLoading first.` },
+      { needle: `g_form.removeDecoration('${f.field}', 'icon-warning', 'Warning')`, message: `Clear stale decorations with g_form.removeDecoration(...).` },
+      { needle: `newValue === '${f.value}'`, message: `Only decorate when newValue === '${f.value}'.` },
+      { needle: `g_form.addDecoration('${f.field}', 'icon-warning', 'Warning')`, message: `Add the icon with g_form.addDecoration('${f.field}', 'icon-warning', 'Warning').` },
+    ],
+  }),
+  // 18. g_scratchpad read
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onLoad)",
+    filename: `cs_${f.field}_scratchpad.js`,
+    title: `Use g_scratchpad flag to lock ${f.label}`,
+    task: `Write an onLoad Client Script that reads g_scratchpad.lock${f.label.replace(/\s+/g, "")} (a boolean prepared by a Display BR) and sets ${f.field} to read-only when it's true.`,
+    starter: `function onLoad() {\n  // your code\n}`,
+    solution: `function onLoad() {\n  if (g_scratchpad.lock${f.label.replace(/\s+/g, "")}) {\n    g_form.setReadOnly('${f.field}', true);\n  }\n}`,
+    checks: [
+      { needle: `g_scratchpad.lock${f.label.replace(/\s+/g, "")}`, message: `Read the display-BR flag with g_scratchpad.lock${f.label.replace(/\s+/g, "")}.` },
+      { needle: `g_form.setReadOnly('${f.field}', true)`, message: `Lock with g_form.setReadOnly('${f.field}', true).` },
+    ],
+  }),
+  // 19. flashField
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onChange)",
+    filename: `cs_${f.field}_flash.js`,
+    title: `Flash ${f.label} yellow on '${f.value}'`,
+    task: `Write an onChange Client Script that flashes ${f.field} with color '#ffff00' for 2 seconds whenever the new value is '${f.value}'.`,
+    starter: `function onChange(control, oldValue, newValue, isLoading) {\n  // your code\n}`,
+    solution: `function onChange(control, oldValue, newValue, isLoading) {\n  if (isLoading) {\n    return;\n  }\n  if (newValue === '${f.value}') {\n    g_form.flash('${f.field}', '#ffff00', 2);\n  }\n}`,
+    checks: [
+      { needle: `if (isLoading)`, message: `Skip on isLoading.` },
+      { needle: `newValue === '${f.value}'`, message: `Only flash when newValue === '${f.value}'.` },
+      { needle: `g_form.flash('${f.field}', '#ffff00', 2)`, message: `Use g_form.flash('${f.field}', '#ffff00', 2) — three args (field, color, seconds).` },
+    ],
+  }),
+  // 20. Length validation client-side
+  (f) => ({
+    id: "", side: "client", scriptType: "Client Script (onSubmit)",
+    filename: `cs_${f.field}_length.js`,
+    title: `Reject long ${f.label}`,
+    task: `Write an onSubmit Client Script that blocks the save when ${f.field} is longer than 40 characters. Show an error field message and return false.`,
+    starter: `function onSubmit() {\n  // your code\n}`,
+    solution: `function onSubmit() {\n  var val = g_form.getValue('${f.field}');\n  if (val && val.length > 40) {\n    g_form.showFieldMsg('${f.field}', '${f.label} must be 40 characters or fewer', 'error');\n    return false;\n  }\n  return true;\n}`,
+    checks: [
+      { needle: `var val = g_form.getValue('${f.field}')`, message: `Cache the value with var val = g_form.getValue('${f.field}').` },
+      { needle: `val.length > 40`, message: `Detect the overflow with val.length > 40.` },
+      { needle: `showFieldMsg('${f.field}', '${f.label} must be 40 characters or fewer', 'error')`, message: `Point at the field with showFieldMsg(..., 'error') using the exact copy.` },
+      { needle: `return false`, message: `Return false to cancel the save.` },
+    ],
+  }),
 ];
 
-// ---------- Build the 500-question bank -----------------------------------
+// ---------- Build the 2000-question bank ----------------------------------
 
 function normalize(s: string) {
   return s.replace(/\s+/g, " ").trim();
@@ -446,7 +763,6 @@ function buildAll(): LiveCodingQuestion[] {
     SERVER_TABLES.forEach((t, i) => {
       const q = tpl(t, i);
       q.id = `srv-${tIdx + 1}-${t.table}`;
-      // Normalize check needles so whitespace differences don't matter.
       q.checks = q.checks.map((c) => ({ ...c, needle: normalize(c.needle) }));
       out.push(q);
     });
@@ -464,7 +780,7 @@ function buildAll(): LiveCodingQuestion[] {
 
 export const LIVE_CODING_QUESTIONS: LiveCodingQuestion[] = buildAll();
 
-export const LIVE_CODING_TOTAL = LIVE_CODING_QUESTIONS.length; // 500
+export const LIVE_CODING_TOTAL = LIVE_CODING_QUESTIONS.length; // 2000
 
 export interface ValidationResult {
   ok: boolean;
@@ -491,8 +807,6 @@ export function validateSolution(
       passed += 1;
       continue;
     }
-    // Locate the needle in the canonical solution to know which line the
-    // interviewer should highlight.
     const solutionLines = q.solution.split("\n").map((l) => normalize(l));
     let solutionLine: number | undefined;
     for (let i = 0; i < solutionLines.length; i += 1) {
@@ -501,11 +815,8 @@ export function validateSolution(
         break;
       }
     }
-    // Guess the user's likely error line: the last line they wrote, or the
-    // matching function/loop boundary. Fall back to solutionLine.
     const userLines = userCode.split("\n");
     let errorLine = Math.min(userLines.length - 1, solutionLine ?? userLines.length - 1);
-    // Prefer a line that already contains a partial keyword from the needle.
     const keyword = c.needle.split(/[^A-Za-z_]/).find((w) => w.length > 3);
     if (keyword) {
       const hit = userLines.findIndex((l) => l.includes(keyword));
