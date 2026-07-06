@@ -21,7 +21,7 @@ export const Route = createFileRoute("/live-coding")({
       {
         name: "description",
         content:
-          "Write ServiceNow scripts end-to-end in a colorful instance-style editor. 500 server-side and client-side tasks with an AI coach that points at the exact line to fix.",
+          "Write ServiceNow scripts in an instance-style editor. 2000+ server & client tasks with an AI coach that points at the exact failing line.",
       },
       { property: "og:title", content: "Live Coding Simulator — SparkCoder" },
       {

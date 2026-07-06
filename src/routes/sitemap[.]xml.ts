@@ -31,6 +31,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
           { path: "/angularjs-coding-test", changefreq: "monthly", priority: "0.9" },
           { path: "/guides/gliderecord-query-reference-field", changefreq: "monthly", priority: "0.9" },
+          { path: "/live-coding", changefreq: "weekly", priority: "0.8" },
           { path: "/play", changefreq: "monthly", priority: "0.6" },
           { path: "/tools/servicenow-regex-tester", changefreq: "monthly", priority: "0.8" },
           { path: "/insights/backlinks", changefreq: "weekly", priority: "0.6" },
