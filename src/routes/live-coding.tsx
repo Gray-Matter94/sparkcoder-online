@@ -820,7 +820,13 @@ function LiveCoding() {
               }`}
             >
               <span className="text-base">{result.ok ? "✓" : "✕"}</span>
-              <span>{result.ok ? "Script accepted" : "AI Coach — needs a fix"}</span>
+              <span>
+                {result.ok
+                  ? result.alternativeAccepted
+                    ? "Alternative approach accepted"
+                    : "Script accepted"
+                  : "AI Coach — needs a fix"}
+              </span>
               <span className="ml-auto font-mono text-muted-foreground">
                 {result.passedCount}/{result.totalChecks} checks
               </span>
@@ -828,16 +834,25 @@ function LiveCoding() {
             {result.ok ? (
               <>
                 <p className="text-sm text-emerald-300/90 leading-relaxed">
-                  Nailed it. Your script satisfies every required pattern for this task. +40 XP
-                  banked.
+                  {result.alternativeAccepted
+                    ? result.message ??
+                      "Your script runs cleanly and produces the correct result with a different approach. +40 XP banked."
+                    : "Nailed it. Your script satisfies every required pattern for this task. +40 XP banked."}
                 </p>
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={nextQuestion}
                     disabled={idx >= list.length - 1}
                     className="px-4 h-10 rounded-lg bg-emerald-500 text-emerald-950 font-display tracking-wider text-sm shadow-[0_4px_0_#065f46] active:translate-y-0.5 active:shadow-none disabled:opacity-40"
                   >
                     NEXT TASK →
+                  </button>
+                  <button
+                    onClick={loadAlternatives}
+                    disabled={altsLoading}
+                    className="px-3 h-10 rounded-lg bg-zinc-800 text-amber-300 text-xs font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50 disabled:opacity-50"
+                  >
+                    {altsLoading ? "LOADING…" : "💡 SHOW ALTERNATIVE APPROACHES"}
                   </button>
                 </div>
               </>
