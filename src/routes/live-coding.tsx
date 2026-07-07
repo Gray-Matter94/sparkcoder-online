@@ -1,13 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment, useMemo, useRef, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   LIVE_CODING_QUESTIONS,
   LIVE_CODING_TOTAL,
   validateSolution,
+  acceptAsAlternative,
   type LiveCodingQuestion,
   type Side,
   type ValidationResult,
 } from "@/lib/live-coding-questions";
+import {
+  suggestAlternatives,
+  type Alternative,
+} from "@/lib/live-coding-alternatives.functions";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
