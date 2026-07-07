@@ -793,6 +793,86 @@ export interface ValidationResult {
   needle?: string;
   passedCount: number;
   totalChecks: number;
+  /** True when the code is not a literal match but is accepted as a valid alternative. */
+  alternativeAccepted?: boolean;
+}
+
+// ---------- Tolerant matching helpers -------------------------------------
+//
+// The check "needles" describe the *canonical* solution. Candidates often
+// write valid variants — different variable names, double vs single quotes,
+// extra whitespace, chained calls split across lines, `let` instead of
+// `var`, etc. The helpers below rewrite BOTH the code and the needle to a
+// shared canonical form before substring matching, and fall back to a
+// quote/whitespace-flexible regex for the tricky cases.
+
+function stripComments(src: string): string {
+  let out = src.replace(/\/\*[\s\S]*?\*\//g, "");
+  out = out.replace(/\/\/[^\n]*/g, "");
+  return out;
+}
+
+/**
+ * Rename common vars to the canonical short names the needles use
+ * (`gr`, `ga`, `gdt`, `gax`, `val`). Whole-word only.
+ */
+function canonicalizeVars(code: string): string {
+  const renames: Array<[RegExp, string]> = [];
+  const capture = (re: RegExp, canonical: string) => {
+    const seen = new Set<string>();
+    let m: RegExpExecArray | null;
+    const r = new RegExp(re.source, re.flags.includes("g") ? re.flags : re.flags + "g");
+    while ((m = r.exec(code)) !== null) {
+      const name = m[1];
+      if (!name || name === canonical || seen.has(name)) continue;
+      seen.add(name);
+      renames.push([new RegExp(`\\b${name}\\b`, "g"), canonical]);
+    }
+  };
+  capture(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*new\s+GlideRecord(?:Secure)?\s*\(/g, "gr");
+  capture(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*new\s+GlideAggregate\s*\(/g, "ga");
+  capture(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*new\s+GlideDateTime\s*\(/g, "gdt");
+  capture(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*new\s+GlideAjax\s*\(/g, "gax");
+  capture(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=\s*g_form\.getValue\s*\(/g, "val");
+
+  let out = code;
+  for (const [re, name] of renames) out = out.replace(re, name);
+  return out;
+}
+
+function canonicalize(code: string): string {
+  const noComments = stripComments(code);
+  const renamed = canonicalizeVars(noComments);
+  return renamed
+    .replace(/"((?:[^"\\]|\\.)*)"/g, "'$1'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function needleToRegex(needle: string): RegExp {
+  const escaped = needle
+    .split(/(["']|\s+)/)
+    .map((part) => {
+      if (!part) return "";
+      if (part === '"' || part === "'") return `["']`;
+      if (/^\s+$/.test(part)) return "\\s*";
+      return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    })
+    .join("")
+    .replace(/([(){}\[\],;=<>+\-])/g, "\\s*$1\\s*");
+  return new RegExp(escaped);
+}
+
+function matchesNeedle(canonicalCode: string, rawCode: string, needle: string): boolean {
+  const canonicalNeedle = normalize(needle).replace(/"([^"]*)"/g, "'$1'");
+  if (canonicalCode.includes(canonicalNeedle)) return true;
+  try {
+    const re = needleToRegex(needle);
+    if (re.test(canonicalCode) || re.test(rawCode)) return true;
+  } catch {
+    /* fall through */
+  }
+  return false;
 }
 
 /** Ordered check runner — returns the first failing check. */
@@ -800,10 +880,10 @@ export function validateSolution(
   q: LiveCodingQuestion,
   userCode: string,
 ): ValidationResult {
-  const normalizedCode = normalize(userCode);
+  const canonical = canonicalize(userCode);
   let passed = 0;
   for (const c of q.checks) {
-    if (normalizedCode.includes(c.needle)) {
+    if (matchesNeedle(canonical, userCode, c.needle)) {
       passed += 1;
       continue;
     }
@@ -833,4 +913,41 @@ export function validateSolution(
     };
   }
   return { ok: true, passedCount: passed, totalChecks: q.checks.length };
+}
+
+/**
+ * Behavior-based acceptance: when the sandbox runs the script cleanly AND
+ * the code uses the primary API family the question is about, accept the
+ * script as a valid alternative even if strict pattern checks failed.
+ */
+export function acceptAsAlternative(
+  q: LiveCodingQuestion,
+  userCode: string,
+  sandboxOk: boolean,
+): boolean {
+  if (!sandboxOk) return false;
+  const src = stripComments(userCode);
+  if (q.side === "server") {
+    const hasApi =
+      /\bnew\s+Glide(Record|RecordSecure|Aggregate|DateTime)\b/.test(src) ||
+      /\bgs\.(info|log|print|warn|error|eventQueue|addInfoMessage|addErrorMessage)\s*\(/.test(src);
+    if (!hasApi) return false;
+  } else {
+    const hasApi =
+      /\bg_form\.(getValue|setValue|setReadOnly|setMandatory|setDisplay|setVisible|showFieldMsg|flash|clearValue|addInfoMessage|addErrorMessage)\s*\(/.test(
+        src,
+      ) || /\bnew\s+GlideAjax\b/.test(src) || /\bg_user\.(hasRole|hasRoleExactly)\s*\(/.test(src);
+    if (!hasApi) return false;
+  }
+  // Require at least one task-specific literal (table name / field value)
+  // so an unrelated script that happens to call GlideRecord won't pass.
+  const tokens = new Set<string>();
+  const collect = (s: string) => {
+    const m = s.match(/'([^']{2,})'|"([^"]{2,})"/g);
+    if (m) m.forEach((x) => tokens.add(x.slice(1, -1)));
+  };
+  collect(q.solution);
+  let hits = 0;
+  for (const t of tokens) if (src.includes(t)) hits += 1;
+  return hits >= 1;
 }
