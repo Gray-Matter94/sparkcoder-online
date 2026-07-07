@@ -1021,6 +1021,84 @@ function LiveCoding() {
           </section>
         )}
 
+        {(altsError || alternatives) && (
+          <section
+            aria-label="Alternative approaches"
+            className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-4 space-y-3"
+          >
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-amber-300 font-bold">
+              <span className="text-base">💡</span>
+              Alternative approaches
+              {alternatives && (
+                <span className="ml-auto font-mono text-muted-foreground normal-case tracking-normal">
+                  {alternatives.length} variant{alternatives.length === 1 ? "" : "s"}
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  setAlternatives(null);
+                  setAltsError(null);
+                }}
+                className="ml-2 px-2 h-7 rounded-md bg-zinc-800 text-[10px] font-bold tracking-widest text-muted-foreground hover:text-foreground border border-zinc-700"
+              >
+                CLOSE
+              </button>
+            </div>
+            {altsError && (
+              <p className="text-sm text-destructive/90">{altsError}</p>
+            )}
+            {alternatives?.map((alt, i) => (
+              <article
+                key={i}
+                className="rounded-xl border border-amber-500/30 bg-zinc-950/60 p-3 space-y-2"
+              >
+                <header className="flex items-baseline gap-2">
+                  <span className="text-[10px] font-bold text-amber-300 tracking-widest">
+                    APPROACH {i + 1}
+                  </span>
+                  <h3 className="text-sm font-bold">{alt.title}</h3>
+                </header>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {alt.rationale}
+                </p>
+                <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800">
+                  {alt.code.split("\n").map((line, j) => (
+                    <div key={j} className="flex">
+                      <span className="text-zinc-500 select-none w-8 shrink-0 text-right pr-2 font-bold">
+                        {String(j + 1).padStart(2, "0")}
+                      </span>
+                      <span>
+                        {highlightLine(line).map((tok, k) => (
+                          <span key={k} className={tok.c}>
+                            {tok.t}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </pre>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setCode(alt.code);
+                      setRan(false);
+                    }}
+                    className="px-3 h-8 rounded-md bg-zinc-800 text-amber-300 text-[10px] font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50"
+                  >
+                    LOAD INTO EDITOR
+                  </button>
+                  <button
+                    onClick={() => handleRun(alt.code)}
+                    className="px-3 h-8 rounded-md bg-emerald-500 text-emerald-950 text-[10px] font-bold tracking-widest shadow-[0_3px_0_#065f46] active:translate-y-0.5 active:shadow-none"
+                  >
+                    ▶ LOAD &amp; RUN
+                  </button>
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
+
 
         {showSolution && (
           <section
