@@ -1,13 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment, useMemo, useRef, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   LIVE_CODING_QUESTIONS,
   LIVE_CODING_TOTAL,
   validateSolution,
+  acceptAsAlternative,
   type LiveCodingQuestion,
   type Side,
   type ValidationResult,
 } from "@/lib/live-coding-questions";
+import {
+  suggestAlternatives,
+  type Alternative,
+} from "@/lib/live-coding-alternatives.functions";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
@@ -141,8 +147,12 @@ function LiveCoding() {
   const [patch, setPatch] = useState<string>("");
   const [patchMode, setPatchMode] = useState<"replace" | "insert">("replace");
   const [correctionDismissed, setCorrectionDismissed] = useState(false);
+  const [alternatives, setAlternatives] = useState<Alternative[] | null>(null);
+  const [altsLoading, setAltsLoading] = useState(false);
+  const [altsError, setAltsError] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const preRef = useRef<HTMLPreElement>(null);
+  const fetchAlternatives = useServerFn(suggestAlternatives);
 
   useEffect(() => {
     setCode(q.starter);
@@ -153,28 +163,64 @@ function LiveCoding() {
     setPatch("");
     setPatchMode("replace");
     setCorrectionDismissed(false);
+    setAlternatives(null);
+    setAltsError(null);
   }, [q.id]);
 
   function handleRun(nextCode: string = code) {
     if (nextCode !== code) setCode(nextCode);
     const sb = runSandbox(nextCode);
     setSandbox(sb);
-    // If the sandbox crashed, skip pattern checks — candidate must fix the
-    // crash first. The error line comes from the real stack trace.
-    const res: ValidationResult = sb.ok
-      ? validateSolution(q, nextCode)
-      : {
-          ok: false,
-          passedCount: 0,
-          totalChecks: q.checks.length,
-          errorLine: sb.errorLine,
-          message: `${sb.errorName ?? "Error"}: ${sb.errorMessage ?? "Script failed to execute."}`,
+    let res: ValidationResult;
+    if (!sb.ok) {
+      res = {
+        ok: false,
+        passedCount: 0,
+        totalChecks: q.checks.length,
+        errorLine: sb.errorLine,
+        message: `${sb.errorName ?? "Error"}: ${sb.errorMessage ?? "Script failed to execute."}`,
+      };
+    } else {
+      res = validateSolution(q, nextCode);
+      // Behavior-based acceptance: valid alternative approach.
+      if (!res.ok && acceptAsAlternative(q, nextCode, true)) {
+        res = {
+          ok: true,
+          passedCount: res.totalChecks,
+          totalChecks: res.totalChecks,
+          alternativeAccepted: true,
+          message:
+            "Alternative approach accepted — your script runs cleanly and uses the right APIs to satisfy the task.",
         };
+      }
+    }
     setResult(res);
     setRan(true);
     setCorrectionDismissed(false);
     if (sb.ok && res.ok) {
       award(`live-${q.id}`, 40);
+    }
+  }
+
+  async function loadAlternatives() {
+    setAltsLoading(true);
+    setAltsError(null);
+    try {
+      const out = await fetchAlternatives({
+        data: {
+          questionId: q.id,
+          side: q.side,
+          scriptType: q.scriptType,
+          title: q.title,
+          task: q.task,
+          referenceSolution: q.solution,
+        },
+      });
+      setAlternatives(out.alternatives);
+    } catch (err) {
+      setAltsError(err instanceof Error ? err.message : "Failed to load alternatives.");
+    } finally {
+      setAltsLoading(false);
     }
   }
 
@@ -774,7 +820,13 @@ function LiveCoding() {
               }`}
             >
               <span className="text-base">{result.ok ? "✓" : "✕"}</span>
-              <span>{result.ok ? "Script accepted" : "AI Coach — needs a fix"}</span>
+              <span>
+                {result.ok
+                  ? result.alternativeAccepted
+                    ? "Alternative approach accepted"
+                    : "Script accepted"
+                  : "AI Coach — needs a fix"}
+              </span>
               <span className="ml-auto font-mono text-muted-foreground">
                 {result.passedCount}/{result.totalChecks} checks
               </span>
@@ -782,16 +834,25 @@ function LiveCoding() {
             {result.ok ? (
               <>
                 <p className="text-sm text-emerald-300/90 leading-relaxed">
-                  Nailed it. Your script satisfies every required pattern for this task. +40 XP
-                  banked.
+                  {result.alternativeAccepted
+                    ? result.message ??
+                      "Your script runs cleanly and produces the correct result with a different approach. +40 XP banked."
+                    : "Nailed it. Your script satisfies every required pattern for this task. +40 XP banked."}
                 </p>
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={nextQuestion}
                     disabled={idx >= list.length - 1}
                     className="px-4 h-10 rounded-lg bg-emerald-500 text-emerald-950 font-display tracking-wider text-sm shadow-[0_4px_0_#065f46] active:translate-y-0.5 active:shadow-none disabled:opacity-40"
                   >
                     NEXT TASK →
+                  </button>
+                  <button
+                    onClick={loadAlternatives}
+                    disabled={altsLoading}
+                    className="px-3 h-10 rounded-lg bg-zinc-800 text-amber-300 text-xs font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50 disabled:opacity-50"
+                  >
+                    {altsLoading ? "LOADING…" : "💡 SHOW ALTERNATIVE APPROACHES"}
                   </button>
                 </div>
               </>
@@ -808,6 +869,15 @@ function LiveCoding() {
                 <p className="mt-2 text-[11px] text-muted-foreground">
                   Fix that line and hit RUN &amp; CHECK again.
                 </p>
+                <div className="mt-3">
+                  <button
+                    onClick={loadAlternatives}
+                    disabled={altsLoading}
+                    className="px-3 h-9 rounded-lg bg-zinc-800 text-amber-300 text-[11px] font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50 disabled:opacity-50"
+                  >
+                    {altsLoading ? "LOADING…" : "💡 SUGGEST ALTERNATIVE APPROACHES"}
+                  </button>
+                </div>
               </>
             )}
           </section>
@@ -948,6 +1018,84 @@ function LiveCoding() {
                 DISMISS
               </button>
             </div>
+          </section>
+        )}
+
+        {(altsError || alternatives) && (
+          <section
+            aria-label="Alternative approaches"
+            className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-4 space-y-3"
+          >
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-amber-300 font-bold">
+              <span className="text-base">💡</span>
+              Alternative approaches
+              {alternatives && (
+                <span className="ml-auto font-mono text-muted-foreground normal-case tracking-normal">
+                  {alternatives.length} variant{alternatives.length === 1 ? "" : "s"}
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  setAlternatives(null);
+                  setAltsError(null);
+                }}
+                className="ml-2 px-2 h-7 rounded-md bg-zinc-800 text-[10px] font-bold tracking-widest text-muted-foreground hover:text-foreground border border-zinc-700"
+              >
+                CLOSE
+              </button>
+            </div>
+            {altsError && (
+              <p className="text-sm text-destructive/90">{altsError}</p>
+            )}
+            {alternatives?.map((alt, i) => (
+              <article
+                key={i}
+                className="rounded-xl border border-amber-500/30 bg-zinc-950/60 p-3 space-y-2"
+              >
+                <header className="flex items-baseline gap-2">
+                  <span className="text-[10px] font-bold text-amber-300 tracking-widest">
+                    APPROACH {i + 1}
+                  </span>
+                  <h3 className="text-sm font-bold">{alt.title}</h3>
+                </header>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {alt.rationale}
+                </p>
+                <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800">
+                  {alt.code.split("\n").map((line, j) => (
+                    <div key={j} className="flex">
+                      <span className="text-zinc-500 select-none w-8 shrink-0 text-right pr-2 font-bold">
+                        {String(j + 1).padStart(2, "0")}
+                      </span>
+                      <span>
+                        {highlightLine(line).map((tok, k) => (
+                          <span key={k} className={tok.c}>
+                            {tok.t}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </pre>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setCode(alt.code);
+                      setRan(false);
+                    }}
+                    className="px-3 h-8 rounded-md bg-zinc-800 text-amber-300 text-[10px] font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50"
+                  >
+                    LOAD INTO EDITOR
+                  </button>
+                  <button
+                    onClick={() => handleRun(alt.code)}
+                    className="px-3 h-8 rounded-md bg-emerald-500 text-emerald-950 text-[10px] font-bold tracking-widest shadow-[0_3px_0_#065f46] active:translate-y-0.5 active:shadow-none"
+                  >
+                    ▶ LOAD &amp; RUN
+                  </button>
+                </div>
+              </article>
+            ))}
           </section>
         )}
 
