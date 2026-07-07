@@ -869,6 +869,15 @@ function LiveCoding() {
                 <p className="mt-2 text-[11px] text-muted-foreground">
                   Fix that line and hit RUN &amp; CHECK again.
                 </p>
+                <div className="mt-3">
+                  <button
+                    onClick={loadAlternatives}
+                    disabled={altsLoading}
+                    className="px-3 h-9 rounded-lg bg-zinc-800 text-amber-300 text-[11px] font-bold tracking-widest border border-zinc-700 hover:border-amber-500/50 disabled:opacity-50"
+                  >
+                    {altsLoading ? "LOADING…" : "💡 SUGGEST ALTERNATIVE APPROACHES"}
+                  </button>
+                </div>
               </>
             )}
           </section>
