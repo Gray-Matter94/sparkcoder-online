@@ -147,8 +147,12 @@ function LiveCoding() {
   const [patch, setPatch] = useState<string>("");
   const [patchMode, setPatchMode] = useState<"replace" | "insert">("replace");
   const [correctionDismissed, setCorrectionDismissed] = useState(false);
+  const [alternatives, setAlternatives] = useState<Alternative[] | null>(null);
+  const [altsLoading, setAltsLoading] = useState(false);
+  const [altsError, setAltsError] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const preRef = useRef<HTMLPreElement>(null);
+  const fetchAlternatives = useServerFn(suggestAlternatives);
 
   useEffect(() => {
     setCode(q.starter);
@@ -159,28 +163,64 @@ function LiveCoding() {
     setPatch("");
     setPatchMode("replace");
     setCorrectionDismissed(false);
+    setAlternatives(null);
+    setAltsError(null);
   }, [q.id]);
 
   function handleRun(nextCode: string = code) {
     if (nextCode !== code) setCode(nextCode);
     const sb = runSandbox(nextCode);
     setSandbox(sb);
-    // If the sandbox crashed, skip pattern checks — candidate must fix the
-    // crash first. The error line comes from the real stack trace.
-    const res: ValidationResult = sb.ok
-      ? validateSolution(q, nextCode)
-      : {
-          ok: false,
-          passedCount: 0,
-          totalChecks: q.checks.length,
-          errorLine: sb.errorLine,
-          message: `${sb.errorName ?? "Error"}: ${sb.errorMessage ?? "Script failed to execute."}`,
+    let res: ValidationResult;
+    if (!sb.ok) {
+      res = {
+        ok: false,
+        passedCount: 0,
+        totalChecks: q.checks.length,
+        errorLine: sb.errorLine,
+        message: `${sb.errorName ?? "Error"}: ${sb.errorMessage ?? "Script failed to execute."}`,
+      };
+    } else {
+      res = validateSolution(q, nextCode);
+      // Behavior-based acceptance: valid alternative approach.
+      if (!res.ok && acceptAsAlternative(q, nextCode, true)) {
+        res = {
+          ok: true,
+          passedCount: res.totalChecks,
+          totalChecks: res.totalChecks,
+          alternativeAccepted: true,
+          message:
+            "Alternative approach accepted — your script runs cleanly and uses the right APIs to satisfy the task.",
         };
+      }
+    }
     setResult(res);
     setRan(true);
     setCorrectionDismissed(false);
     if (sb.ok && res.ok) {
       award(`live-${q.id}`, 40);
+    }
+  }
+
+  async function loadAlternatives() {
+    setAltsLoading(true);
+    setAltsError(null);
+    try {
+      const out = await fetchAlternatives({
+        data: {
+          questionId: q.id,
+          side: q.side,
+          scriptType: q.scriptType,
+          title: q.title,
+          task: q.task,
+          referenceSolution: q.solution,
+        },
+      });
+      setAlternatives(out.alternatives);
+    } catch (err) {
+      setAltsError(err instanceof Error ? err.message : "Failed to load alternatives.");
+    } finally {
+      setAltsLoading(false);
     }
   }
 
