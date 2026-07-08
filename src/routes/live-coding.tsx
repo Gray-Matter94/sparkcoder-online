@@ -99,6 +99,114 @@ function highlightLine(line: string): Tok[] {
   return arr;
 }
 
+// ------- Line explainer ----------------------------------------------------
+// Produces a short, human-readable "// comment" describing what the line does,
+// and a quick heuristic flag for whether the line looks syntactically wrong.
+// Sandbox errorLine still owns the authoritative "wrong" verdict.
+
+function isLineLikelyBad(line: string): boolean {
+  const stripped = line.replace(/\/\/.*$/, "");
+  // Odd number of unescaped quotes on a single line → unterminated string.
+  const singles = (stripped.match(/(^|[^\\])'/g) || []).length;
+  const doubles = (stripped.match(/(^|[^\\])"/g) || []).length;
+  if (singles % 2 === 1 || doubles % 2 === 1) return true;
+  return false;
+}
+
+function explainLine(raw: string): string {
+  const line = raw.trim();
+  if (!line) return "";
+  if (/^\/\//.test(line)) return "author comment";
+  if (/^\/\*|\*\/\s*$/.test(line)) return "block comment";
+  if (/^\}\s*else\s*\{?$/.test(line)) return "else branch — runs when the if condition is false";
+  if (/^\}\s*else\s+if\s*\(/.test(line)) return "else-if branch — tests the next condition";
+  if (/^\}\)?;?\s*$/.test(line)) return "closes the previous block";
+  if (/^\{\s*$/.test(line)) return "opens a new block";
+
+  // Variable declarations for common ServiceNow objects.
+  const decl = line.match(/^\s*(var|let|const)\s+(\w+)\s*=\s*new\s+(\w+)\s*\(\s*['"]?([^'")]*)['"]?\s*\)/);
+  if (decl) {
+    const [, , name, cls, arg] = decl;
+    if (cls === "GlideRecord")
+      return `create a GlideRecord "${name}" pointing at the ${arg || "?"} table`;
+    if (cls === "GlideRecordSecure")
+      return `create an ACL-aware GlideRecord "${name}" on ${arg || "?"}`;
+    if (cls === "GlideAggregate")
+      return `create a GlideAggregate "${name}" to group/count rows on ${arg || "?"}`;
+    if (cls === "GlideDateTime")
+      return `create a GlideDateTime "${name}"${arg ? ` for ${arg}` : ""}`;
+    if (cls === "GlideAjax")
+      return `create a client-side GlideAjax caller for Script Include "${arg}"`;
+    return `declare "${name}" as a new ${cls}(${arg})`;
+  }
+
+  if (/^\s*(var|let|const)\s+\w+\s*=/.test(line)) {
+    const m = line.match(/^\s*(?:var|let|const)\s+(\w+)/);
+    return `declare local variable "${m?.[1] ?? ""}"`;
+  }
+
+  if (/\.addEncodedQuery\s*\(/.test(line)) return "apply an encoded query filter";
+  if (/\.addActiveQuery\s*\(/.test(line)) return "filter to active records only";
+  if (/\.addQuery\s*\(/.test(line)) {
+    const m = line.match(/addQuery\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `filter where ${m[1]} matches the given value` : "add a filter condition";
+  }
+  if (/\.orderByDesc\s*\(/.test(line)) return "sort results descending";
+  if (/\.orderBy\s*\(/.test(line)) return "sort results ascending";
+  if (/\.setLimit\s*\(/.test(line)) return "cap the number of rows returned";
+  if (/\.query\s*\(\s*\)/.test(line)) return "execute the database query";
+  if (/while\s*\(\s*\w+\.next\s*\(\s*\)\s*\)/.test(line)) return "loop over every matching row";
+  if (/if\s*\(\s*\w+\.next\s*\(\s*\)\s*\)/.test(line)) return "advance to the first matching row";
+  if (/\.next\s*\(\s*\)/.test(line)) return "step to the next row";
+  if (/\.getValue\s*\(/.test(line)) {
+    const m = line.match(/getValue\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `read the raw value of the ${m[1]} field` : "read a raw field value";
+  }
+  if (/\.getDisplayValue\s*\(/.test(line)) return "read the human-readable display value";
+  if (/\.setValue\s*\(/.test(line)) {
+    const m = line.match(/setValue\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `set the ${m[1]} field` : "set a field value";
+  }
+  if (/\.update\s*\(\s*\)/.test(line)) return "persist changes to the current row";
+  if (/\.insert\s*\(\s*\)/.test(line)) return "insert a new row and return its sys_id";
+  if (/\.deleteRecord\s*\(\s*\)/.test(line)) return "delete the current row";
+  if (/\.deleteMultiple\s*\(\s*\)/.test(line)) return "delete every row matching the query";
+  if (/\.updateMultiple\s*\(\s*\)/.test(line)) return "bulk-update every row matching the query";
+
+  if (/gs\.(info|log|print)\s*\(/.test(line)) return "log an info message to system log";
+  if (/gs\.warn\s*\(/.test(line)) return "log a warning to system log";
+  if (/gs\.error\s*\(/.test(line)) return "log an error to system log";
+  if (/gs\.addInfoMessage\s*\(/.test(line)) return "show an info banner to the user";
+  if (/gs\.addErrorMessage\s*\(/.test(line)) return "show an error banner to the user";
+  if (/gs\.hasRole\s*\(/.test(line)) return "check whether current user has the given role";
+  if (/gs\.getUser(ID|Name)?\s*\(/.test(line)) return "read the current user identity";
+
+  if (/g_form\.getValue\s*\(/.test(line)) return "read a field value from the client form";
+  if (/g_form\.setValue\s*\(/.test(line)) return "set a field value on the client form";
+  if (/g_form\.setMandatory\s*\(/.test(line)) return "toggle whether a field is required";
+  if (/g_form\.setReadOnly\s*\(/.test(line)) return "toggle a field's read-only state";
+  if (/g_form\.setVisible\s*\(/.test(line)) return "show or hide a field on the form";
+  if (/g_form\.setDisplay\s*\(/.test(line)) return "show or hide a field (with layout)";
+  if (/g_form\.addInfoMessage\s*\(/.test(line)) return "show an info message on the form";
+  if (/g_form\.addErrorMessage\s*\(/.test(line)) return "show an error message on the form";
+  if (/g_form\.clearMessages\s*\(/.test(line)) return "clear all form messages";
+
+  if (/^function\s+\w+\s*\(/.test(line)) {
+    const m = line.match(/^function\s+(\w+)/);
+    return `define function "${m?.[1] ?? ""}"`;
+  }
+  if (/^\s*function\s*\(/.test(line)) return "anonymous function";
+  if (/^return\b/.test(line)) return "return a value from the function";
+  if (/^if\s*\(/.test(line)) return "conditional check";
+  if (/^for\s*\(/.test(line)) return "for-loop iteration";
+  if (/^while\s*\(/.test(line)) return "while-loop iteration";
+  if (/\.addParam\s*\(/.test(line)) return "attach a GlideAjax parameter";
+  if (/\.getXMLAnswer\s*\(/.test(line)) return "call Script Include, receive answer async";
+  if (/\.getXML\s*\(/.test(line)) return "call Script Include, receive full XML async";
+
+  return "statement";
+}
+
 // ------- Component ---------------------------------------------------------
 
 type Filter = "all" | Side;
