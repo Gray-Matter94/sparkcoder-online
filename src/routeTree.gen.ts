@@ -23,6 +23,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
+import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
 import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
@@ -108,6 +109,12 @@ const LearnScenarioBasedScriptingRoute =
     path: '/learn/scenario-based-scripting',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnItsmInterviewQuestionsRoute =
+  LearnItsmInterviewQuestionsRouteImport.update({
+    id: '/learn/itsm-interview-questions',
+    path: '/learn/itsm-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnIrmArchitectInterviewQuestionsRoute =
   LearnIrmArchitectInterviewQuestionsRouteImport.update({
     id: '/learn/irm-architect-interview-questions',
@@ -184,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
+  '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByTo {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
+  '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -237,6 +246,7 @@ export interface FileRoutesById {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
+  '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/irm-architect-interview-questions'
+    | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/irm-architect-interview-questions'
+    | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -317,6 +329,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/irm-architect-interview-questions'
+    | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
@@ -344,6 +357,7 @@ export interface RootRouteChildren {
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnIrmArchitectInterviewQuestionsRoute: typeof LearnIrmArchitectInterviewQuestionsRoute
+  LearnItsmInterviewQuestionsRoute: typeof LearnItsmInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
@@ -451,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/itsm-interview-questions': {
+      id: '/learn/itsm-interview-questions'
+      path: '/learn/itsm-interview-questions'
+      fullPath: '/learn/itsm-interview-questions'
+      preLoaderRoute: typeof LearnItsmInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/irm-architect-interview-questions': {
       id: '/learn/irm-architect-interview-questions'
       path: '/learn/irm-architect-interview-questions'
@@ -548,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
   LearnIrmArchitectInterviewQuestionsRoute:
     LearnIrmArchitectInterviewQuestionsRoute,
+  LearnItsmInterviewQuestionsRoute: LearnItsmInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
@@ -557,13 +579,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
