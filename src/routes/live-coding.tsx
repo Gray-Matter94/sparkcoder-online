@@ -361,6 +361,15 @@ function LiveCoding() {
     }
   }
 
+  const [caretLine, setCaretLine] = useState<number>(-1);
+  function syncCaret() {
+    const el = editorRef.current;
+    if (!el) return;
+    const pos = el.selectionStart ?? 0;
+    const line = code.slice(0, pos).split("\n").length - 1;
+    setCaretLine(line);
+  }
+
   const lines = code.split("\n");
   const errorLine = ran && result && !result.ok ? result.errorLine : undefined;
 
