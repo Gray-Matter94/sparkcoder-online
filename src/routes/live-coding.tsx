@@ -99,6 +99,114 @@ function highlightLine(line: string): Tok[] {
   return arr;
 }
 
+// ------- Line explainer ----------------------------------------------------
+// Produces a short, human-readable "// comment" describing what the line does,
+// and a quick heuristic flag for whether the line looks syntactically wrong.
+// Sandbox errorLine still owns the authoritative "wrong" verdict.
+
+function isLineLikelyBad(line: string): boolean {
+  const stripped = line.replace(/\/\/.*$/, "");
+  // Odd number of unescaped quotes on a single line → unterminated string.
+  const singles = (stripped.match(/(^|[^\\])'/g) || []).length;
+  const doubles = (stripped.match(/(^|[^\\])"/g) || []).length;
+  if (singles % 2 === 1 || doubles % 2 === 1) return true;
+  return false;
+}
+
+function explainLine(raw: string): string {
+  const line = raw.trim();
+  if (!line) return "";
+  if (/^\/\//.test(line)) return "author comment";
+  if (/^\/\*|\*\/\s*$/.test(line)) return "block comment";
+  if (/^\}\s*else\s*\{?$/.test(line)) return "else branch — runs when the if condition is false";
+  if (/^\}\s*else\s+if\s*\(/.test(line)) return "else-if branch — tests the next condition";
+  if (/^\}\)?;?\s*$/.test(line)) return "closes the previous block";
+  if (/^\{\s*$/.test(line)) return "opens a new block";
+
+  // Variable declarations for common ServiceNow objects.
+  const decl = line.match(/^\s*(var|let|const)\s+(\w+)\s*=\s*new\s+(\w+)\s*\(\s*['"]?([^'")]*)['"]?\s*\)/);
+  if (decl) {
+    const [, , name, cls, arg] = decl;
+    if (cls === "GlideRecord")
+      return `create a GlideRecord "${name}" pointing at the ${arg || "?"} table`;
+    if (cls === "GlideRecordSecure")
+      return `create an ACL-aware GlideRecord "${name}" on ${arg || "?"}`;
+    if (cls === "GlideAggregate")
+      return `create a GlideAggregate "${name}" to group/count rows on ${arg || "?"}`;
+    if (cls === "GlideDateTime")
+      return `create a GlideDateTime "${name}"${arg ? ` for ${arg}` : ""}`;
+    if (cls === "GlideAjax")
+      return `create a client-side GlideAjax caller for Script Include "${arg}"`;
+    return `declare "${name}" as a new ${cls}(${arg})`;
+  }
+
+  if (/^\s*(var|let|const)\s+\w+\s*=/.test(line)) {
+    const m = line.match(/^\s*(?:var|let|const)\s+(\w+)/);
+    return `declare local variable "${m?.[1] ?? ""}"`;
+  }
+
+  if (/\.addEncodedQuery\s*\(/.test(line)) return "apply an encoded query filter";
+  if (/\.addActiveQuery\s*\(/.test(line)) return "filter to active records only";
+  if (/\.addQuery\s*\(/.test(line)) {
+    const m = line.match(/addQuery\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `filter where ${m[1]} matches the given value` : "add a filter condition";
+  }
+  if (/\.orderByDesc\s*\(/.test(line)) return "sort results descending";
+  if (/\.orderBy\s*\(/.test(line)) return "sort results ascending";
+  if (/\.setLimit\s*\(/.test(line)) return "cap the number of rows returned";
+  if (/\.query\s*\(\s*\)/.test(line)) return "execute the database query";
+  if (/while\s*\(\s*\w+\.next\s*\(\s*\)\s*\)/.test(line)) return "loop over every matching row";
+  if (/if\s*\(\s*\w+\.next\s*\(\s*\)\s*\)/.test(line)) return "advance to the first matching row";
+  if (/\.next\s*\(\s*\)/.test(line)) return "step to the next row";
+  if (/\.getValue\s*\(/.test(line)) {
+    const m = line.match(/getValue\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `read the raw value of the ${m[1]} field` : "read a raw field value";
+  }
+  if (/\.getDisplayValue\s*\(/.test(line)) return "read the human-readable display value";
+  if (/\.setValue\s*\(/.test(line)) {
+    const m = line.match(/setValue\s*\(\s*['"]([^'"]+)['"]/);
+    return m ? `set the ${m[1]} field` : "set a field value";
+  }
+  if (/\.update\s*\(\s*\)/.test(line)) return "persist changes to the current row";
+  if (/\.insert\s*\(\s*\)/.test(line)) return "insert a new row and return its sys_id";
+  if (/\.deleteRecord\s*\(\s*\)/.test(line)) return "delete the current row";
+  if (/\.deleteMultiple\s*\(\s*\)/.test(line)) return "delete every row matching the query";
+  if (/\.updateMultiple\s*\(\s*\)/.test(line)) return "bulk-update every row matching the query";
+
+  if (/gs\.(info|log|print)\s*\(/.test(line)) return "log an info message to system log";
+  if (/gs\.warn\s*\(/.test(line)) return "log a warning to system log";
+  if (/gs\.error\s*\(/.test(line)) return "log an error to system log";
+  if (/gs\.addInfoMessage\s*\(/.test(line)) return "show an info banner to the user";
+  if (/gs\.addErrorMessage\s*\(/.test(line)) return "show an error banner to the user";
+  if (/gs\.hasRole\s*\(/.test(line)) return "check whether current user has the given role";
+  if (/gs\.getUser(ID|Name)?\s*\(/.test(line)) return "read the current user identity";
+
+  if (/g_form\.getValue\s*\(/.test(line)) return "read a field value from the client form";
+  if (/g_form\.setValue\s*\(/.test(line)) return "set a field value on the client form";
+  if (/g_form\.setMandatory\s*\(/.test(line)) return "toggle whether a field is required";
+  if (/g_form\.setReadOnly\s*\(/.test(line)) return "toggle a field's read-only state";
+  if (/g_form\.setVisible\s*\(/.test(line)) return "show or hide a field on the form";
+  if (/g_form\.setDisplay\s*\(/.test(line)) return "show or hide a field (with layout)";
+  if (/g_form\.addInfoMessage\s*\(/.test(line)) return "show an info message on the form";
+  if (/g_form\.addErrorMessage\s*\(/.test(line)) return "show an error message on the form";
+  if (/g_form\.clearMessages\s*\(/.test(line)) return "clear all form messages";
+
+  if (/^function\s+\w+\s*\(/.test(line)) {
+    const m = line.match(/^function\s+(\w+)/);
+    return `define function "${m?.[1] ?? ""}"`;
+  }
+  if (/^\s*function\s*\(/.test(line)) return "anonymous function";
+  if (/^return\b/.test(line)) return "return a value from the function";
+  if (/^if\s*\(/.test(line)) return "conditional check";
+  if (/^for\s*\(/.test(line)) return "for-loop iteration";
+  if (/^while\s*\(/.test(line)) return "while-loop iteration";
+  if (/\.addParam\s*\(/.test(line)) return "attach a GlideAjax parameter";
+  if (/\.getXMLAnswer\s*\(/.test(line)) return "call Script Include, receive answer async";
+  if (/\.getXML\s*\(/.test(line)) return "call Script Include, receive full XML async";
+
+  return "statement";
+}
+
 // ------- Component ---------------------------------------------------------
 
 type Filter = "all" | Side;
@@ -251,6 +359,15 @@ function LiveCoding() {
       preRef.current.scrollTop = editorRef.current.scrollTop;
       preRef.current.scrollLeft = editorRef.current.scrollLeft;
     }
+  }
+
+  const [caretLine, setCaretLine] = useState<number>(-1);
+  function syncCaret() {
+    const el = editorRef.current;
+    if (!el) return;
+    const pos = el.selectionStart ?? 0;
+    const line = code.slice(0, pos).split("\n").length - 1;
+    setCaretLine(line);
   }
 
   const lines = code.split("\n");
@@ -685,6 +802,11 @@ function LiveCoding() {
                 setRan(false);
               }}
               onKeyDown={onTab}
+              onKeyUp={syncCaret}
+              onClick={syncCaret}
+              onSelect={syncCaret}
+              onFocus={syncCaret}
+              onBlur={() => setCaretLine(-1)}
               onScroll={onScroll}
               spellCheck={false}
               aria-label="ServiceNow script editor"
@@ -731,6 +853,59 @@ function LiveCoding() {
             </span>
           </div>
         </section>
+
+        {/* Line-by-line auto explanations. Comment appears once the user moves
+            off that line (caret is elsewhere). Red when the line is flagged as
+            wrong by the sandbox or by a quick per-line syntax check, else
+            green. Blank lines produce no annotation. */}
+        <section
+          aria-label="Line-by-line code explanations"
+          className="rounded-2xl border-2 border-border bg-zinc-950 shadow-2xl overflow-hidden"
+        >
+          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border-b border-border">
+            <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
+              Auto-explain · line by line
+            </span>
+            <span className="ml-auto text-[10px] font-mono text-muted-foreground">
+              green = ok · red = check this
+            </span>
+          </div>
+          <ol className="p-3 font-mono text-[12px] leading-6 space-y-1">
+            {lines.map((line, i) => {
+              if (i === caretLine) return null;
+              if (line.trim().length === 0) return null;
+              const bad = errorLine === i || isLineLikelyBad(line);
+              const note = explainLine(line);
+              const cls = bad
+                ? "text-destructive"
+                : "text-emerald-400";
+              const prefix = bad ? "// ⚠ " : "// ✓ ";
+              return (
+                <li key={i} className="grid grid-cols-[3rem_1fr] gap-3">
+                  <span className="text-zinc-500 text-right select-none">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={`italic ${cls}`}>
+                    {prefix}
+                    {bad && errorLine === i
+                      ? `${note} — sandbox flagged this line`
+                      : bad
+                        ? `${note} — looks off (check quotes / syntax)`
+                        : note}
+                  </span>
+                </li>
+              );
+            })}
+            {lines.every((l) => l.trim().length === 0) && (
+              <li className="text-muted-foreground text-[11px]">
+                Start typing in the editor — each finished line will be
+                explained here automatically.
+              </li>
+            )}
+          </ol>
+        </section>
+
+
 
         {/* Sandbox execution output */}
         {ran && sandbox && (
