@@ -854,6 +854,59 @@ function LiveCoding() {
           </div>
         </section>
 
+        {/* Line-by-line auto explanations. Comment appears once the user moves
+            off that line (caret is elsewhere). Red when the line is flagged as
+            wrong by the sandbox or by a quick per-line syntax check, else
+            green. Blank lines produce no annotation. */}
+        <section
+          aria-label="Line-by-line code explanations"
+          className="rounded-2xl border-2 border-border bg-zinc-950 shadow-2xl overflow-hidden"
+        >
+          <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border-b border-border">
+            <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
+              Auto-explain · line by line
+            </span>
+            <span className="ml-auto text-[10px] font-mono text-muted-foreground">
+              green = ok · red = check this
+            </span>
+          </div>
+          <ol className="p-3 font-mono text-[12px] leading-6 space-y-1">
+            {lines.map((line, i) => {
+              if (i === caretLine) return null;
+              if (line.trim().length === 0) return null;
+              const bad = errorLine === i || isLineLikelyBad(line);
+              const note = explainLine(line);
+              const cls = bad
+                ? "text-destructive"
+                : "text-emerald-400";
+              const prefix = bad ? "// ⚠ " : "// ✓ ";
+              return (
+                <li key={i} className="grid grid-cols-[3rem_1fr] gap-3">
+                  <span className="text-zinc-500 text-right select-none">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={`italic ${cls}`}>
+                    {prefix}
+                    {bad && errorLine === i
+                      ? `${note} — sandbox flagged this line`
+                      : bad
+                        ? `${note} — looks off (check quotes / syntax)`
+                        : note}
+                  </span>
+                </li>
+              );
+            })}
+            {lines.every((l) => l.trim().length === 0) && (
+              <li className="text-muted-foreground text-[11px]">
+                Start typing in the editor — each finished line will be
+                explained here automatically.
+              </li>
+            )}
+          </ol>
+        </section>
+
+
+
         {/* Sandbox execution output */}
         {ran && sandbox && (
           <section
