@@ -802,6 +802,11 @@ function LiveCoding() {
                 setRan(false);
               }}
               onKeyDown={onTab}
+              onKeyUp={syncCaret}
+              onClick={syncCaret}
+              onSelect={syncCaret}
+              onFocus={syncCaret}
+              onBlur={() => setCaretLine(-1)}
               onScroll={onScroll}
               spellCheck={false}
               aria-label="ServiceNow script editor"
