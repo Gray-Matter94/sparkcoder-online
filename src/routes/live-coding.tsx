@@ -1038,15 +1038,108 @@ function LiveCoding() {
                 {sandbox.durationMs.toFixed(0)}ms
               </span>
             </div>
-            {!sandbox.ok && (
-              <p className="text-sm text-destructive/90 mb-2">
-                <strong>
-                  {sandbox.errorName ?? "Error"} at line {(sandbox.errorLine ?? 0) + 1}
-                  {sandbox.errorColumn ? `:${sandbox.errorColumn}` : ""}:
-                </strong>{" "}
-                {sandbox.errorMessage}
-              </p>
-            )}
+            {!sandbox.ok && (() => {
+              const errLine = sandbox.errorLine ?? 0;
+              const faultLine = lines[errLine] ?? "";
+              const diagnosis = inferCause(sandbox.errorName, sandbox.errorMessage, faultLine);
+              const start = Math.max(0, errLine - 2);
+              const end = Math.min(lines.length - 1, errLine + 2);
+              const snippet: { n: number; text: string; hit: boolean }[] = [];
+              for (let i = start; i <= end; i += 1) {
+                snippet.push({ n: i + 1, text: lines[i] ?? "", hit: i === errLine });
+              }
+              const caretIndent =
+                sandbox.errorColumn && sandbox.errorColumn > 0
+                  ? " ".repeat(sandbox.errorColumn - 1) + "^"
+                  : null;
+              return (
+                <>
+                  <p className="text-sm text-destructive/90 mb-2">
+                    <strong>
+                      {sandbox.errorName ?? "Error"} at line {errLine + 1}
+                      {sandbox.errorColumn ? `:${sandbox.errorColumn}` : ""}:
+                    </strong>{" "}
+                    {sandbox.errorMessage}
+                  </p>
+                  <details className="mb-3 rounded-lg border border-destructive/40 bg-destructive/5 overflow-hidden group">
+                    <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-destructive flex items-center gap-2 hover:bg-destructive/10 select-none">
+                      <span
+                        aria-hidden="true"
+                        className="inline-block transition-transform group-open:rotate-90"
+                      >
+                        ▶
+                      </span>
+                      Show error details, inferred cause, and code snippet
+                    </summary>
+                    <div className="px-4 py-3 space-y-3 border-t border-destructive/30">
+                      <div className="grid grid-cols-[5.5rem_1fr] gap-x-3 gap-y-1 text-[12px]">
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Type
+                        </span>
+                        <span className="font-mono text-destructive">
+                          {sandbox.errorName ?? "Error"}
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Location
+                        </span>
+                        <span className="font-mono text-foreground/90">
+                          line {errLine + 1}
+                          {sandbox.errorColumn ? `, column ${sandbox.errorColumn}` : ""}
+                          {" · "}
+                          {sandbox.durationMs.toFixed(0)}ms into run
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Message
+                        </span>
+                        <span className="font-mono text-foreground/90 break-words">
+                          {sandbox.errorMessage ?? "(no message)"}
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Cause
+                        </span>
+                        <span className="text-amber-300">{diagnosis.cause}</span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Try
+                        </span>
+                        <span className="text-emerald-300">{diagnosis.fix}</span>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                          Code snippet
+                        </div>
+                        <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800">
+                          {snippet.map((s) => (
+                            <div
+                              key={s.n}
+                              className={
+                                s.hit
+                                  ? "bg-destructive/20 text-destructive"
+                                  : "text-zinc-400"
+                              }
+                            >
+                              <span className="select-none inline-block w-10 text-right pr-3 opacity-70">
+                                {s.hit ? "→" : " "}
+                                {String(s.n).padStart(3, " ")}
+                              </span>
+                              {s.text || " "}
+                            </div>
+                          ))}
+                          {caretIndent && (
+                            <div className="text-destructive">
+                              <span className="select-none inline-block w-10 text-right pr-3 opacity-70">
+                                {" "}
+                              </span>
+                              {caretIndent}
+                            </div>
+                          )}
+                        </pre>
+                      </div>
+                    </div>
+                  </details>
+                </>
+              );
+            })()}
+
             {sandbox.logs.length > 0 ? (
               <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800 max-h-56">
                 {sandbox.logs.map((l, i) => {
