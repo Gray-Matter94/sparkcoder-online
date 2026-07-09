@@ -113,6 +113,105 @@ function isLineLikelyBad(line: string): boolean {
   return false;
 }
 
+// Best-effort human-friendly diagnosis of a sandbox error. Maps the raw
+// error name + message to a likely root cause and a concrete next step.
+function inferCause(
+  name: string | undefined,
+  message: string | undefined,
+  line: string | undefined,
+): { cause: string; fix: string } {
+  const n = name ?? "Error";
+  const m = message ?? "";
+  const l = line ?? "";
+
+  if (n === "SyntaxError") {
+    if (/Unterminated string/i.test(m))
+      return {
+        cause: "A string literal is opened but never closed on the same line.",
+        fix: "Add the matching quote (', \", or `) before the line ends, or escape newlines with \\n.",
+      };
+    if (/Unclosed|no matching/i.test(m))
+      return {
+        cause: "A bracket, brace, or paren was opened without a matching closer.",
+        fix: "Add the missing closer, or delete the stray opener.",
+      };
+    if (/Mismatched|Unexpected/i.test(m))
+      return {
+        cause: "A closing bracket doesn't line up with its opener.",
+        fix: "Re-indent the block and pair each { with }, ( with ), [ with ].",
+      };
+    return {
+      cause: "The parser rejected the script before it could run.",
+      fix: "Look for a missing punctuation mark (semicolon, quote, or bracket) at or just before the flagged line.",
+    };
+  }
+
+  if (n === "ReferenceError") {
+    const nm = m.match(/^(\w+)\s+is not defined/);
+    if (nm)
+      return {
+        cause: `\`${nm[1]}\` was used before it was declared, or its name is misspelled.`,
+        fix: `Declare it with var/let/const, or check the spelling and case of \`${nm[1]}\`.`,
+      };
+    return {
+      cause: "A name was referenced that doesn't exist in scope.",
+      fix: "Declare the variable, or import/require the API you meant to call.",
+    };
+  }
+
+  if (n === "TypeError") {
+    const notFn = m.match(/(\S+)\s+is not a function/);
+    if (notFn)
+      return {
+        cause: `\`${notFn[1]}\` was called as a function but isn't one — often a typo on a ServiceNow API name.`,
+        fix: "Check the method name (e.g. addQuery vs addQury) and verify the object type supports it.",
+      };
+    if (/Cannot read propert(?:y|ies).*of (?:null|undefined)/i.test(m))
+      return {
+        cause: "Reading a property from something that was null or undefined.",
+        fix: "Guard the value with an if-check or `?.`, or make sure it was assigned before this line.",
+      };
+    if (/is not iterable/i.test(m))
+      return {
+        cause: "Iterating over a value that isn't an array or iterable.",
+        fix: "Wrap the value in an array, or call .next() explicitly on a GlideRecord.",
+      };
+    return {
+      cause: "An operation was performed on a value of the wrong type.",
+      fix: "Log the value with gs.info(...) just before this line to see what type it actually is.",
+    };
+  }
+
+  if (n === "TimeoutError")
+    return {
+      cause: "The script ran longer than the sandbox time budget.",
+      fix: "Add setLimit(n), tighten your addQuery filters, or ensure your loop terminates.",
+    };
+  if (n === "SandboxError")
+    return {
+      cause: "The sandbox refused to execute this script.",
+      fix: "Read the message above — usually an unbounded loop or disallowed construct.",
+    };
+  if (n === "RangeError" && /Maximum call stack/i.test(m))
+    return {
+      cause: "Infinite recursion — a function is calling itself with no base case.",
+      fix: "Add a termination condition to the recursive function.",
+    };
+
+  if (l && /\.next\s*\(\s*\)/.test(l) && /undefined/i.test(m))
+    return {
+      cause: "Called .next() before .query() populated the cursor.",
+      fix: "Call gr.query() first, then loop with while (gr.next()).",
+    };
+
+  return {
+    cause: "The script threw at runtime; the message above is the raw engine error.",
+    fix: "Check the highlighted line and any values it depends on.",
+  };
+}
+
+
+
 function explainLine(raw: string): string {
   const line = raw.trim();
   if (!line) return "";
@@ -939,15 +1038,108 @@ function LiveCoding() {
                 {sandbox.durationMs.toFixed(0)}ms
               </span>
             </div>
-            {!sandbox.ok && (
-              <p className="text-sm text-destructive/90 mb-2">
-                <strong>
-                  {sandbox.errorName ?? "Error"} at line {(sandbox.errorLine ?? 0) + 1}
-                  {sandbox.errorColumn ? `:${sandbox.errorColumn}` : ""}:
-                </strong>{" "}
-                {sandbox.errorMessage}
-              </p>
-            )}
+            {!sandbox.ok && (() => {
+              const errLine = sandbox.errorLine ?? 0;
+              const faultLine = lines[errLine] ?? "";
+              const diagnosis = inferCause(sandbox.errorName, sandbox.errorMessage, faultLine);
+              const start = Math.max(0, errLine - 2);
+              const end = Math.min(lines.length - 1, errLine + 2);
+              const snippet: { n: number; text: string; hit: boolean }[] = [];
+              for (let i = start; i <= end; i += 1) {
+                snippet.push({ n: i + 1, text: lines[i] ?? "", hit: i === errLine });
+              }
+              const caretIndent =
+                sandbox.errorColumn && sandbox.errorColumn > 0
+                  ? " ".repeat(sandbox.errorColumn - 1) + "^"
+                  : null;
+              return (
+                <>
+                  <p className="text-sm text-destructive/90 mb-2">
+                    <strong>
+                      {sandbox.errorName ?? "Error"} at line {errLine + 1}
+                      {sandbox.errorColumn ? `:${sandbox.errorColumn}` : ""}:
+                    </strong>{" "}
+                    {sandbox.errorMessage}
+                  </p>
+                  <details className="mb-3 rounded-lg border border-destructive/40 bg-destructive/5 overflow-hidden group">
+                    <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-destructive flex items-center gap-2 hover:bg-destructive/10 select-none">
+                      <span
+                        aria-hidden="true"
+                        className="inline-block transition-transform group-open:rotate-90"
+                      >
+                        ▶
+                      </span>
+                      Show error details, inferred cause, and code snippet
+                    </summary>
+                    <div className="px-4 py-3 space-y-3 border-t border-destructive/30">
+                      <div className="grid grid-cols-[5.5rem_1fr] gap-x-3 gap-y-1 text-[12px]">
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Type
+                        </span>
+                        <span className="font-mono text-destructive">
+                          {sandbox.errorName ?? "Error"}
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Location
+                        </span>
+                        <span className="font-mono text-foreground/90">
+                          line {errLine + 1}
+                          {sandbox.errorColumn ? `, column ${sandbox.errorColumn}` : ""}
+                          {" · "}
+                          {sandbox.durationMs.toFixed(0)}ms into run
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Message
+                        </span>
+                        <span className="font-mono text-foreground/90 break-words">
+                          {sandbox.errorMessage ?? "(no message)"}
+                        </span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Cause
+                        </span>
+                        <span className="text-amber-300">{diagnosis.cause}</span>
+                        <span className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] pt-0.5">
+                          Try
+                        </span>
+                        <span className="text-emerald-300">{diagnosis.fix}</span>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                          Code snippet
+                        </div>
+                        <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800">
+                          {snippet.map((s) => (
+                            <div
+                              key={s.n}
+                              className={
+                                s.hit
+                                  ? "bg-destructive/20 text-destructive"
+                                  : "text-zinc-400"
+                              }
+                            >
+                              <span className="select-none inline-block w-10 text-right pr-3 opacity-70">
+                                {s.hit ? "→" : " "}
+                                {String(s.n).padStart(3, " ")}
+                              </span>
+                              {s.text || " "}
+                            </div>
+                          ))}
+                          {caretIndent && (
+                            <div className="text-destructive">
+                              <span className="select-none inline-block w-10 text-right pr-3 opacity-70">
+                                {" "}
+                              </span>
+                              {caretIndent}
+                            </div>
+                          )}
+                        </pre>
+                      </div>
+                    </div>
+                  </details>
+                </>
+              );
+            })()}
+
             {sandbox.logs.length > 0 ? (
               <pre className="text-[12px] font-mono overflow-x-auto p-3 rounded-lg bg-black border border-zinc-800 max-h-56">
                 {sandbox.logs.map((l, i) => {
