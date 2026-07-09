@@ -265,7 +265,7 @@ interface ParsedLoc {
 
 function parseErrorLocation(err: unknown, sourceUrl: string): ParsedLoc | undefined {
   if (!err || typeof err !== "object") return undefined;
-  const e = err as { stack?: string; lineNumber?: number; columnNumber?: number };
+  const e = err as { stack?: string; message?: string; lineNumber?: number; columnNumber?: number };
 
   // Firefox exposes lineNumber directly.
   if (typeof e.lineNumber === "number" && e.lineNumber > 0) {
@@ -275,17 +275,152 @@ function parseErrorLocation(err: unknown, sourceUrl: string): ParsedLoc | undefi
     };
   }
 
-  const stack = e.stack;
-  if (typeof stack !== "string") return undefined;
-  // Look for `sourceUrl:<line>:<col>` (V8 / WebKit) or `@sourceUrl:<line>:<col>` (SM).
+  const stack = typeof e.stack === "string" ? e.stack : "";
   const escaped = sourceUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp(`${escaped}:(\\d+):(\\d+)`);
-  const m = stack.match(re);
+
+  // 1) `sourceUrl:<line>:<col>` (V8 / WebKit / SM with sourceURL) — most precise.
+  let m = stack.match(new RegExp(`${escaped}:(\\d+):(\\d+)`));
+  if (!m) {
+    // 2) V8 sometimes reports as `<anonymous>:<line>:<col>` for new Function().
+    m = stack.match(/<anonymous>:(\d+):(\d+)/);
+  }
+  if (!m && typeof e.message === "string") {
+    // 3) WebKit SyntaxError messages often embed `at line X`.
+    const lm = e.message.match(/(?:at\s+)?line\s+(\d+)(?:[:,]\s*column\s+(\d+))?/i);
+    if (lm) m = [lm[0], lm[1], lm[2] ?? "1"];
+  }
   if (!m) return undefined;
   const rawLine = Number(m[1]);
   const col = Number(m[2]);
   const line = Math.max(1, rawLine - WRAPPER_LINE_OFFSET);
   return { line, column: col };
+}
+
+// Snap a suspected error line to the nearest meaningful code line. Skips
+// blank lines, pure-brace closers, and comment-only lines — a `SyntaxError`
+// often points at the token AFTER the real mistake (typically a closing `}`
+// or the next statement), so the human-visible fault is on the previous
+// non-trivial line.
+function snapToCodeLine(zeroIdx: number, userCode: string): number {
+  const lines = userCode.split("\n");
+  const trivial = (s: string) => {
+    const t = s.trim();
+    if (!t) return true;
+    if (/^\/\//.test(t)) return true;
+    if (/^\/\*|\*\/$/.test(t)) return true;
+    if (/^[})\];,]+\s*;?\s*$/.test(t)) return true;
+    return false;
+  };
+  let i = Math.min(Math.max(0, zeroIdx), lines.length - 1);
+  // If the reported line is itself substantive, keep it.
+  if (!trivial(lines[i] ?? "")) return i;
+  // Otherwise walk back to the nearest non-trivial line.
+  for (let j = i - 1; j >= 0; j -= 1) if (!trivial(lines[j] ?? "")) return j;
+  return i;
+}
+
+// ------- Static pre-scan (runs before eval) --------------------------------
+// Finds the first structural problem — unbalanced quotes, brackets, braces,
+// or parens — and returns the line where it was introduced. Gives a precise
+// pointer for SyntaxErrors that would otherwise lose location info once
+// `new Function()` re-parses.
+
+interface PreScanIssue {
+  line: number; // zero-based
+  column: number; // zero-based
+  message: string;
+}
+
+function preScanSyntax(userCode: string): PreScanIssue | null {
+  const stack: { ch: string; line: number; col: number }[] = [];
+  const pairs: Record<string, string> = { ")": "(", "]": "[", "}": "{" };
+  let inString: '"' | "'" | "`" | null = null;
+  let stringStart: { line: number; col: number } | null = null;
+  let inLineComment = false;
+  let inBlockComment = false;
+  let line = 0;
+  let col = 0;
+
+  for (let i = 0; i < userCode.length; i += 1) {
+    const ch = userCode[i];
+    const next = userCode[i + 1];
+
+    if (ch === "\n") {
+      if (inString && inString !== "`") {
+        return {
+          line: stringStart?.line ?? line,
+          column: stringStart?.col ?? col,
+          message: `Unterminated string literal (opened with ${inString}).`,
+        };
+      }
+      inLineComment = false;
+      line += 1;
+      col = 0;
+      continue;
+    }
+
+    if (inLineComment) { col += 1; continue; }
+    if (inBlockComment) {
+      if (ch === "*" && next === "/") { inBlockComment = false; i += 1; col += 2; continue; }
+      col += 1;
+      continue;
+    }
+    if (inString) {
+      if (ch === "\\") { i += 1; col += 2; continue; }
+      if (ch === inString) { inString = null; stringStart = null; }
+      col += 1;
+      continue;
+    }
+
+    if (ch === "/" && next === "/") { inLineComment = true; i += 1; col += 2; continue; }
+    if (ch === "/" && next === "*") { inBlockComment = true; i += 1; col += 2; continue; }
+    if (ch === '"' || ch === "'" || ch === "`") {
+      inString = ch;
+      stringStart = { line, col };
+      col += 1;
+      continue;
+    }
+    if (ch === "(" || ch === "[" || ch === "{") {
+      stack.push({ ch, line, col });
+      col += 1;
+      continue;
+    }
+    if (ch === ")" || ch === "]" || ch === "}") {
+      const top = stack.pop();
+      if (!top || top.ch !== pairs[ch]) {
+        return {
+          line,
+          column: col,
+          message: top
+            ? `Mismatched "${ch}" — expected to close "${top.ch}" opened on line ${top.line + 1}.`
+            : `Unexpected "${ch}" with no matching opener.`,
+        };
+      }
+      col += 1;
+      continue;
+    }
+    col += 1;
+  }
+
+  if (inString) {
+    return {
+      line: stringStart?.line ?? line,
+      column: stringStart?.col ?? 0,
+      message: `Unterminated string literal (opened with ${inString}).`,
+    };
+  }
+  if (inBlockComment) {
+    return { line, column: 0, message: "Unterminated block comment (/* … */)." };
+  }
+  if (stack.length > 0) {
+    const top = stack[stack.length - 1];
+    return {
+      line: top.line,
+      column: top.col,
+      message: `Unclosed "${top.ch}" — no matching "${top.ch === "(" ? ")" : top.ch === "[" ? "]" : "}"}" was found.`,
+    };
+  }
+  return null;
 }
 
 // ------- Runner ------------------------------------------------------------
@@ -295,6 +430,21 @@ export function runSandbox(userCode: string, timeoutMs = 750): SandboxRunResult 
   const mocks = makeMocks(logs);
   const start = performance.now();
   const sourceUrl = `sn-candidate-${Math.random().toString(36).slice(2, 8)}.js`;
+
+  // Pre-scan first — gives precise (line, col) even when V8/WebKit strip
+  // location from a SyntaxError thrown inside `new Function(...)`.
+  const preIssue = preScanSyntax(userCode);
+  if (preIssue) {
+    return {
+      ok: false,
+      logs,
+      errorLine: snapToCodeLine(preIssue.line, userCode),
+      errorColumn: preIssue.column + 1,
+      errorName: "SyntaxError",
+      errorMessage: preIssue.message,
+      durationMs: performance.now() - start,
+    };
+  }
 
   // Wrap in a function so `return` at top-level is legal and globals scope
   // cleanly. Extra `\n` before user code keeps our offset predictable.
@@ -352,10 +502,32 @@ export function runSandbox(userCode: string, timeoutMs = 750): SandboxRunResult 
   } catch (err) {
     const loc = parseErrorLocation(err, sourceUrl);
     const e = err as Error;
+
+    let errorLine: number | undefined;
+    if (loc) {
+      errorLine = snapToCodeLine(loc.line - 1, userCode);
+    } else if (e?.name === "ReferenceError" && typeof e.message === "string") {
+      // Fallback: find the first line that references the undefined name.
+      const nm = e.message.match(/^(\w+)\s+is not defined/);
+      if (nm) {
+        const needle = new RegExp(`\\b${nm[1].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
+        const hit = findLine(userCode, needle);
+        if (typeof hit === "number") errorLine = hit;
+      }
+    } else if (e?.name === "TypeError" && typeof e.message === "string") {
+      // e.g. "gr.addQury is not a function" — pinpoint the method name.
+      const nm = e.message.match(/\b(\w+)\s+is not a function/);
+      if (nm) {
+        const needle = new RegExp(`\\.${nm[1]}\\s*\\(`);
+        const hit = findLine(userCode, needle);
+        if (typeof hit === "number") errorLine = hit;
+      }
+    }
+
     return {
       ok: false,
       logs,
-      errorLine: loc ? loc.line - 1 : undefined,
+      errorLine,
       errorColumn: loc?.column,
       errorName: e?.name ?? "Error",
       errorMessage: e?.message ?? String(err),
@@ -373,3 +545,4 @@ function findLine(code: string, re: RegExp): number | undefined {
   for (let i = 0; i < lines.length; i += 1) if (re.test(lines[i])) return i;
   return undefined;
 }
+

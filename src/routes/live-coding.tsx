@@ -874,12 +874,27 @@ function LiveCoding() {
             {lines.map((line, i) => {
               if (i === caretLine) return null;
               if (line.trim().length === 0) return null;
-              const bad = errorLine === i || isLineLikelyBad(line);
+              // Sandbox errorLine is authoritative: when set, ONLY that line
+              // is red. Heuristic per-line checks are suppressed so the
+              // annotation panel points at exactly one culprit.
+              const isSandboxErr = errorLine === i;
+              const heuristicBad = errorLine === undefined && isLineLikelyBad(line);
+              const bad = isSandboxErr || heuristicBad;
               const note = explainLine(line);
-              const cls = bad
-                ? "text-destructive"
-                : "text-emerald-400";
+              const cls = bad ? "text-destructive" : "text-emerald-400";
               const prefix = bad ? "// ⚠ " : "// ✓ ";
+              let detail = note;
+              if (isSandboxErr) {
+                const name = sandbox?.errorName ?? result?.message?.split(":")[0] ?? "Error";
+                const msg = sandbox?.errorMessage ?? result?.message ?? "";
+                const col =
+                  sandbox && !sandbox.ok && typeof sandbox.errorColumn === "number"
+                    ? ` (col ${sandbox.errorColumn})`
+                    : "";
+                detail = `${note} — ${name}${col}: ${msg}`.replace(/\s+—\s+—\s+/, " — ");
+              } else if (heuristicBad) {
+                detail = `${note} — looks off (check quotes / syntax)`;
+              }
               return (
                 <li key={i} className="grid grid-cols-[3rem_1fr] gap-3">
                   <span className="text-zinc-500 text-right select-none">
@@ -887,11 +902,7 @@ function LiveCoding() {
                   </span>
                   <span className={`italic ${cls}`}>
                     {prefix}
-                    {bad && errorLine === i
-                      ? `${note} — sandbox flagged this line`
-                      : bad
-                        ? `${note} — looks off (check quotes / syntax)`
-                        : note}
+                    {detail}
                   </span>
                 </li>
               );
@@ -903,6 +914,7 @@ function LiveCoding() {
               </li>
             )}
           </ol>
+
         </section>
 
 
