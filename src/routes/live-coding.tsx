@@ -113,6 +113,105 @@ function isLineLikelyBad(line: string): boolean {
   return false;
 }
 
+// Best-effort human-friendly diagnosis of a sandbox error. Maps the raw
+// error name + message to a likely root cause and a concrete next step.
+function inferCause(
+  name: string | undefined,
+  message: string | undefined,
+  line: string | undefined,
+): { cause: string; fix: string } {
+  const n = name ?? "Error";
+  const m = message ?? "";
+  const l = line ?? "";
+
+  if (n === "SyntaxError") {
+    if (/Unterminated string/i.test(m))
+      return {
+        cause: "A string literal is opened but never closed on the same line.",
+        fix: "Add the matching quote (', \", or `) before the line ends, or escape newlines with \\n.",
+      };
+    if (/Unclosed|no matching/i.test(m))
+      return {
+        cause: "A bracket, brace, or paren was opened without a matching closer.",
+        fix: "Add the missing closer, or delete the stray opener.",
+      };
+    if (/Mismatched|Unexpected/i.test(m))
+      return {
+        cause: "A closing bracket doesn't line up with its opener.",
+        fix: "Re-indent the block and pair each { with }, ( with ), [ with ].",
+      };
+    return {
+      cause: "The parser rejected the script before it could run.",
+      fix: "Look for a missing punctuation mark (semicolon, quote, or bracket) at or just before the flagged line.",
+    };
+  }
+
+  if (n === "ReferenceError") {
+    const nm = m.match(/^(\w+)\s+is not defined/);
+    if (nm)
+      return {
+        cause: `\`${nm[1]}\` was used before it was declared, or its name is misspelled.`,
+        fix: `Declare it with var/let/const, or check the spelling and case of \`${nm[1]}\`.`,
+      };
+    return {
+      cause: "A name was referenced that doesn't exist in scope.",
+      fix: "Declare the variable, or import/require the API you meant to call.",
+    };
+  }
+
+  if (n === "TypeError") {
+    const notFn = m.match(/(\S+)\s+is not a function/);
+    if (notFn)
+      return {
+        cause: `\`${notFn[1]}\` was called as a function but isn't one — often a typo on a ServiceNow API name.`,
+        fix: "Check the method name (e.g. addQuery vs addQury) and verify the object type supports it.",
+      };
+    if (/Cannot read propert(?:y|ies).*of (?:null|undefined)/i.test(m))
+      return {
+        cause: "Reading a property from something that was null or undefined.",
+        fix: "Guard the value with an if-check or `?.`, or make sure it was assigned before this line.",
+      };
+    if (/is not iterable/i.test(m))
+      return {
+        cause: "Iterating over a value that isn't an array or iterable.",
+        fix: "Wrap the value in an array, or call .next() explicitly on a GlideRecord.",
+      };
+    return {
+      cause: "An operation was performed on a value of the wrong type.",
+      fix: "Log the value with gs.info(...) just before this line to see what type it actually is.",
+    };
+  }
+
+  if (n === "TimeoutError")
+    return {
+      cause: "The script ran longer than the sandbox time budget.",
+      fix: "Add setLimit(n), tighten your addQuery filters, or ensure your loop terminates.",
+    };
+  if (n === "SandboxError")
+    return {
+      cause: "The sandbox refused to execute this script.",
+      fix: "Read the message above — usually an unbounded loop or disallowed construct.",
+    };
+  if (n === "RangeError" && /Maximum call stack/i.test(m))
+    return {
+      cause: "Infinite recursion — a function is calling itself with no base case.",
+      fix: "Add a termination condition to the recursive function.",
+    };
+
+  if (l && /\.next\s*\(\s*\)/.test(l) && /undefined/i.test(m))
+    return {
+      cause: "Called .next() before .query() populated the cursor.",
+      fix: "Call gr.query() first, then loop with while (gr.next()).",
+    };
+
+  return {
+    cause: "The script threw at runtime; the message above is the raw engine error.",
+    fix: "Check the highlighted line and any values it depends on.",
+  };
+}
+
+
+
 function explainLine(raw: string): string {
   const line = raw.trim();
   if (!line) return "";
