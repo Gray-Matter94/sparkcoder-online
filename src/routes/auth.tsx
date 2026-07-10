@@ -6,6 +6,9 @@ import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : "",
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — SparkCoder" },
@@ -29,6 +32,7 @@ const schema = z.object({
 function AuthPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,9 +40,14 @@ function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const returnTo = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+
   useEffect(() => {
-    if (user) navigate({ to: "/" });
-  }, [user, navigate]);
+    if (user) {
+      if (returnTo === "/") navigate({ to: "/" });
+      else window.location.href = returnTo;
+    }
+  }, [user, navigate, returnTo]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,7 +64,7 @@ function AuthPage() {
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `${window.location.origin}${returnTo}`,
             data: { display_name: parsed.data.displayName ?? parsed.data.email.split("@")[0] },
           },
         });
@@ -67,7 +76,8 @@ function AuthPage() {
         });
         if (err) throw err;
       }
-      navigate({ to: "/" });
+      if (returnTo === "/") navigate({ to: "/" });
+      else window.location.href = returnTo;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       setError(

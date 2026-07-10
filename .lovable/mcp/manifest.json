@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://jnsxsockaqwbmxxwmrlw.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "sparkcoder-mcp",
+      "version": "0.1.0",
+      "title": "SparkCoder"
+    },
+    "tools": [
+      {
+        "name": "list_tracks",
+        "title": "List learning tracks",
+        "description": "List all SparkCoder learning tracks (ServiceNow Dev, Admin, IRM, Java, AngularJS) with their IDs, titles, and short descriptions. Public — no auth required.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_practice_questions",
+        "title": "List practice questions",
+        "description": "List SparkCoder practice questions. Optionally filter by category id (e.g. 'gliderecord', 'streams', 'grc-tables', 'ng-directives'). Returns id, category, prompt, and difficulty. Public — no auth required.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "description": "Optional category id to filter by. Omit for all categories."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Max questions to return (default 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_my_progress",
+        "title": "Get my progress",
+        "description": "Return the signed-in SparkCoder user's saved progress (XP, streaks, solved puzzles, badges). Requires sign-in.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "save_my_progress",
+        "title": "Save my progress",
+        "description": "Replace the signed-in SparkCoder user's saved progress blob. Pass the full progress object you want stored (XP, streaks, solved puzzles, etc.); it overwrites the previous value. Requires sign-in.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "additionalProperties": {},
+              "description": "The full progress object to persist for this user."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_feedback",
+        "title": "List my feedback",
+        "description": "List the signed-in user's own SparkCoder feedback / issue reports and their current status (open, in_progress, resolved) plus any admin note. Requires sign-in.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "submit_feedback",
+        "title": "Submit feedback",
+        "description": "Create a new SparkCoder feedback / issue report for the signed-in user. Screenshots aren't supported through MCP — attach them from the /feedback page in the app. Requires sign-in.",
+        "annotations": {
+          "readOnlyHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 120,
+              "description": "Short title for the issue."
+            },
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 2000,
+              "description": "Detailed description of the issue or feedback."
+            },
+            "page_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Optional URL of the page the feedback is about."
+            }
+          },
+          "required": [
+            "title",
+            "description"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
