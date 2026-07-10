@@ -114,7 +114,7 @@ function Home() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <h2 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
-                  DAILY CHALLENGE
+                  {meta.short.toUpperCase()} DAILY CHALLENGE
                 </h2>
                 <span className="text-[10px] text-muted-foreground font-mono">
                   {dailyDone ? "DONE" : "+50 XP"}
@@ -127,99 +127,34 @@ function Home() {
           </div>
         </Link>
 
-        <Link
-          to="/learn"
-          className="block p-4 rounded-2xl border-2 border-secondary/50 bg-secondary/5 hover:border-secondary transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📚</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              🧠
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-secondary">
-                  LEARN & QUIZ
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">GLOSSARY + QUIZ</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                ServiceNow glossary + topic quizzes with illustrations.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          to="/play"
-          className="block p-4 rounded-2xl border-2 border-accent/50 bg-accent/5 hover:border-accent transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">🎮</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              ⚡
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-accent">
-                  GLIDE API MATCH
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">MINI-GAME</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                Speed-match Glide APIs to their descriptions. Beat the clock.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          to="/blog"
-          className="block p-4 rounded-2xl border-2 border-primary/50 bg-primary/5 hover:border-primary transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📝</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              📅
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-primary">
-                  20-DAY CURRICULUM
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">4 WEEKS</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                Day-by-day ServiceNow scripting plan. Goals, drills, takeaways.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        {track === "servicenow-dev" && (
-          <Link
-            to="/live-coding"
-            className="block p-4 rounded-2xl border-2 border-amber-500/60 bg-amber-500/5 hover:border-amber-400 transition-all active:translate-y-0.5 relative overflow-hidden shadow-[0_0_24px_rgba(245,158,11,0.12)]"
-          >
-            <div className="absolute -top-6 -right-6 text-7xl opacity-10">💻</div>
-            <div className="flex items-center gap-3 relative">
-              <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-                🤖
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="font-display text-lg tracking-wide text-amber-300">
-                    LIVE CODING SIMULATOR
-                  </h2>
-                  <span className="text-[10px] text-muted-foreground font-mono">500 TASKS</span>
+        {TRACK_CARDS[track].map((card) => {
+          const accentClasses = CARD_ACCENTS[card.accent];
+          return (
+            <Link
+              key={card.title}
+              to={card.to}
+              {...(card.params ? { params: card.params } : {})}
+              className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
+            >
+              <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
+              <div className="flex items-center gap-3 relative">
+                <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+                  {card.icon}
                 </div>
-                <p className="text-xs text-muted-foreground truncate">
-                  Instance-style editor · AI points at the exact line to fix.
-                </p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className={`font-display text-lg tracking-wide ${accentClasses.text}`}>
+                      {card.title}
+                    </h2>
+                    <span className="text-[10px] text-muted-foreground font-mono">{card.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">{card.blurb}</p>
+                </div>
               </div>
-            </div>
-          </Link>
-        )}
+            </Link>
+          );
+        })}
+
 
         <DifficultyCard progress={progress} />
 
