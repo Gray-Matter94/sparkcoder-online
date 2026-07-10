@@ -27,6 +27,7 @@ import { Route as PracticeCategoryRouteImport } from './routes/practice.$categor
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
 import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
+import { Route as LearnIntegrationhubInterviewQuestionsRouteImport } from './routes/learn.integrationhub-interview-questions'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-designer-how-to'
@@ -138,6 +139,12 @@ const LearnIrmArchitectInterviewQuestionsRoute =
     path: '/learn/irm-architect-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnIntegrationhubInterviewQuestionsRoute =
+  LearnIntegrationhubInterviewQuestionsRouteImport.update({
+    id: '/learn/integrationhub-interview-questions',
+    path: '/learn/integrationhub-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnGlideajaxInterviewQuestionsRoute =
   LearnGlideajaxInterviewQuestionsRouteImport.update({
     id: '/learn/glideajax-interview-questions',
@@ -240,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -274,6 +282,7 @@ export interface FileRoutesByTo {
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -309,6 +318,7 @@ export interface FileRoutesById {
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
+  '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
@@ -413,6 +425,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
+    | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
@@ -448,6 +461,7 @@ export interface RootRouteChildren {
   LearnFlowDesignerHowToRoute: typeof LearnFlowDesignerHowToRoute
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
+  LearnIntegrationhubInterviewQuestionsRoute: typeof LearnIntegrationhubInterviewQuestionsRoute
   LearnIrmArchitectInterviewQuestionsRoute: typeof LearnIrmArchitectInterviewQuestionsRoute
   LearnItsmInterviewQuestionsRoute: typeof LearnItsmInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
@@ -587,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIrmArchitectInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/integrationhub-interview-questions': {
+      id: '/learn/integrationhub-interview-questions'
+      path: '/learn/integrationhub-interview-questions'
+      fullPath: '/learn/integrationhub-interview-questions'
+      preLoaderRoute: typeof LearnIntegrationhubInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/glideajax-interview-questions': {
       id: '/learn/glideajax-interview-questions'
       path: '/learn/glideajax-interview-questions'
@@ -716,6 +737,8 @@ const rootRouteChildren: RootRouteChildren = {
   LearnFlowDesignerInterviewQuestionsRoute:
     LearnFlowDesignerInterviewQuestionsRoute,
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
+  LearnIntegrationhubInterviewQuestionsRoute:
+    LearnIntegrationhubInterviewQuestionsRoute,
   LearnIrmArchitectInterviewQuestionsRoute:
     LearnIrmArchitectInterviewQuestionsRoute,
   LearnItsmInterviewQuestionsRoute: LearnItsmInterviewQuestionsRoute,
