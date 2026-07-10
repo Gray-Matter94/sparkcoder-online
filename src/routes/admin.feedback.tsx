@@ -49,11 +49,17 @@ function AdminFeedback() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => {
-      setIsAdmin(!!data);
-      setChecked(true);
-      if (data) void load();
-    });
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => {
+        setIsAdmin(!!data);
+        setChecked(true);
+        if (data) void load();
+      });
   }, [user]);
 
   async function load() {
