@@ -74,7 +74,7 @@ const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
   "angular-dev": [
     { title: "ANGULARJS GLOSSARY & QUIZ", blurb: "Scopes, directives, services, digest cycle — with quick quizzes.", tag: "GLOSSARY + QUIZ", icon: "🅰️", bgEmoji: "📚", accent: "secondary", to: "/learn" },
     { title: "ANGULARJS CODING TEST", blurb: "Timed coding round: directives, filters, controllers.", tag: "TIMED TEST", icon: "⏱️", bgEmoji: "💻", accent: "destructive", to: "/angularjs-coding-test" },
-    { title: "DIRECTIVES DRILL", blurb: "Build isolate-scope directives and compile-vs-link intuitions.", tag: "CORE ANGULAR", icon: "🧩", bgEmoji: "🅰️", accent: "primary", to: "/practice/$category", params: { category: "directives" } },
+    { title: "DIRECTIVES DRILL", blurb: "Build isolate-scope directives and compile-vs-link intuitions.", tag: "CORE ANGULAR", icon: "🧩", bgEmoji: "🅰️", accent: "primary", to: "/practice/$category", params: { category: "ng-directives" } },
   ],
 };
 
