@@ -12,11 +12,12 @@ export default defineTool({
     if (!ctx.isAuthenticated()) {
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
+    const userId = ctx.getUserId()!;
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase
       .from("user_progress")
       .select("data, updated_at")
-      .eq("user_id", ctx.getUserId())
+      .eq("user_id", userId)
       .maybeSingle();
     if (error) {
       return { content: [{ type: "text", text: error.message }], isError: true };
