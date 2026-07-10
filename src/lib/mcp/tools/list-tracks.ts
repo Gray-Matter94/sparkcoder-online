@@ -11,7 +11,7 @@ export default defineTool({
   handler: () => {
     const items = TRACKS.map((t) => ({
       id: t.id,
-      title: t.title,
+      name: t.name,
       tagline: t.tagline,
     }));
     return {
