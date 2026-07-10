@@ -12,6 +12,7 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
         {back ? (
           <Link
             to="/"
+            aria-label="Back to SparkCoder home"
             className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
             ← Home
