@@ -12,11 +12,12 @@ export default defineTool({
     if (!ctx.isAuthenticated()) {
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
+    const userId = ctx.getUserId()!;
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase
       .from("feedback")
       .select("id, title, description, status, page_url, admin_note, resolved_at, created_at")
-      .eq("user_id", ctx.getUserId())
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(50);
     if (error) {
