@@ -8,8 +8,76 @@ import { DifficultyCard } from "@/components/DifficultyCard";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
 import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
-import { trackMeta } from "@/lib/tracks";
+import { trackMeta, type TrackId } from "@/lib/tracks";
 import { TopWeeklyBlogs } from "@/components/TopWeeklyBlogs";
+
+type CardAccent = "primary" | "accent" | "secondary" | "amber" | "destructive";
+
+interface TrackCard {
+  title: string;
+  blurb: string;
+  tag: string;
+  icon: string;
+  bgEmoji: string;
+  accent: CardAccent;
+  to: string;
+  params?: Record<string, string>;
+}
+
+const CARD_ACCENTS: Record<CardAccent, { wrap: string; text: string }> = {
+  primary: {
+    wrap: "border-primary/50 bg-primary/5 hover:border-primary",
+    text: "text-primary",
+  },
+  accent: {
+    wrap: "border-accent/50 bg-accent/5 hover:border-accent",
+    text: "text-accent",
+  },
+  secondary: {
+    wrap: "border-secondary/50 bg-secondary/5 hover:border-secondary",
+    text: "text-secondary",
+  },
+  amber: {
+    wrap: "border-amber-500/60 bg-amber-500/5 hover:border-amber-400 shadow-[0_0_24px_rgba(245,158,11,0.12)]",
+    text: "text-amber-300",
+  },
+  destructive: {
+    wrap: "border-destructive/50 bg-destructive/5 hover:border-destructive",
+    text: "text-destructive",
+  },
+};
+
+const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
+  "servicenow-dev": [
+    { title: "LEARN & QUIZ", blurb: "ServiceNow glossary + topic quizzes with illustrations.", tag: "GLOSSARY + QUIZ", icon: "🧠", bgEmoji: "📚", accent: "secondary", to: "/learn" },
+    { title: "GLIDE API MATCH", blurb: "Speed-match Glide APIs to their descriptions. Beat the clock.", tag: "MINI-GAME", icon: "⚡", bgEmoji: "🎮", accent: "accent", to: "/play" },
+    { title: "20-DAY CURRICULUM", blurb: "Day-by-day ServiceNow scripting plan. Goals, drills, takeaways.", tag: "4 WEEKS", icon: "📅", bgEmoji: "📝", accent: "primary", to: "/blog" },
+    { title: "LIVE CODING SIMULATOR", blurb: "Instance-style editor · AI points at the exact line to fix.", tag: "500 TASKS", icon: "🤖", bgEmoji: "💻", accent: "amber", to: "/live-coding" },
+  ],
+  "servicenow-admin": [
+    { title: "ADMIN GLOSSARY & QUIZ", blurb: "ACLs, UI policies, catalogs, update sets — with quick quizzes.", tag: "GLOSSARY + QUIZ", icon: "🛡️", bgEmoji: "📚", accent: "secondary", to: "/learn" },
+    { title: "CSA INTERVIEW Q&A 2026", blurb: "Curated Certified System Administrator questions with answers.", tag: "CSA PREP", icon: "🎓", bgEmoji: "❓", accent: "accent", to: "/servicenow-csa-interview-questions-2026" },
+    { title: "ACL SCRIPTING DEEP-DIVE", blurb: "How ACLs evaluate, the four gates, and the scripts that unlock them.", tag: "GUIDE", icon: "🔐", bgEmoji: "🛡️", accent: "primary", to: "/learn/acl-scripting" },
+    { title: "SCENARIO-BASED SCRIPTING", blurb: "Real admin scenarios: catalog logic, workflow gaps, data policies.", tag: "SCENARIOS", icon: "🧩", bgEmoji: "🧠", accent: "amber", to: "/learn/scenario-based-scripting" },
+  ],
+  "servicenow-irm": [
+    { title: "IRM GLOSSARY & QUIZ", blurb: "GRC, CORT, risk register, control attestation — illustrated.", tag: "GLOSSARY + QUIZ", icon: "🛡️", bgEmoji: "📚", accent: "secondary", to: "/learn" },
+    { title: "IRM ARCHITECT PRACTICE", blurb: "End-to-end IRM architecture drills: policies, risks, controls.", tag: "ARCHITECT TRACK", icon: "🏛️", bgEmoji: "🛡️", accent: "primary", to: "/servicenow-irm-architect-practice" },
+    { title: "IRM INTERVIEW Q&A", blurb: "Panel-style questions with sample answers and pitfalls.", tag: "INTERVIEW", icon: "🎯", bgEmoji: "❓", accent: "accent", to: "/learn/irm-architect-interview-questions" },
+    { title: "GRC TABLES REFERENCE", blurb: "Policy, control, risk, issue — the tables you must know cold.", tag: "REFERENCE", icon: "🗂️", bgEmoji: "🗃️", accent: "amber", to: "/practice/$category", params: { category: "grc-tables" } },
+  ],
+  "java-dev": [
+    { title: "JAVA GLOSSARY & QUIZ", blurb: "Collections, concurrency, JVM internals — bite-size definitions.", tag: "GLOSSARY + QUIZ", icon: "☕", bgEmoji: "📚", accent: "secondary", to: "/learn" },
+    { title: "STREAMS & LAMBDAS DRILL", blurb: "Practice functional pipelines and collector patterns.", tag: "CORE JAVA", icon: "🧵", bgEmoji: "⚡", accent: "primary", to: "/practice/$category", params: { category: "streams" } },
+    { title: "CONCURRENCY PUZZLES", blurb: "Threads, executors, locks, and the CAS primitives interviewers grill.", tag: "MULTITHREAD", icon: "🧠", bgEmoji: "🔀", accent: "accent", to: "/practice/$category", params: { category: "concurrency" } },
+  ],
+  "angular-dev": [
+    { title: "ANGULARJS GLOSSARY & QUIZ", blurb: "Scopes, directives, services, digest cycle — with quick quizzes.", tag: "GLOSSARY + QUIZ", icon: "🅰️", bgEmoji: "📚", accent: "secondary", to: "/learn" },
+    { title: "ANGULARJS CODING TEST", blurb: "Timed coding round: directives, filters, controllers.", tag: "TIMED TEST", icon: "⏱️", bgEmoji: "💻", accent: "destructive", to: "/angularjs-coding-test" },
+    { title: "DIRECTIVES DRILL", blurb: "Build isolate-scope directives and compile-vs-link intuitions.", tag: "CORE ANGULAR", icon: "🧩", bgEmoji: "🅰️", accent: "primary", to: "/practice/$category", params: { category: "ng-directives" } },
+  ],
+};
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -114,7 +182,7 @@ function Home() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <h2 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
-                  DAILY CHALLENGE
+                  {meta.short.toUpperCase()} DAILY CHALLENGE
                 </h2>
                 <span className="text-[10px] text-muted-foreground font-mono">
                   {dailyDone ? "DONE" : "+50 XP"}
@@ -127,99 +195,34 @@ function Home() {
           </div>
         </Link>
 
-        <Link
-          to="/learn"
-          className="block p-4 rounded-2xl border-2 border-secondary/50 bg-secondary/5 hover:border-secondary transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📚</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              🧠
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-secondary">
-                  LEARN & QUIZ
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">GLOSSARY + QUIZ</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                ServiceNow glossary + topic quizzes with illustrations.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          to="/play"
-          className="block p-4 rounded-2xl border-2 border-accent/50 bg-accent/5 hover:border-accent transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">🎮</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              ⚡
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-accent">
-                  GLIDE API MATCH
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">MINI-GAME</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                Speed-match Glide APIs to their descriptions. Beat the clock.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          to="/blog"
-          className="block p-4 rounded-2xl border-2 border-primary/50 bg-primary/5 hover:border-primary transition-all active:translate-y-0.5 relative overflow-hidden"
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📝</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              📅
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-display text-lg tracking-wide text-primary">
-                  20-DAY CURRICULUM
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">4 WEEKS</span>
-              </div>
-              <p className="text-xs text-muted-foreground truncate">
-                Day-by-day ServiceNow scripting plan. Goals, drills, takeaways.
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        {track === "servicenow-dev" && (
-          <Link
-            to="/live-coding"
-            className="block p-4 rounded-2xl border-2 border-amber-500/60 bg-amber-500/5 hover:border-amber-400 transition-all active:translate-y-0.5 relative overflow-hidden shadow-[0_0_24px_rgba(245,158,11,0.12)]"
-          >
-            <div className="absolute -top-6 -right-6 text-7xl opacity-10">💻</div>
-            <div className="flex items-center gap-3 relative">
-              <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-                🤖
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="font-display text-lg tracking-wide text-amber-300">
-                    LIVE CODING SIMULATOR
-                  </h2>
-                  <span className="text-[10px] text-muted-foreground font-mono">500 TASKS</span>
+        {TRACK_CARDS[track].map((card) => {
+          const accentClasses = CARD_ACCENTS[card.accent];
+          return (
+            <Link
+              key={card.title}
+              to={card.to}
+              {...(card.params ? { params: card.params } : {})}
+              className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
+            >
+              <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
+              <div className="flex items-center gap-3 relative">
+                <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+                  {card.icon}
                 </div>
-                <p className="text-xs text-muted-foreground truncate">
-                  Instance-style editor · AI points at the exact line to fix.
-                </p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className={`font-display text-lg tracking-wide ${accentClasses.text}`}>
+                      {card.title}
+                    </h2>
+                    <span className="text-[10px] text-muted-foreground font-mono">{card.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">{card.blurb}</p>
+                </div>
               </div>
-            </div>
-          </Link>
-        )}
+            </Link>
+          );
+        })}
+
 
         <DifficultyCard progress={progress} />
 
