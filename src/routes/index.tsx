@@ -166,62 +166,68 @@ function Home() {
         </section>
 
 
-        <Link
-          to="/daily"
-          className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
-            dailyDone
-              ? "border-primary/50 bg-primary/5"
-              : "border-accent bg-accent/5 hover:border-accent shadow-[0_0_24px_rgba(245,158,11,0.15)]"
-          }`}
-        >
-          <div className="absolute -top-6 -right-6 text-7xl opacity-10">📅</div>
-          <div className="flex items-center gap-3 relative">
-            <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-              {dailyDone ? "✅" : "🔥"}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
-                  {meta.short.toUpperCase()} DAILY CHALLENGE
-                </h2>
-                <span className="text-[10px] text-muted-foreground font-mono">
-                  {dailyDone ? "DONE" : "+50 XP"}
-                </span>
+        <section aria-labelledby="learning-modules-heading" className="space-y-3">
+          <h2 id="learning-modules-heading" className="sr-only">
+            Learning modules for {meta.name}
+          </h2>
+          <Link
+            to="/daily"
+            className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
+              dailyDone
+                ? "border-primary/50 bg-primary/5"
+                : "border-accent bg-accent/5 hover:border-accent shadow-[0_0_24px_rgba(245,158,11,0.15)]"
+            }`}
+          >
+            <div className="absolute -top-6 -right-6 text-7xl opacity-10">📅</div>
+            <div className="flex items-center gap-3 relative">
+              <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+                {dailyDone ? "✅" : "🔥"}
               </div>
-              <p className="text-xs text-muted-foreground truncate">
-                {dailyMeta.emoji} {dailyMeta.name} · {daily.title}
-              </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
+                    {meta.short.toUpperCase()} DAILY CHALLENGE
+                  </h3>
+                  <span className="text-[10px] text-muted-foreground font-mono">
+                    {dailyDone ? "DONE" : "+50 XP"}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground truncate">
+                  {dailyMeta.emoji} {dailyMeta.name} · {daily.title}
+                </p>
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
 
-        {TRACK_CARDS[track].map((card) => {
-          const accentClasses = CARD_ACCENTS[card.accent];
-          return (
-            <Link
-              key={card.title}
-              to={card.to}
-              {...(card.params ? { params: card.params } : {})}
-              className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
-            >
-              <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
-              <div className="flex items-center gap-3 relative">
-                <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
-                  {card.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <h2 className={`font-display text-lg tracking-wide ${accentClasses.text}`}>
-                      {card.title}
-                    </h2>
-                    <span className="text-[10px] text-muted-foreground font-mono">{card.tag}</span>
+          {TRACK_CARDS[track].map((card) => {
+            const accentClasses = CARD_ACCENTS[card.accent];
+            return (
+              <Link
+                key={card.title}
+                to={card.to}
+                {...(card.params ? { params: card.params } : {})}
+                className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
+              >
+                <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
+                <div className="flex items-center gap-3 relative">
+                  <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
+                    {card.icon}
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">{card.blurb}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className={`font-display text-lg tracking-wide ${accentClasses.text}`}>
+                        {card.title}
+                      </h3>
+                      <span className="text-[10px] text-muted-foreground font-mono">{card.tag}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">{card.blurb}</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })}
+        </section>
+
 
 
         <DifficultyCard progress={progress} />
