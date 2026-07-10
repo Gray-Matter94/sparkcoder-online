@@ -65,7 +65,7 @@ function AdminFeedback() {
   }
 
   async function update(id: string, patch: Partial<FeedbackRow>) {
-    const payload: Record<string, unknown> = { ...patch };
+    const payload: Partial<FeedbackRow> = { ...patch };
     if (patch.status === "resolved") payload.resolved_at = new Date().toISOString();
     if (patch.status && patch.status !== "resolved") payload.resolved_at = null;
     const { error } = await supabase.from("feedback").update(payload).eq("id", id);
