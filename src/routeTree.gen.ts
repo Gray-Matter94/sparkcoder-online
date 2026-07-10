@@ -14,6 +14,7 @@ import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/ser
 import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as LiveCodingRouteImport } from './routes/live-coding'
+import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
@@ -34,6 +35,7 @@ import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -60,6 +62,11 @@ const PlayRoute = PlayRouteImport.update({
 const LiveCodingRoute = LiveCodingRouteImport.update({
   id: '/live-coding',
   path: '/live-coding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyRoute = DailyRouteImport.update({
@@ -170,17 +177,24 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
+  id: '/admin/feedback',
+  path: '/admin/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -203,11 +217,13 @@ export interface FileRoutesByTo {
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -231,11 +247,13 @@ export interface FileRoutesById {
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
+  '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -260,11 +278,13 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/feedback'
     | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
+    | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -287,11 +307,13 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/feedback'
     | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
+    | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -314,11 +336,13 @@ export interface FileRouteTypes {
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
+    | '/feedback'
     | '/live-coding'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
+    | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -342,11 +366,13 @@ export interface RootRouteChildren {
   AngularjsCodingTestRoute: typeof AngularjsCodingTestRoute
   AuthRoute: typeof AuthRoute
   DailyRoute: typeof DailyRoute
+  FeedbackRoute: typeof FeedbackRoute
   LiveCodingRoute: typeof LiveCodingRoute
   PlayRoute: typeof PlayRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
   ServicenowIrmArchitectPracticeRoute: typeof ServicenowIrmArchitectPracticeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminFeedbackRoute: typeof AdminFeedbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
@@ -400,6 +426,13 @@ declare module '@tanstack/react-router' {
       path: '/live-coding'
       fullPath: '/live-coding'
       preLoaderRoute: typeof LiveCodingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily': {
@@ -542,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/feedback': {
+      id: '/admin/feedback'
+      path: '/admin/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AdminFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -550,12 +590,14 @@ const rootRouteChildren: RootRouteChildren = {
   AngularjsCodingTestRoute: AngularjsCodingTestRoute,
   AuthRoute: AuthRoute,
   DailyRoute: DailyRoute,
+  FeedbackRoute: FeedbackRoute,
   LiveCodingRoute: LiveCodingRoute,
   PlayRoute: PlayRoute,
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,
   ServicenowIrmArchitectPracticeRoute: ServicenowIrmArchitectPracticeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminFeedbackRoute: AdminFeedbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
     GuidesGliderecordQueryReferenceFieldRoute,

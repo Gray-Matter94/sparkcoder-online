@@ -296,7 +296,13 @@ function Home() {
 
         <TopWeeklyBlogs />
 
-        <section className="pt-2">
+        <section className="pt-2 flex items-center justify-between gap-3">
+          <Link
+            to="/feedback"
+            className="text-[10px] uppercase tracking-widest font-bold text-accent hover:text-accent/80"
+          >
+            📝 Report an issue / feedback
+          </Link>
           <button
             onClick={reset}
             className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
