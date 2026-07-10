@@ -17,10 +17,11 @@ export default defineTool({
     if (!ctx.isAuthenticated()) {
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
+    const userId = ctx.getUserId()!;
     const supabase = supabaseForUser(ctx);
     const { data: row, error } = await supabase
       .from("user_progress")
-      .upsert({ user_id: ctx.getUserId(), data: data as never })
+      .upsert({ user_id: userId, data: data as never })
       .select()
       .single();
     if (error) {
