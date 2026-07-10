@@ -94,11 +94,24 @@ function FeedbackPage() {
       let screenshot_url: string | null = null;
       if (file) {
         if (file.size > 5 * 1024 * 1024) throw new Error("Screenshot must be under 5 MB");
-        const ext = file.name.split(".").pop()?.toLowerCase() ?? "png";
+        const ALLOWED: Record<string, string> = {
+          "image/jpeg": "jpg",
+          "image/png": "png",
+          "image/gif": "gif",
+          "image/webp": "webp",
+        };
+        const ext = ALLOWED[file.type];
+        if (!ext) throw new Error("Screenshot must be a JPEG, PNG, GIF, or WebP image");
+        // Verify magic bytes match the claimed image type
+        const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+        const sniff = sniffImageMime(header);
+        if (sniff !== file.type) {
+          throw new Error("Screenshot content doesn't match its file type");
+        }
         const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
         const { error: upErr } = await supabase.storage
           .from("feedback-screenshots")
-          .upload(path, file, { contentType: file.type });
+          .upload(path, file, { contentType: file.type, cacheControl: "3600" });
         if (upErr) throw upErr;
         screenshot_url = path;
       }
