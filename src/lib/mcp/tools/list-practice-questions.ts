@@ -34,8 +34,8 @@ export default defineTool({
       .map((q) => ({
         id: q.id,
         category: q.category,
-        prompt: q.prompt,
-        difficulty: q.difficulty ?? null,
+        title: q.title,
+        level: q.level,
       }));
     return {
       content: [
