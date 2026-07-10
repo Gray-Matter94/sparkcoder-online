@@ -311,6 +311,7 @@ function Home() {
           </Link>
           <button
             onClick={reset}
+            aria-label="Reset all progress, XP, and streaks"
             className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
           >
             Reset all progress
