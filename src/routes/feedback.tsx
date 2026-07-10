@@ -75,7 +75,11 @@ function FeedbackPage() {
     if (!user) return;
     void loadRows();
     void supabase
-      .rpc("has_role", { _user_id: user.id, _role: "admin" })
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 
