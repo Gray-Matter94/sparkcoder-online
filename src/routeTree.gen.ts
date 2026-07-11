@@ -32,6 +32,7 @@ import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/l
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-designer-how-to'
 import { Route as LearnDiscoveryInterviewQuestionsRouteImport } from './routes/learn.discovery-interview-questions'
+import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
@@ -168,6 +169,12 @@ const LearnDiscoveryInterviewQuestionsRoute =
     path: '/learn/discovery-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnCmdbInterviewQuestionsRoute =
+  LearnCmdbInterviewQuestionsRouteImport.update({
+    id: '/learn/cmdb-interview-questions',
+    path: '/learn/cmdb-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
   id: '/learn/acl-scripting',
   path: '/learn/acl-scripting',
@@ -243,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -278,6 +286,7 @@ export interface FileRoutesByTo {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -314,6 +323,7 @@ export interface FileRoutesById {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/cmdb-interview-questions'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/cmdb-interview-questions'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -421,6 +433,7 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/cmdb-interview-questions'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -457,6 +470,7 @@ export interface RootRouteChildren {
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
+  LearnCmdbInterviewQuestionsRoute: typeof LearnCmdbInterviewQuestionsRoute
   LearnDiscoveryInterviewQuestionsRoute: typeof LearnDiscoveryInterviewQuestionsRoute
   LearnFlowDesignerHowToRoute: typeof LearnFlowDesignerHowToRoute
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -636,6 +650,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnDiscoveryInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/cmdb-interview-questions': {
+      id: '/learn/cmdb-interview-questions'
+      path: '/learn/cmdb-interview-questions'
+      fullPath: '/learn/cmdb-interview-questions'
+      preLoaderRoute: typeof LearnCmdbInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/acl-scripting': {
       id: '/learn/acl-scripting'
       path: '/learn/acl-scripting'
@@ -732,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
+  LearnCmdbInterviewQuestionsRoute: LearnCmdbInterviewQuestionsRoute,
   LearnDiscoveryInterviewQuestionsRoute: LearnDiscoveryInterviewQuestionsRoute,
   LearnFlowDesignerHowToRoute: LearnFlowDesignerHowToRoute,
   LearnFlowDesignerInterviewQuestionsRoute:
