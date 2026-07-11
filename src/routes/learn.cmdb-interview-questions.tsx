@@ -136,7 +136,7 @@ for (var d in anchors) {
         { time: "", text: "Manage: 27 technical services", tone: "ok" },
       ],
       rows: [
-        { number: "csdm:audit", state: "reviewed", updated: "aggregate", highlight: "info" },
+        { number: "csdm:audit", state: "reviewed", updated: "aggregate", highlight: "ok" },
       ],
     },
     pitfall:
