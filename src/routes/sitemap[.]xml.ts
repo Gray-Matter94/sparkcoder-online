@@ -29,6 +29,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/learn/discovery-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/irm-architect-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/integrationhub-interview-questions", changefreq: "monthly", priority: "0.8" },
+          { path: "/learn/cmdb-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/servicenow-irm-architect-practice", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
           { path: "/angularjs-coding-test", changefreq: "monthly", priority: "0.9" },
