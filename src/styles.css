@@ -106,14 +106,6 @@
   to { opacity: 1; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-sim-expand {
-    animation: reduced-motion-fade 0.2s ease-out both;
-    max-height: 18rem;
-    transform-origin: bottom;
-    overflow: hidden;
-}
-
 /* Liquid glass — frosted, saturated, with inner highlight + soft sheen */
 @utility liquid-glass {
   position: relative;
@@ -171,9 +163,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .liquid-glass::after { animation: none; }
-}
-
+  .animate-sim-expand {
+    animation: reduced-motion-fade 0.2s ease-out both;
+    max-height: 18rem;
+    transform-origin: bottom;
+    overflow: hidden;
+  }
   .animate-tap-line-in {
     animation: reduced-motion-fade 0.2s ease-out both;
     transform-origin: center;
@@ -186,6 +181,9 @@
     opacity: 0;
   }
   .animate-pulse {
+    animation: none;
+  }
+  .liquid-glass::after {
     animation: none;
   }
 }
