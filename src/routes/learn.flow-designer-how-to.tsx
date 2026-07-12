@@ -5,7 +5,7 @@ import { useProgress } from "@/lib/progress";
 
 const TITLE = "ServiceNow Flow Designer How-To Guide — SparkCoder";
 const DESCRIPTION =
-  "How-to answers for ServiceNow Flow Designer (Process Automation Designer / Workflow Studio): script steps, REST messages, script includes, subflows, decision tables, catalog items, and more.";
+  "How-to answers for ServiceNow Flow Designer: script steps, REST messages, script includes, subflows, decision tables, and catalog items.";
 const URL = "https://www.sparkcoder.online/learn/flow-designer-how-to";
 
 interface HowTo {
