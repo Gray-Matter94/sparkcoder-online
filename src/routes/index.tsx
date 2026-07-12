@@ -353,7 +353,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent: 
         ? "text-accent"
         : "text-secondary";
   return (
-    <div className="rounded-2xl bg-panel border border-border p-4 text-center">
+    <div className="liquid-glass rounded-2xl p-4 text-center">
       <div className={`font-display text-2xl ${color}`}>{value}</div>
       <div className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">{label}</div>
     </div>
