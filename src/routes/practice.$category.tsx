@@ -142,9 +142,12 @@ function Practice() {
     return (
       <div className="min-h-screen flex flex-col">
         <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
-        <div className="flex-1 grid place-items-center p-8 text-center">
-          <p className="text-muted-foreground text-sm">No puzzles in this module yet.</p>
-        </div>
+        <main className="flex-1 grid place-items-center p-8 text-center">
+          <div className="space-y-2">
+            <h1 className="text-xl font-bold">{meta.name} puzzles</h1>
+            <p className="text-muted-foreground text-sm">No puzzles in this module yet.</p>
+          </div>
+        </main>
       </div>
     );
   }
