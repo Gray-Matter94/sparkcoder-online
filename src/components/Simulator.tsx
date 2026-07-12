@@ -24,7 +24,7 @@ interface Props {
 
 export function Simulator({ output, status, resultTone }: Props) {
   const [visibleLogs, setVisibleLogs] = useState(0);
-  const [minimized, setMinimized] = useState(false);
+  const [minimized, setMinimized] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
