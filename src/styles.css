@@ -112,7 +112,68 @@
     max-height: 18rem;
     transform-origin: bottom;
     overflow: hidden;
+}
+
+/* Liquid glass — frosted, saturated, with inner highlight + soft sheen */
+@utility liquid-glass {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-panel) 55%, transparent) 0%,
+    color-mix(in oklab, var(--color-panel-2) 40%, transparent) 100%
+  );
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid color-mix(in oklab, white 12%, transparent);
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, white 10%, transparent) inset,
+    0 -1px 0 0 color-mix(in oklab, black 30%, transparent) inset,
+    0 10px 30px -12px color-mix(in oklab, black 60%, transparent);
+  overflow: hidden;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, white 14%, transparent) 0%,
+      transparent 45%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: -1;
   }
+  &::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -30%;
+    width: 60%;
+    height: 180%;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      color-mix(in oklab, white 18%, transparent) 50%,
+      transparent 100%
+    );
+    transform: rotate(8deg);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+    animation: liquid-sheen 7s ease-in-out infinite;
+  }
+}
+
+@keyframes liquid-sheen {
+  0%, 100% { transform: translateX(0) rotate(8deg); opacity: 0.35; }
+  50% { transform: translateX(220%) rotate(8deg); opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass::after { animation: none; }
+}
+
   .animate-tap-line-in {
     animation: reduced-motion-fade 0.2s ease-out both;
     transform-origin: center;
