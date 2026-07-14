@@ -13,7 +13,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
 import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as PlayRouteImport } from './routes/play'
-import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LiveCodingRouteImport } from './routes/live-coding'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DailyRouteImport } from './routes/daily'
@@ -41,11 +40,7 @@ import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlin
 import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
-import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
-import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -67,11 +62,6 @@ const ServicenowCsaInterviewQuestions2026Route =
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LiveCodingRoute = LiveCodingRouteImport.update({
@@ -220,33 +210,10 @@ const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
   id: '/$section',
   path: '/$section',
   getParentRoute: () => LearnDiscoveryRoute,
-} as any)
-const Char91DotmcpChar93InvokeToolToolRoute =
-  Char91DotmcpChar93InvokeToolToolRouteImport.update({
-    id: '/.mcp/invoke-tool/$tool',
-    path: '/.mcp/invoke-tool/$tool',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -256,13 +223,10 @@ export interface FileRoutesByFullPath {
   '/daily': typeof DailyRoute
   '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
-  '/mcp': typeof McpRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -284,8 +248,6 @@ export interface FileRoutesByFullPath {
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
   '/learn/': typeof LearnIndexRoute
-  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRoutesByTo {
@@ -295,13 +257,10 @@ export interface FileRoutesByTo {
   '/daily': typeof DailyRoute
   '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
-  '/mcp': typeof McpRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -323,8 +282,6 @@ export interface FileRoutesByTo {
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog': typeof BlogIndexRoute
   '/learn': typeof LearnIndexRoute
-  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRoutesById {
@@ -335,13 +292,10 @@ export interface FileRoutesById {
   '/daily': typeof DailyRoute
   '/feedback': typeof FeedbackRoute
   '/live-coding': typeof LiveCodingRoute
-  '/mcp': typeof McpRoute
   '/play': typeof PlayRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -363,8 +317,6 @@ export interface FileRoutesById {
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
   '/learn/': typeof LearnIndexRoute
-  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRouteTypes {
@@ -376,13 +328,10 @@ export interface FileRouteTypes {
     | '/daily'
     | '/feedback'
     | '/live-coding'
-    | '/mcp'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -404,8 +353,6 @@ export interface FileRouteTypes {
     | '/tools/servicenow-regex-tester'
     | '/blog/'
     | '/learn/'
-    | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/learn/discovery/$section'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -415,13 +362,10 @@ export interface FileRouteTypes {
     | '/daily'
     | '/feedback'
     | '/live-coding'
-    | '/mcp'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -443,8 +387,6 @@ export interface FileRouteTypes {
     | '/tools/servicenow-regex-tester'
     | '/blog'
     | '/learn'
-    | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/learn/discovery/$section'
   id:
     | '__root__'
@@ -454,13 +396,10 @@ export interface FileRouteTypes {
     | '/daily'
     | '/feedback'
     | '/live-coding'
-    | '/mcp'
     | '/play'
     | '/servicenow-csa-interview-questions-2026'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/admin/feedback'
     | '/blog/$slug'
     | '/guides/gliderecord-query-reference-field'
@@ -482,8 +421,6 @@ export interface FileRouteTypes {
     | '/tools/servicenow-regex-tester'
     | '/blog/'
     | '/learn/'
-    | '/.lovable/oauth/consent'
-    | '/.mcp/invoke-tool/$tool'
     | '/learn/discovery/$section'
   fileRoutesById: FileRoutesById
 }
@@ -494,13 +431,10 @@ export interface RootRouteChildren {
   DailyRoute: typeof DailyRoute
   FeedbackRoute: typeof FeedbackRoute
   LiveCodingRoute: typeof LiveCodingRoute
-  McpRoute: typeof McpRoute
   PlayRoute: typeof PlayRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
   ServicenowIrmArchitectPracticeRoute: typeof ServicenowIrmArchitectPracticeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
-  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
@@ -522,8 +456,6 @@ export interface RootRouteChildren {
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
   BlogIndexRoute: typeof BlogIndexRoute
   LearnIndexRoute: typeof LearnIndexRoute
-  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
-  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -554,13 +486,6 @@ declare module '@tanstack/react-router' {
       path: '/play'
       fullPath: '/play'
       preLoaderRoute: typeof PlayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/live-coding': {
@@ -752,40 +677,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/.mcp/list-tools': {
-      id: '/.mcp/list-tools'
-      path: '/.mcp/list-tools'
-      fullPath: '/.mcp/list-tools'
-      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/learn/discovery/$section': {
       id: '/learn/discovery/$section'
       path: '/$section'
       fullPath: '/learn/discovery/$section'
       preLoaderRoute: typeof LearnDiscoverySectionRouteImport
       parentRoute: typeof LearnDiscoveryRoute
-    }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
-      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -809,15 +706,11 @@ const rootRouteChildren: RootRouteChildren = {
   DailyRoute: DailyRoute,
   FeedbackRoute: FeedbackRoute,
   LiveCodingRoute: LiveCodingRoute,
-  McpRoute: McpRoute,
   PlayRoute: PlayRoute,
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,
   ServicenowIrmArchitectPracticeRoute: ServicenowIrmArchitectPracticeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
-  Char91DotwellKnownChar93OauthProtectedResourceRoute:
-    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
@@ -843,19 +736,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
   BlogIndexRoute: BlogIndexRoute,
   LearnIndexRoute: LearnIndexRoute,
-  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
-  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
