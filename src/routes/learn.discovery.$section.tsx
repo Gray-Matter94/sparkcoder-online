@@ -249,7 +249,7 @@ function SectionPage() {
                     Approach
                   </h4>
                   <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">
-                    {q.approach.map((a, i) => (
+                    {q.approach.map((a: string, i: number) => (
                       <li key={i}>{a}</li>
                     ))}
                   </ul>
