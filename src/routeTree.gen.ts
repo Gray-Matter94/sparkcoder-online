@@ -33,6 +33,7 @@ import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/l
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-designer-how-to'
 import { Route as LearnDiscoveryInterviewQuestionsRouteImport } from './routes/learn.discovery-interview-questions'
+import { Route as LearnDiscoveryRouteImport } from './routes/learn.discovery'
 import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
@@ -42,6 +43,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -176,6 +178,11 @@ const LearnDiscoveryInterviewQuestionsRoute =
     path: '/learn/discovery-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnDiscoveryRoute = LearnDiscoveryRouteImport.update({
+  id: '/learn/discovery',
+  path: '/learn/discovery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnCmdbInterviewQuestionsRoute =
   LearnCmdbInterviewQuestionsRouteImport.update({
     id: '/learn/cmdb-interview-questions',
@@ -225,6 +232,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => LearnDiscoveryRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -258,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -273,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/learn/': typeof LearnIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -295,6 +309,7 @@ export interface FileRoutesByTo {
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -310,6 +325,7 @@ export interface FileRoutesByTo {
   '/learn': typeof LearnIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -333,6 +349,7 @@ export interface FileRoutesById {
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -348,6 +365,7 @@ export interface FileRoutesById {
   '/learn/': typeof LearnIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -372,6 +390,7 @@ export interface FileRouteTypes {
     | '/learn/$topic'
     | '/learn/acl-scripting'
     | '/learn/cmdb-interview-questions'
+    | '/learn/discovery'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -387,6 +406,7 @@ export interface FileRouteTypes {
     | '/learn/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/learn/discovery/$section'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -409,6 +429,7 @@ export interface FileRouteTypes {
     | '/learn/$topic'
     | '/learn/acl-scripting'
     | '/learn/cmdb-interview-questions'
+    | '/learn/discovery'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -424,6 +445,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/learn/discovery/$section'
   id:
     | '__root__'
     | '/'
@@ -446,6 +468,7 @@ export interface FileRouteTypes {
     | '/learn/$topic'
     | '/learn/acl-scripting'
     | '/learn/cmdb-interview-questions'
+    | '/learn/discovery'
     | '/learn/discovery-interview-questions'
     | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
@@ -461,6 +484,7 @@ export interface FileRouteTypes {
     | '/learn/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/learn/discovery/$section'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -484,6 +508,7 @@ export interface RootRouteChildren {
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
   LearnCmdbInterviewQuestionsRoute: typeof LearnCmdbInterviewQuestionsRoute
+  LearnDiscoveryRoute: typeof LearnDiscoveryRouteWithChildren
   LearnDiscoveryInterviewQuestionsRoute: typeof LearnDiscoveryInterviewQuestionsRoute
   LearnFlowDesignerHowToRoute: typeof LearnFlowDesignerHowToRoute
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
@@ -671,6 +696,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnDiscoveryInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/discovery': {
+      id: '/learn/discovery'
+      path: '/learn/discovery'
+      fullPath: '/learn/discovery'
+      preLoaderRoute: typeof LearnDiscoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/cmdb-interview-questions': {
       id: '/learn/cmdb-interview-questions'
       path: '/learn/cmdb-interview-questions'
@@ -734,6 +766,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/discovery/$section': {
+      id: '/learn/discovery/$section'
+      path: '/$section'
+      fullPath: '/learn/discovery/$section'
+      preLoaderRoute: typeof LearnDiscoverySectionRouteImport
+      parentRoute: typeof LearnDiscoveryRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -750,6 +789,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface LearnDiscoveryRouteChildren {
+  LearnDiscoverySectionRoute: typeof LearnDiscoverySectionRoute
+}
+
+const LearnDiscoveryRouteChildren: LearnDiscoveryRouteChildren = {
+  LearnDiscoverySectionRoute: LearnDiscoverySectionRoute,
+}
+
+const LearnDiscoveryRouteWithChildren = LearnDiscoveryRoute._addFileChildren(
+  LearnDiscoveryRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -775,6 +826,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
   LearnCmdbInterviewQuestionsRoute: LearnCmdbInterviewQuestionsRoute,
+  LearnDiscoveryRoute: LearnDiscoveryRouteWithChildren,
   LearnDiscoveryInterviewQuestionsRoute: LearnDiscoveryInterviewQuestionsRoute,
   LearnFlowDesignerHowToRoute: LearnFlowDesignerHowToRoute,
   LearnFlowDesignerInterviewQuestionsRoute:
