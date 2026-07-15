@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 import { BLOG_POSTS } from "@/lib/blog";
+import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
 
 
 const BASE_URL = "https://www.sparkcoder.online";
