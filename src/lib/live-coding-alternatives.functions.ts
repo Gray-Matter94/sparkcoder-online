@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
 
 export interface Alternative {
   title: string;
@@ -27,7 +27,6 @@ Return STRICT JSON matching the tool schema. Each "code" MUST be a complete,
 runnable ServiceNow script (no ellipses, no commentary inside code).`;
 
 export const suggestAlternatives = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<{ alternatives: Alternative[] }> => {
     const apiKey = process.env.LOVABLE_API_KEY;
