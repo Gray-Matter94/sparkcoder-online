@@ -3,68 +3,48 @@
 @import "tw-animate-css";
 
 @theme {
-  /* Apple canvas: light default, near-black tiles used as sections. */
-  --color-background: #ffffff;
-  --color-foreground: #1d1d1f;
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-primary: #22c55e;
+  --color-primary-foreground: #052e16;
+  --color-primary-deep: #166534;
+  --color-secondary: #ec4899;
+  --color-secondary-foreground: #500724;
+  --color-accent: #f59e0b;
+  --color-accent-foreground: #451a03;
+  --color-panel: #18181b;
+  --color-panel-2: #1f1f23;
+  --color-border: #27272a;
+  --color-muted: #18181b;
+  --color-muted-foreground: #a1a1aa;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fef2f2;
+  --color-success: #22c55e;
+  --color-card: #18181b;
+  --color-card-foreground: #fafafa;
+  --color-popover: #18181b;
+  --color-popover-foreground: #fafafa;
+  --color-input: #27272a;
+  --color-ring: #22c55e;
 
-  /* Single interactive color across the whole system. */
-  --color-primary: #0066cc;
-  --color-primary-foreground: #ffffff;
-  --color-primary-deep: #0071e3;
+  --font-display: "Anton", "Impact", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Apple has no secondary brand accent; both map to Action Blue. */
-  --color-secondary: #0066cc;
-  --color-secondary-foreground: #ffffff;
-  --color-accent: #0066cc;
-  --color-accent-foreground: #ffffff;
-
-  /* Surfaces */
-  --color-panel: #f5f5f7;
-  --color-panel-2: #fafafc;
-  --color-muted: #f5f5f7;
-  --color-muted-foreground: #7a7a7a;
-  --color-card: #ffffff;
-  --color-card-foreground: #1d1d1f;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #1d1d1f;
-
-  /* Hairlines */
-  --color-border: #e0e0e0;
-  --color-input: #e0e0e0;
-  --color-ring: #0071e3;
-
-  /* Semantic */
-  --color-destructive: #e30000;
-  --color-destructive-foreground: #ffffff;
-  --color-success: #248a3d;
-
-  /* Dark tile section palette (for `.tile-dark` etc.) */
-  --tile-1: #272729;
-  --tile-2: #2a2a2c;
-  --tile-3: #252527;
-  --on-dark: #ffffff;
-  --on-dark-muted: #cccccc;
-  --on-dark-link: #2997ff;
-
-  /* Typography — SF Pro with system fallback (renders true SF on Apple devices). */
-  --font-display: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sans: "SF Pro Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Apple radii ladder. */
-  --radius-xs: 5px;
-  --radius-sm: 8px;
-  --radius-md: 11px;
-  --radius-lg: 18px;
-  --radius-xl: 18px;
-  --radius-2xl: 18px;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
 
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1.2);
 }
 
-/* The only shadow in the system — reserved for product/hero imagery. */
-:root {
-  --shadow-product: 3px 5px 30px rgba(0, 0, 0, 0.22);
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/anton/v27/1Ptgg87LROyAm3Kz-C8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @keyframes slideUp {
@@ -87,7 +67,13 @@
   60% { transform: scale(1.05); opacity: 1; }
   100% { transform: scale(1); }
 }
-@keyframes caret { 50% { opacity: 0; } }
+@keyframes confetti-burst {
+  0% { transform: translateY(0) scale(0.6); opacity: 1; }
+  100% { transform: translateY(-120px) scale(1); opacity: 0; }
+}
+@keyframes caret {
+  50% { opacity: 0; }
+}
 @keyframes log-in {
   from { opacity: 0; transform: translateX(-6px); }
   to { opacity: 1; transform: translateX(0); }
@@ -115,137 +101,100 @@
 .animate-tap-line-in { animation: tap-line-in 0.35s var(--ease-spring) both; transform-origin: center; }
 .animate-tap-shimmer { animation: tap-shimmer 1.8s ease-in-out infinite; }
 
-@keyframes reduced-motion-fade { from { opacity: 0; } to { opacity: 1; } }
-
-/* Apple type ladder — utilities for callers that opt in. */
-@utility apple-hero {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 56px);
-  font-weight: 600;
-  line-height: 1.07;
-  letter-spacing: -0.02em;
-}
-@utility apple-display {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-}
-@utility apple-lead {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 28px);
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0.007em;
-}
-@utility apple-tagline {
-  font-family: var(--font-display);
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.011em;
-}
-@utility apple-body {
-  font-family: var(--font-sans);
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.47;
-  letter-spacing: -0.022em;
-}
-@utility apple-caption {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.43;
-  letter-spacing: -0.016em;
-  color: var(--color-muted-foreground);
-}
-@utility apple-eyebrow {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--color-primary);
+@keyframes reduced-motion-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Edge-to-edge alternating section tiles. */
-@utility tile-light {
-  background-color: #ffffff;
-  color: var(--color-foreground);
-}
-@utility tile-parchment {
-  background-color: #f5f5f7;
-  color: var(--color-foreground);
-}
-@utility tile-dark {
-  background-color: var(--tile-1);
-  color: var(--on-dark);
-}
-@utility tile-dark-2 {
-  background-color: var(--tile-2);
-  color: var(--on-dark);
-}
-@utility tile-dark-3 {
-  background-color: var(--tile-3);
-  color: var(--on-dark);
-}
-@utility product-shadow {
-  box-shadow: var(--shadow-product);
-}
-
-/* Frosted sub-nav / sticky bars (backdrop blur, no drop shadow). */
-@utility apple-frost {
-  background-color: color-mix(in oklab, #f5f5f7 82%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid var(--color-border);
-}
-@utility apple-frost-dark {
-  background-color: color-mix(in oklab, #000000 72%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  color: var(--on-dark);
-}
-
-/* Legacy alias kept so existing markup doesn't break — now renders as a plain hairline card. */
+/* Liquid glass — frosted, saturated, with inner highlight + soft sheen */
 @utility liquid-glass {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  color: var(--color-foreground);
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-panel) 55%, transparent) 0%,
+    color-mix(in oklab, var(--color-panel-2) 40%, transparent) 100%
+  );
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid color-mix(in oklab, white 12%, transparent);
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, white 10%, transparent) inset,
+    0 -1px 0 0 color-mix(in oklab, black 30%, transparent) inset,
+    0 10px 30px -12px color-mix(in oklab, black 60%, transparent);
+  overflow: hidden;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, white 14%, transparent) 0%,
+      transparent 45%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -30%;
+    width: 60%;
+    height: 180%;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      color-mix(in oklab, white 18%, transparent) 50%,
+      transparent 100%
+    );
+    transform: rotate(8deg);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+    animation: liquid-sheen 7s ease-in-out infinite;
+  }
+}
+
+@keyframes liquid-sheen {
+  0%, 100% { transform: translateX(0) rotate(8deg); opacity: 0.35; }
+  50% { transform: translateX(220%) rotate(8deg); opacity: 0.7; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-sim-expand { animation: reduced-motion-fade 0.2s ease-out both; max-height: 18rem; overflow: hidden; }
-  .animate-tap-line-in { animation: reduced-motion-fade 0.2s ease-out both; }
-  .animate-log-in { animation: reduced-motion-fade 0.15s ease-out both; }
-  .animate-tap-shimmer, .animate-pulse { animation: none; }
+  .animate-sim-expand {
+    animation: reduced-motion-fade 0.2s ease-out both;
+    max-height: 18rem;
+    transform-origin: bottom;
+    overflow: hidden;
+  }
+  .animate-tap-line-in {
+    animation: reduced-motion-fade 0.2s ease-out both;
+    transform-origin: center;
+  }
+  .animate-log-in {
+    animation: reduced-motion-fade 0.15s ease-out both;
+  }
+  .animate-tap-shimmer {
+    animation: none;
+    opacity: 0;
+  }
+  .animate-pulse {
+    animation: none;
+  }
+  .liquid-glass::after {
+    animation: none;
+  }
 }
 
+
 .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: #cccccc; border-radius: 3px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 
 @layer base {
-  html, body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-  }
-  body {
-    font-family: var(--font-sans);
-    font-size: 17px;
-    line-height: 1.47;
-    letter-spacing: -0.022em;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    letter-spacing: -0.015em;
-  }
-  code, pre, kbd, samp { font-family: var(--font-mono); }
+  html, body { background-color: var(--color-background); color: var(--color-foreground); }
+  body { font-family: var(--font-mono); -webkit-font-smoothing: antialiased; }
   * { border-color: var(--color-border); }
-  ::selection { background-color: color-mix(in oklab, var(--color-primary) 22%, transparent); }
 }

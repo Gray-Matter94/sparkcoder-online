@@ -7,7 +7,7 @@ import logoAsset from "@/assets/sparkcoder-logo.png.asset.json";
 
 export function StatsBar({ progress, back }: { progress: Progress; back?: boolean }) {
   return (
-    <header className="apple-frost-dark px-4 h-11 flex items-center justify-between sticky top-0 z-50 rounded-none">
+    <header className="liquid-glass p-4 flex items-center justify-between sticky top-0 z-50 rounded-none">
       <div className="flex items-center gap-4">
         {back ? (
           <Link
