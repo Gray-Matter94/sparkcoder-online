@@ -774,9 +774,11 @@ function LiveCoding() {
 
         {/* Interviewer prompt */}
         <section
-          aria-label="AI interviewer prompt"
+          aria-labelledby="lc-prompt-heading"
           className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-4 space-y-2"
         >
+          <h2 id="lc-prompt-heading" className="sr-only">AI interviewer prompt</h2>
+
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-amber-300 font-bold">
             <span className="size-6 rounded-full bg-amber-500/20 grid place-items-center">🤖</span>
             AI Interviewer
