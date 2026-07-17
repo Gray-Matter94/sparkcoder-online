@@ -681,9 +681,11 @@ function LiveCoding() {
 
         {!noResults && (
           <section
-            aria-label="Browse tasks"
+            aria-labelledby="lc-browse-heading"
             className="rounded-2xl border-2 border-border bg-panel p-3 space-y-3"
           >
+            <h2 id="lc-browse-heading" className="sr-only">Browse tasks</h2>
+
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <p className="text-[11px] font-bold tracking-widest text-muted-foreground">
                 BROWSE · showing {currentPage * PAGE_SIZE + 1}–
