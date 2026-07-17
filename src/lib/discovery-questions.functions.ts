@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { DISCOVERY_SECTIONS } from "./discovery-interview";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export interface GeneratedDefinitive {
   question: string;
