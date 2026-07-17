@@ -274,7 +274,9 @@ function PlayPage() {
           Tap a Glide API on the left, then its matching description on the right. {roundSize} pairs to clear level {level}.
         </p>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <section aria-labelledby="play-match-heading" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <h2 id="play-match-heading" className="sr-only">Match Glide APIs to descriptions</h2>
+
           <Column
             title="Glide API"
             cards={apiCards}
