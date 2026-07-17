@@ -37,6 +37,7 @@ Every scenario must include a realistic alternate approach and a pitfall.
 Return STRICT JSON matching the tool schema — no prose outside the tool call.`;
 
 export const generateDiscoveryQuestions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<GenerateResult> => {
     const section = DISCOVERY_SECTIONS.find((s) => s.slug === data.sectionSlug);
