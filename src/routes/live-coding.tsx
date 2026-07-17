@@ -681,9 +681,11 @@ function LiveCoding() {
 
         {!noResults && (
           <section
-            aria-label="Browse tasks"
+            aria-labelledby="lc-browse-heading"
             className="rounded-2xl border-2 border-border bg-panel p-3 space-y-3"
           >
+            <h2 id="lc-browse-heading" className="sr-only">Browse tasks</h2>
+
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <p className="text-[11px] font-bold tracking-widest text-muted-foreground">
                 BROWSE · showing {currentPage * PAGE_SIZE + 1}–
@@ -772,9 +774,11 @@ function LiveCoding() {
 
         {/* Interviewer prompt */}
         <section
-          aria-label="AI interviewer prompt"
+          aria-labelledby="lc-prompt-heading"
           className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-4 space-y-2"
         >
+          <h2 id="lc-prompt-heading" className="sr-only">AI interviewer prompt</h2>
+
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-amber-300 font-bold">
             <span className="size-6 rounded-full bg-amber-500/20 grid place-items-center">🤖</span>
             AI Interviewer
@@ -788,9 +792,11 @@ function LiveCoding() {
 
         {/* Instance-style editor */}
         <section
-          aria-label="Script editor"
+          aria-labelledby="lc-editor-heading"
           className="rounded-2xl overflow-hidden border-2 border-border bg-zinc-950 shadow-2xl"
         >
+          <h2 id="lc-editor-heading" className="sr-only">Script editor</h2>
+
           <div className="flex items-center gap-1.5 px-4 py-2 bg-zinc-900 border-b border-border">
             <div className="size-2 rounded-full bg-red-500/60" />
             <div className="size-2 rounded-full bg-amber-500/60" />
@@ -958,9 +964,11 @@ function LiveCoding() {
             wrong by the sandbox or by a quick per-line syntax check, else
             green. Blank lines produce no annotation. */}
         <section
-          aria-label="Line-by-line code explanations"
+          aria-labelledby="lc-explain-heading"
           className="rounded-2xl border-2 border-border bg-zinc-950 shadow-2xl overflow-hidden"
         >
+          <h2 id="lc-explain-heading" className="sr-only">Line-by-line code explanations</h2>
+
           <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border-b border-border">
             <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
               Auto-explain · line by line
@@ -1021,13 +1029,15 @@ function LiveCoding() {
         {/* Sandbox execution output */}
         {ran && sandbox && (
           <section
-            aria-label="Sandbox execution output"
+            aria-labelledby="lc-sandbox-heading"
             className={`rounded-2xl border-2 p-4 shadow-2xl ${
               sandbox.ok
                 ? "bg-zinc-950 border-emerald-500/40"
                 : "bg-zinc-950 border-destructive/60"
             }`}
           >
+            <h2 id="lc-sandbox-heading" className="sr-only">Sandbox execution output</h2>
+
             <div className="flex items-center gap-2 mb-2 font-bold uppercase tracking-widest text-xs">
               <span className="text-base">{sandbox.ok ? "🟢" : "🔴"}</span>
               <span className={sandbox.ok ? "text-emerald-400" : "text-destructive"}>
@@ -1402,9 +1412,11 @@ function LiveCoding() {
 
         {(altsError || alternatives) && (
           <section
-            aria-label="Alternative approaches"
+            aria-labelledby="lc-alts-heading"
             className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/5 p-4 space-y-3"
           >
+            <h2 id="lc-alts-heading" className="sr-only">Alternative approaches</h2>
+
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-amber-300 font-bold">
               <span className="text-base">💡</span>
               Alternative approaches

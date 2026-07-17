@@ -255,7 +255,9 @@ function PlayPage() {
       </header>
 
       <main className="flex-1 max-w-3xl w-full mx-auto p-5 sm:p-8 space-y-6">
-        <section className="grid grid-cols-4 gap-3">
+        <section aria-labelledby="play-stats-heading" className="grid grid-cols-4 gap-3">
+          <h2 id="play-stats-heading" className="sr-only">Round stats</h2>
+
           <Stat label="Time" value={`${seconds}s`} accent="text-primary" />
           <Stat label="Matched" value={`${matched.size}/${roundSize}`} accent="text-accent" />
           <Stat label="Misses" value={String(missed)} accent="text-secondary" />
@@ -272,7 +274,9 @@ function PlayPage() {
           Tap a Glide API on the left, then its matching description on the right. {roundSize} pairs to clear level {level}.
         </p>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <section aria-labelledby="play-match-heading" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <h2 id="play-match-heading" className="sr-only">Match Glide APIs to descriptions</h2>
+
           <Column
             title="Glide API"
             cards={apiCards}
