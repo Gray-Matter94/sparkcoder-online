@@ -55,6 +55,8 @@ function auditRoute(file) {
   if (EXEMPT.has(base)) return;
   const src = readFileSync(file, "utf8");
   if (!src.includes("createFileRoute")) return;
+  // Skip routes intentionally hidden from search
+  if (/name:\s*["']robots["'],\s*content:\s*["'][^"']*noindex/.test(src)) return;
 
   // Layout-only routes that just render <Outlet /> without head() are OK.
   if (!src.includes("head:") && !src.includes("head()")) {
