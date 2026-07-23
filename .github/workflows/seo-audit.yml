@@ -1,0 +1,22 @@
+name: SEO Audit
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  seo-audit:
+    name: Pre-publish SEO audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Run SEO audit
+        run: bun run seo:audit
