@@ -64,7 +64,7 @@ function auditRoute(file) {
   }
 
   const need = [
-    { key: "title", re: /title:\s*["'`]/, hard: true },
+    { key: "title", re: /title:\s*[`"'A-Za-z_$]/, hard: true },
     { key: "meta description", re: /name:\s*["']description["']/, hard: true },
     { key: "og:title", re: /property:\s*["']og:title["']/, hard: false },
     { key: "og:description", re: /property:\s*["']og:description["']/, hard: false },
