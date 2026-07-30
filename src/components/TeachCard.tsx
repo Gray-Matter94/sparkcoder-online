@@ -1,12 +1,14 @@
+import type { ReactNode } from "react";
 interface Props {
   tone: "ok" | "bad";
   title: string;
   explain: string;
   onContinue: () => void;
   continueLabel: string;
+  children?: ReactNode;
 }
 
-export function TeachCard({ tone, title, explain, onContinue, continueLabel }: Props) {
+export function TeachCard({ tone, title, explain, onContinue, continueLabel, children }: Props) {
   const isOk = tone === "ok";
   return (
     <div
@@ -37,6 +39,7 @@ export function TeachCard({ tone, title, explain, onContinue, continueLabel }: P
       >
         {explain}
       </p>
+      {children}
       <button
         onClick={onContinue}
         className={`mt-4 w-full py-3 rounded-2xl font-display tracking-wider text-sm transition-all active:translate-y-0.5 ${
