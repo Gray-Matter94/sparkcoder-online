@@ -106,7 +106,7 @@ function BacklinksGate() {
             Semrush-powered link data.
           </p>
           <Link
-            to="/auth"
+            to="/auth" search={{ next: "" }}
             className="inline-block rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90"
           >
             Sign in

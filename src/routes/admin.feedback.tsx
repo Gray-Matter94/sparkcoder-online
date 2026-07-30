@@ -44,7 +44,7 @@ function AdminFeedback() {
   const [filter, setFilter] = useState<"all" | FeedbackStatus>("all");
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
+    if (!loading && !user) navigate({ to: "/auth", search: { next: "" } });
   }, [loading, user, navigate]);
 
   useEffect(() => {

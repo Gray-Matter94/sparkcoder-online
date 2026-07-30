@@ -65,7 +65,7 @@ function AuthButton() {
   if (!user) {
     return (
       <Link
-        to="/auth"
+        to="/auth" search={{ next: "" }}
         className="text-[10px] font-display tracking-widest px-3 py-2 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all"
       >
         SIGN IN
