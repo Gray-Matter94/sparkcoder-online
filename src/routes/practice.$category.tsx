@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
+import { LineCorrections } from "@/components/LineCorrections";
 import { DIFFICULTIES, matchesDifficulty, getHintForQuestion, type Difficulty } from "@/lib/hints";
 
 const DIFFICULTY_STORAGE_KEY = "snscript_difficulty_v1";
@@ -347,7 +348,9 @@ function Practice() {
                     : "NEXT PUZZLE →"
                   : "TRY AGAIN"
               }
-            />
+            >
+              {status === "wrong" && picked && <LineCorrections question={q} picked={picked} />}
+            </TeachCard>
           </div>
         )}
 

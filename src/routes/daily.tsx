@@ -7,6 +7,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
+import { LineCorrections } from "@/components/LineCorrections";
 import type { Option, SimulatorOutput } from "@/lib/questions";
 import { CATEGORIES } from "@/lib/questions";
 import { getCurrentTier } from "@/lib/difficulty";
@@ -163,7 +164,9 @@ function Daily() {
                 }
               }}
               continueLabel={status === "right" ? "BACK TO ARCADE" : "TRY AGAIN"}
-            />
+            >
+              {status === "wrong" && picked && <LineCorrections question={q} picked={picked} />}
+            </TeachCard>
           </div>
         )}
 
