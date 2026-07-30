@@ -285,13 +285,15 @@ export function Simulator({ output, status, resultTone }: Props) {
           </div>
         )}
 
-        {output && view === "log" && (
+        {output && (
           <div
             data-testid="simulator-trace"
             role="log"
             aria-live="polite"
             aria-label="Simulator output log"
-            className="mt-auto space-y-0.5 font-mono"
+            className={`mt-auto space-y-0.5 font-mono ${
+              view === "visual" ? "border-t border-white/5 pt-2" : ""
+            }`}
           >
             {output.logs.slice(0, visibleLogs).map((l, i) => (
               <div key={i} className="flex gap-2 text-[10px] leading-relaxed animate-log-in">
