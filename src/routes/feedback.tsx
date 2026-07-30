@@ -68,7 +68,7 @@ function FeedbackPage() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
+    if (!loading && !user) navigate({ to: "/auth", search: { next: "" } });
   }, [loading, user, navigate]);
 
   useEffect(() => {
