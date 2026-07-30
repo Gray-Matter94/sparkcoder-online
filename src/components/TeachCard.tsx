@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 interface Props {
   tone: "ok" | "bad";
   title: string;
   explain: string;
   onContinue: () => void;
   continueLabel: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function TeachCard({ tone, title, explain, onContinue, continueLabel, children }: Props) {
