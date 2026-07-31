@@ -38,6 +38,8 @@ export interface Progress {
   srs: Record<string, SrsEntry>;
   /** Glossary term mastery, keyed by `${topic}::${term}`. */
   termMastery: Record<string, TermMastery>;
+  /** Recorded wrong attempts, newest last (capped). */
+  mistakes: MistakeEntry[];
 }
 
 const empty: Progress = {
