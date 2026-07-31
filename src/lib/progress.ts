@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTrack, type TrackId } from "./tracks";
+import { classifyMistake, type MistakeEntry } from "./mistake-analytics";
+import type { Question, Option } from "./questions";
 
 const BASE_KEY = "snscript_progress_v3";
 /** Per-track local storage key. The legacy v2 key migrates into the default track. */
@@ -38,6 +40,8 @@ export interface Progress {
   srs: Record<string, SrsEntry>;
   /** Glossary term mastery, keyed by `${topic}::${term}`. */
   termMastery: Record<string, TermMastery>;
+  /** Recorded wrong attempts, newest last (capped). */
+  mistakes: MistakeEntry[];
 }
 
 const empty: Progress = {
@@ -52,6 +56,7 @@ const empty: Progress = {
   dailyChallenges: {},
   srs: {},
   termMastery: {},
+  mistakes: [],
 };
 
 
@@ -89,6 +94,21 @@ function write(track: TrackId, p: Progress) {
 }
 
 
+export const MISTAKE_LOG_LIMIT = 300;
+
+/** Union of recorded mistakes, de-duplicated by question+option+date. */
+function mergeMistakes(a: MistakeEntry[] = [], b: MistakeEntry[] = []): MistakeEntry[] {
+  const seen = new Set<string>();
+  const out: MistakeEntry[] = [];
+  for (const m of [...a, ...b]) {
+    const k = `${m.date}|${m.questionId}|${m.optionId}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(m);
+  }
+  return out.slice(-MISTAKE_LOG_LIMIT);
+}
+
 /** Merge two progress snapshots, taking the most generous of each field. */
 function merge(a: Progress, b: Progress): Progress {
   // For SRS, keep the most recently reviewed entry per key.
@@ -112,6 +132,7 @@ function merge(a: Progress, b: Progress): Progress {
     dailyChallenges: { ...a.dailyChallenges, ...b.dailyChallenges },
     srs,
     termMastery: { ...(a.termMastery ?? {}), ...(b.termMastery ?? {}) },
+    mistakes: mergeMistakes(a.mistakes, b.mistakes),
   };
 }
 
@@ -392,6 +413,26 @@ export function useProgress() {
   );
 
 
+  const recordMistake = useCallback(
+    (question: Question, picked: Option) => {
+      setProgress((prev) => {
+        const entry: MistakeEntry = {
+          questionId: question.id,
+          category: question.category,
+          optionId: picked.id,
+          kind: classifyMistake(question, picked),
+          date: todayStr(),
+        };
+        const mistakes = [...(prev.mistakes ?? []), entry].slice(-MISTAKE_LOG_LIMIT);
+        const next: Progress = { ...prev, mistakes };
+        write(trackRef.current, next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const setTermMastery = useCallback(
     (topic: string, term: string, status: TermMastery | null) => {
       setProgress((prev) => {
@@ -414,7 +455,7 @@ export function useProgress() {
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge, recordSrs, setTermMastery, track };
+  return { progress, award, reset, markDailyChallenge, recordSrs, recordMistake, setTermMastery, track };
 
 }
 
