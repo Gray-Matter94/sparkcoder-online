@@ -9,6 +9,7 @@ import { CodeBlock } from "@/components/CodeBlock";
 import { Simulator } from "@/components/Simulator";
 import { TeachCard } from "@/components/TeachCard";
 import { LineCorrections } from "@/components/LineCorrections";
+import { MistakeAnalytics } from "@/components/MistakeAnalytics";
 import { DIFFICULTIES, matchesDifficulty, getHintForQuestion, type Difficulty } from "@/lib/hints";
 
 const DIFFICULTY_STORAGE_KEY = "snscript_difficulty_v1";
@@ -70,7 +71,7 @@ function Practice() {
   const meta = CATEGORIES.find((c) => c.id === (category as Category));
   if (!meta) throw notFound();
 
-  const { progress, award } = useProgress();
+  const { progress, award, recordMistake, track } = useProgress();
   const tier = useMemo(() => getCurrentTier(progress), [progress]);
   const nextTier = useMemo(() => getNextTier(progress), [progress]);
   const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
@@ -154,7 +155,7 @@ function Practice() {
   }
 
   if (status === "done" || index >= questions.length) {
-    return <Completed cat={meta.name} onRestart={() => { setIndex(0); resetQuestion(); }}
+    return <Completed cat={meta.name} maxLevel={tier.maxLevel} onRestart={() => { setIndex(0); resetQuestion(); }}
       onHome={() => navigate({ to: "/" })} />;
   }
 
@@ -175,6 +176,7 @@ function Practice() {
         award(q.id, xp);
         setStatus("right");
       } else {
+        recordMistake(q, picked);
         setWrongAttempts((w) => [...w, picked.id]);
         setStatus("wrong");
       }
@@ -273,6 +275,8 @@ function Practice() {
           </div>
         </div>
 
+
+        <MistakeAnalytics progress={progress} maxLevel={tier.maxLevel} track={track} />
 
         <CodeBlock
           filename={q.filename}
@@ -401,8 +405,8 @@ function Practice() {
   );
 }
 
-function Completed({ cat, onRestart, onHome }: { cat: string; onRestart: () => void; onHome: () => void }) {
-  const { progress } = useProgress();
+function Completed({ cat, maxLevel, onRestart, onHome }: { cat: string; maxLevel: number; onRestart: () => void; onHome: () => void }) {
+  const { progress, track } = useProgress();
   return (
     <div className="min-h-screen flex flex-col">
       <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
@@ -426,6 +430,9 @@ function Completed({ cat, onRestart, onHome }: { cat: string; onRestart: () => v
           >
             BACK TO ARCADE
           </button>
+        </div>
+        <div className="w-full mt-6 text-left">
+          <MistakeAnalytics progress={progress} maxLevel={maxLevel} track={track} defaultOpen />
         </div>
       </main>
     </div>
