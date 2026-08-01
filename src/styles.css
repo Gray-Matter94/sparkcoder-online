@@ -228,6 +228,48 @@
 }
 
 
+/* --- Animated starfield background (decorative, behind all content) --- */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+}
+.starfield-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+}
+.starfield-dup {
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  background: transparent;
+}
+.starfield-1,
+.starfield-1 .starfield-dup { width: 1px; height: 1px; }
+.starfield-2,
+.starfield-2 .starfield-dup { width: 2px; height: 2px; }
+.starfield-3,
+.starfield-3 .starfield-dup { width: 3px; height: 3px; }
+
+.starfield-1 { animation: animStar 50s linear infinite; }
+.starfield-2 { animation: animStar 100s linear infinite; }
+.starfield-3 { animation: animStar 150s linear infinite; }
+
+@keyframes animStar {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2000px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield-1, .starfield-2, .starfield-3 { animation: none !important; }
+}
+
+
 .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
