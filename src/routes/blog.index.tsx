@@ -8,6 +8,7 @@ const TITLE = "ServiceNow 20-Day Scripting Curriculum — Weekly Series";
 const DESCRIPTION =
   "A 20-day ServiceNow scripting curriculum, shipped as 4 weekly guides. Daily goals, drills, and takeaways from data dictionary to interview day.";
 const URL = "https://www.sparkcoder.online/blog";
+const OG_IMAGE = "https://www.sparkcoder.online/og/blog-curriculum.jpg";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -18,9 +19,17 @@ export const Route = createFileRoute("/blog/")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "SparkCoder" },
+      { property: "og:locale", content: "en_US" },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "SparkCoder ServiceNow 20-day scripting curriculum" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: "SparkCoder ServiceNow 20-day scripting curriculum" },
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [
