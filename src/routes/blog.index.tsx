@@ -4,7 +4,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 import { BLOG_POSTS } from "@/lib/blog";
 
-const TITLE = "ServiceNow 20-Day Scripting Curriculum — Weekly Blog Series";
+const TITLE = "ServiceNow 20-Day Scripting Curriculum — Weekly Series";
 const DESCRIPTION =
   "A 20-day ServiceNow scripting curriculum, shipped as 4 weekly guides. Daily goals, drills, and takeaways from data dictionary to interview day.";
 const URL = "https://www.sparkcoder.online/blog";
