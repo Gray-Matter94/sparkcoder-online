@@ -35,6 +35,7 @@ export const Route = createFileRoute("/learn/")({
             "Illustrated ServiceNow terminology and quick quizzes across Platform, ITSM, CMDB, Flow Designer, and Integrations.",
         },
         { property: "og:url", content: "https://www.sparkcoder.online/learn" },
+      { property: "og:type", content: "website" },
       ],
       links: [{ rel: "canonical", href: "https://www.sparkcoder.online/learn" }],
       scripts: [
