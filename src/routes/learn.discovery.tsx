@@ -9,6 +9,31 @@ const DESCRIPTION =
   "14 focused sections covering CMDB, Discovery, MID Servers, IRE, CIs, CI classes, relationships, Service Mapping, integrations, CI lifecycle, CMDB health, ITSM integration, CSDM, HAM and SAM — with AI-expandable Q&A.";
 const URL = "https://www.sparkcoder.online/learn/discovery";
 
+const collectionJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: TITLE,
+  description: DESCRIPTION,
+  url: URL,
+  isPartOf: { "@type": "WebSite", name: "SparkCoder", url: "https://www.sparkcoder.online" },
+  hasPart: DISCOVERY_SECTIONS.map((s) => ({
+    "@type": "TechArticle",
+    headline: s.title,
+    description: s.blurb,
+    url: `${URL}/${s.slug}`,
+  })),
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sparkcoder.online/" },
+    { "@type": "ListItem", position: 2, name: "Learn", item: "https://www.sparkcoder.online/learn" },
+    { "@type": "ListItem", position: 3, name: "Discovery & CMDB", item: URL },
+  ],
+};
+
 export const Route = createFileRoute("/learn/discovery")({
   head: () => ({
     meta: [
@@ -21,7 +46,12 @@ export const Route = createFileRoute("/learn/discovery")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: URL }],
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(collectionJsonLd) },
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbJsonLd) },
+    ],
   }),
+
   component: DiscoveryHub,
 });
 

@@ -39,7 +39,64 @@ export const Route = createFileRoute("/live-coding")({
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "https://www.sparkcoder.online/live-coding" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: "ServiceNow Live Coding Simulator",
+          description:
+            "An instance-style editor with 2000+ ServiceNow server and client scripting tasks and AI feedback on the exact failing line.",
+          url: "https://www.sparkcoder.online/live-coding",
+          learningResourceType: "Interactive simulation",
+          educationalLevel: "Intermediate",
+          teaches: "GlideRecord, GlideAggregate, GlideAjax, Business Rules, Client Scripts",
+          inLanguage: "en",
+          isAccessibleForFree: true,
+          provider: {
+            "@type": "Organization",
+            name: "SparkCoder",
+            url: "https://www.sparkcoder.online",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Does the simulator only accept one exact solution?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "No. Scripts are validated by behaviour, so any script that produces the correct result passes — and the coach can suggest alternative approaches to the same task.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How does the live coding simulator show errors?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "The sandbox maps each syntax or runtime error to the exact code line, marks it with an icon and label, and offers an editable suggested patch you can apply and re-run.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How many ServiceNow coding questions are included?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Over 2,000 unique tasks, filterable by server-side or client-side scope and by keyword.",
+              },
+            },
+          ],
+        }),
+      },
+    ],
   }),
+
   component: LiveCoding,
 });
 

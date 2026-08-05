@@ -108,7 +108,70 @@ export const Route = createFileRoute("/")({
         crossOrigin: "anonymous",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "SparkCoder",
+          url: "https://www.sparkcoder.online/",
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Any (web browser)",
+          description:
+            "Arcade-style ServiceNow scripting interview practice with a live instance simulator, line-by-line corrections and mistake analytics.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          publisher: {
+            "@type": "Organization",
+            name: "SparkCoder",
+            url: "https://www.sparkcoder.online",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "What is SparkCoder?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "SparkCoder is a free practice app for ServiceNow scripting interviews. You solve code puzzles, run scripts in a simulated instance, and get instant teaching when an answer is wrong.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Which learning tracks are available?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Tracks cover ServiceNow developer scripting, ServiceNow admin and IRM, Java and AngularJS, each with its own curated modules, quizzes and challenges.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Is SparkCoder free to use?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. All practice puzzles, the live coding simulator and the interview question guides are free, and progress is saved on your device.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Does SparkCoder help with ServiceNow interview preparation?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes. It includes interview question guides for ITSM, CMDB, Discovery, CSM, HRSD, IntegrationHub, Flow Designer and IRM, plus scenario-based scripting drills with model answers.",
+              },
+            },
+          ],
+        }),
+      },
+    ],
   }),
+
 
   component: Home,
 });
