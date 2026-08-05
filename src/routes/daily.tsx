@@ -31,7 +31,64 @@ export const Route = createFileRoute("/daily")({
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "https://www.sparkcoder.online/daily" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: "ServiceNow Daily Scripting Challenge",
+          description:
+            "One curated ServiceNow scripting puzzle a day, with instant teach-back when you miss.",
+          url: "https://www.sparkcoder.online/daily",
+          learningResourceType: "Practice problem",
+          educationalLevel: "Intermediate",
+          teaches: "ServiceNow server-side and client-side scripting",
+          inLanguage: "en",
+          isAccessibleForFree: true,
+          provider: {
+            "@type": "Organization",
+            name: "SparkCoder",
+            url: "https://www.sparkcoder.online",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "How often does the daily ServiceNow challenge change?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "A new puzzle is selected every calendar day for your active learning track, so you get one fresh scripting problem per day.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What happens if I answer the daily challenge wrong?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "You get an immediate teach-back card with a line-by-line correction of the script, plus the option to retry so the concept sticks.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Do I need an account to solve the daily challenge?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "No. The daily challenge is free and your streak, XP, and progress are stored on your device.",
+              },
+            },
+          ],
+        }),
+      },
+    ],
   }),
+
   component: Daily,
 });
 
