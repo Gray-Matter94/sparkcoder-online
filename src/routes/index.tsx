@@ -236,7 +236,7 @@ function Home() {
           </h2>
           <Link
             to="/daily"
-            className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
+            className={`dark-glass-option block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
               dailyDone
                 ? "border-primary/50 bg-primary/5"
                 : "border-accent bg-accent/5 hover:border-accent shadow-[0_0_24px_rgba(245,158,11,0.15)]"
@@ -270,7 +270,7 @@ function Home() {
                 key={card.title}
                 to={card.to}
                 {...(card.params ? { params: card.params } : {})}
-                className={`block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
+                className={`dark-glass-option block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
               >
                 <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
                 <div className="flex items-center gap-3 relative">
@@ -327,7 +327,7 @@ function Home() {
                   key={c.id}
                   to="/practice/$category"
                   params={{ category: c.id }} search={{ difficulty: undefined }}
-                  className={`group p-4 rounded-2xl border-2 border-border bg-panel transition-all flex items-center gap-4 ${ringColor} active:translate-y-0.5`}
+                  className={`dark-glass-option group p-4 rounded-2xl border-2 border-border bg-panel transition-all flex items-center gap-4 ${ringColor} active:translate-y-0.5`}
                 >
                   <div className="size-12 rounded-xl bg-background border border-border flex items-center justify-center text-2xl shrink-0">
                     {c.emoji}
