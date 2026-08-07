@@ -35,10 +35,10 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
               aria-selected={isActive}
               aria-label={`Switch to ${t.name} practice track`}
               onClick={() => setActive(t.id as TrackId)}
-              className={`group relative flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-all active:translate-y-0.5 ${
+              className={`group relative flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-all active:translate-y-0.5 dark-glass-option ${
                 isActive
                   ? accentRing
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-background/40"
+                  : "border-transparent text-muted-foreground"
               }`}
             >
               <span className="text-xl leading-none">{t.emoji}</span>
