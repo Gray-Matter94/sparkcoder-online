@@ -86,7 +86,7 @@ function DiscoveryHub() {
                 to="/learn/discovery/$section"
                 params={{ section: s.slug }}
                 style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
-                className="dark-glass-option block h-full rounded-2xl border-2 border-border bg-panel p-4"
+                className="dark-glass-option floating-glass block h-full rounded-2xl border-2 border-border bg-panel p-4"
               >
                 <div className="text-[10px] font-mono text-muted-foreground mb-1">
                   {String(i + 1).padStart(2, "0")}
