@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { TRACKS, useTrack, type TrackId } from "@/lib/tracks";
 
 export function TrackSwitcher({ className = "" }: { className?: string }) {
@@ -35,6 +36,7 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
               aria-selected={isActive}
               aria-label={`Switch to ${t.name} practice track`}
               onClick={() => setActive(t.id as TrackId)}
+              style={{ "--dg-glow": `var(--color-${t.accent})` } as CSSProperties}
               className={`group relative flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-all active:translate-y-0.5 dark-glass-option ${
                 isActive
                   ? accentRing

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TOPICS, topicsForTrack, termsFor, type TopicId } from "@/lib/glossary";
 import { useProgress, todayStr, daysBetween } from "@/lib/progress";
@@ -74,6 +75,7 @@ function Learn() {
         <Link
           to="/learn/scenario-based-scripting"
           aria-label="Open the Scenario-Based Scripting Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -90,6 +92,7 @@ function Learn() {
         <Link
           to="/learn/acl-scripting"
           aria-label="Open the ACL Scripting Deep Dive guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -106,6 +109,7 @@ function Learn() {
         <Link
           to="/learn/glideajax-interview-questions"
           aria-label="Open the GlideAjax Interview Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -122,6 +126,7 @@ function Learn() {
         <Link
           to="/learn/flow-designer-interview-questions"
           aria-label="Open the Flow Designer Interview Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -138,6 +143,7 @@ function Learn() {
         <Link
           to="/learn/flow-designer-how-to"
           aria-label="Open the Flow Designer How-To Guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -154,6 +160,7 @@ function Learn() {
         <Link
           to="/learn/discovery-interview-questions"
           aria-label="Open the ServiceNow Discovery Interview Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -170,6 +177,7 @@ function Learn() {
         <Link
           to="/servicenow-irm-architect-practice"
           aria-label="Open the ServiceNow IRM Architect practice track"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -186,6 +194,7 @@ function Learn() {
         <Link
           to="/learn/irm-architect-interview-questions"
           aria-label="Open the IRM Architect Interview Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
           className="dark-glass-option block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
         >
           <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
@@ -320,6 +329,7 @@ function Learn() {
               key={t.id}
               to="/learn/$topic"
               params={{ topic: t.id }}
+              style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
               className="dark-glass-option block rounded-2xl border-2 border-border bg-panel overflow-hidden transition-all active:translate-y-0.5"
             >
               <div className="relative aspect-[3/2] bg-zinc-900 overflow-hidden">
