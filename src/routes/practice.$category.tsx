@@ -255,7 +255,7 @@ function Practice() {
                   role="radio"
                   aria-checked={active}
                   onClick={() => setDifficulty(d.id)}
-                  className={`px-2 py-2 rounded-xl border-2 text-left transition-all ${
+                  className={`floating-glass px-2 py-2 rounded-xl border-2 text-left transition-all ${
                     active
                       ? "border-primary bg-primary/5"
                       : "border-border bg-panel hover:border-primary/40"
@@ -299,7 +299,7 @@ function Practice() {
                   key={o.id}
                   disabled={disabled || wasWrong}
                   onClick={() => setPicked(o)}
-                  className={`p-3.5 rounded-xl border-2 text-left flex items-center justify-between gap-3 transition-all ${
+                  className={`floating-glass p-3.5 rounded-xl border-2 text-left flex items-center justify-between gap-3 transition-all ${
                     isPicked
                       ? "border-primary bg-primary/5"
                       : wasWrong
