@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -84,6 +85,7 @@ function DiscoveryHub() {
               <Link
                 to="/learn/discovery/$section"
                 params={{ section: s.slug }}
+                style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
                 className="dark-glass-option block h-full rounded-2xl border-2 border-border bg-panel p-4"
               >
                 <div className="text-[10px] font-mono text-muted-foreground mb-1">

@@ -197,14 +197,13 @@
 }
 
 /* --- Dark Glass option (hover / selected) --- */
+/* Glow color comes from --dg-glow (defaults to the option's own text color). */
 @utility dark-glass-option {
   position: relative;
   transition:
     background 0.25s ease,
     border-color 0.25s ease,
-    box-shadow 0.3s ease,
-    color 0.25s ease,
-    text-shadow 0.25s ease;
+    box-shadow 0.3s ease;
 
   &:hover,
   &:focus-visible,
@@ -216,25 +215,19 @@
       color-mix(in oklab, var(--color-panel) 48%, transparent) 100%
     );
     backdrop-filter: blur(14px) saturate(160%);
-    border-color: color-mix(in oklab, var(--color-primary) 70%, transparent);
-    color: var(--color-primary);
-    text-shadow:
-      0 0 4px color-mix(in oklab, var(--color-primary) 80%, transparent),
-      0 0 12px color-mix(in oklab, var(--color-primary) 55%, transparent);
+    border-color: color-mix(in oklab, var(--dg-glow, currentColor) 70%, transparent);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--color-primary) 45%, transparent),
-      0 0 12px -2px color-mix(in oklab, var(--color-primary) 60%, transparent),
-      0 0 28px -6px color-mix(in oklab, var(--color-primary) 45%, transparent),
-      0 1px 0 0 color-mix(in oklab, white 10%, transparent) inset;
+      0 0 0 1px color-mix(in oklab, var(--dg-glow, currentColor) 45%, transparent),
+      0 0 12px -2px color-mix(in oklab, var(--dg-glow, currentColor) 60%, transparent),
+      0 0 28px -6px color-mix(in oklab, var(--dg-glow, currentColor) 45%, transparent);
   }
 
   &[aria-selected="true"],
   &[data-selected="true"] {
     box-shadow:
-      0 0 0 1.5px color-mix(in oklab, var(--color-primary) 75%, transparent),
-      0 0 16px -1px color-mix(in oklab, var(--color-primary) 70%, transparent),
-      0 0 36px -6px color-mix(in oklab, var(--color-primary) 55%, transparent),
-      0 1px 0 0 color-mix(in oklab, white 12%, transparent) inset;
+      0 0 0 1.5px color-mix(in oklab, var(--dg-glow, currentColor) 75%, transparent),
+      0 0 16px -1px color-mix(in oklab, var(--dg-glow, currentColor) 70%, transparent),
+      0 0 36px -6px color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent);
   }
 }
 
