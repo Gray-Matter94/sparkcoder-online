@@ -196,6 +196,40 @@
   }
 }
 
+/* --- Floating glass option (resting state for every selectable option) --- */
+@utility floating-glass {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-panel) 62%, transparent) 0%,
+    color-mix(in oklab, var(--color-panel-2) 45%, transparent) 100%
+  );
+  backdrop-filter: blur(12px) saturate(150%);
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, white 7%, transparent) inset,
+    0 8px 18px -10px color-mix(in oklab, black 75%, transparent),
+    0 2px 6px -4px color-mix(in oklab, black 60%, transparent);
+  transition:
+    transform 0.25s var(--ease-spring),
+    box-shadow 0.3s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, white 10%, transparent) inset,
+      0 16px 28px -12px color-mix(in oklab, black 80%, transparent),
+      0 4px 10px -6px color-mix(in oklab, black 65%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-glass,
+  .floating-glass:hover:not(:disabled),
+  .floating-glass:focus-visible { transition: none; transform: none; }
+}
+
 /* --- Dark Glass option (hover / selected) --- */
 /* Glow color comes from --dg-glow (defaults to the option's own text color). */
 @utility dark-glass-option {
@@ -204,6 +238,7 @@
     background 0.25s ease,
     border-color 0.25s ease,
     box-shadow 0.3s ease;
+
 
   &:hover,
   &:focus-visible,
