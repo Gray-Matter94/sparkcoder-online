@@ -84,7 +84,7 @@ function DiscoveryHub() {
               <Link
                 to="/learn/discovery/$section"
                 params={{ section: s.slug }}
-                className="block h-full rounded-2xl border-2 border-border bg-panel p-4 hover:border-accent/60 transition-colors"
+                className="dark-glass-option block h-full rounded-2xl border-2 border-border bg-panel p-4"
               >
                 <div className="text-[10px] font-mono text-muted-foreground mb-1">
                   {String(i + 1).padStart(2, "0")}
