@@ -209,18 +209,18 @@
     0 8px 18px -10px color-mix(in oklab, black 75%, transparent),
     0 2px 6px -4px color-mix(in oklab, black 60%, transparent);
   transition:
-    transform 0.25s var(--ease-spring),
-    box-shadow 0.3s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.16s var(--ease-spring),
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 
   &:hover:not(:disabled),
   &:focus-visible {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow:
-      0 1px 0 0 color-mix(in oklab, white 10%, transparent) inset,
-      0 16px 28px -12px color-mix(in oklab, black 80%, transparent),
-      0 4px 10px -6px color-mix(in oklab, black 65%, transparent);
+      0 1px 0 0 color-mix(in oklab, white 9%, transparent) inset,
+      0 10px 20px -12px color-mix(in oklab, black 75%, transparent),
+      0 3px 8px -6px color-mix(in oklab, black 60%, transparent);
   }
 }
 
@@ -235,9 +235,9 @@
 @utility dark-glass-option {
   position: relative;
   transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.3s ease;
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.2s ease;
 
 
   &:hover,
@@ -250,19 +250,18 @@
       color-mix(in oklab, var(--color-panel) 48%, transparent) 100%
     );
     backdrop-filter: blur(14px) saturate(160%);
-    border-color: color-mix(in oklab, var(--dg-glow, currentColor) 70%, transparent);
+    border-color: color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--dg-glow, currentColor) 45%, transparent),
-      0 0 12px -2px color-mix(in oklab, var(--dg-glow, currentColor) 60%, transparent),
-      0 0 28px -6px color-mix(in oklab, var(--dg-glow, currentColor) 45%, transparent);
+      0 0 0 1px color-mix(in oklab, var(--dg-glow, currentColor) 28%, transparent),
+      0 0 8px -3px color-mix(in oklab, var(--dg-glow, currentColor) 38%, transparent);
   }
 
   &[aria-selected="true"],
   &[data-selected="true"] {
     box-shadow:
-      0 0 0 1.5px color-mix(in oklab, var(--dg-glow, currentColor) 75%, transparent),
-      0 0 16px -1px color-mix(in oklab, var(--dg-glow, currentColor) 70%, transparent),
-      0 0 36px -6px color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent);
+      0 0 0 1.25px color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent),
+      0 0 12px -3px color-mix(in oklab, var(--dg-glow, currentColor) 45%, transparent),
+      0 0 22px -10px color-mix(in oklab, var(--dg-glow, currentColor) 30%, transparent);
   }
 }
 
