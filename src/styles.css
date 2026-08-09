@@ -275,10 +275,50 @@
       0 0 16px -1px color-mix(in oklab, var(--dg-glow, currentColor) 70%, transparent),
       0 0 36px -6px color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent);
   }
+
+  /* Faint gradient sweep travelling around the border of the selected option */
+  &[aria-selected="true"]::after,
+  &[data-selected="true"]::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.75;
+    background: conic-gradient(
+      from var(--dg-sweep, 0deg),
+      transparent 0deg,
+      transparent 200deg,
+      color-mix(in oklab, var(--dg-glow, currentColor) 55%, transparent) 300deg,
+      color-mix(in oklab, var(--dg-glow, currentColor) 95%, transparent) 340deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    animation: dg-border-sweep 2.8s linear infinite;
+  }
+}
+
+@property --dg-sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes dg-border-sweep {
+  to { --dg-sweep: 360deg; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .dark-glass-option { transition: none; }
+  .dark-glass-option[aria-selected="true"]::after,
+  .dark-glass-option[data-selected="true"]::after { animation: none; }
 }
 
 @keyframes liquid-sheen {
