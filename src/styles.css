@@ -234,10 +234,14 @@
 /* Glow color comes from --dg-glow (defaults to the option's own text color). */
 @utility dark-glass-option {
   position: relative;
+  /* Slower, eased-out fade when leaving a selection so the glow drifts away */
   transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.3s ease;
+    background 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    outline-color 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    backdrop-filter 0.42s ease;
+
 
 
   &:hover,
