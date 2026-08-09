@@ -248,6 +248,13 @@
   &:focus-visible,
   &[aria-selected="true"],
   &[data-selected="true"] {
+    /* Quicker, springier ramp-in so selection feels responsive */
+    transition:
+      background 0.22s var(--ease-spring),
+      border-color 0.22s var(--ease-spring),
+      outline-color 0.22s var(--ease-spring),
+      box-shadow 0.28s var(--ease-spring),
+      backdrop-filter 0.22s ease;
     background: linear-gradient(
       135deg,
       color-mix(in oklab, black 62%, transparent) 0%,
