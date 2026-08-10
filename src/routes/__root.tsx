@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Starfield } from "../components/Starfield";
+import { BootSplash } from "../components/BootSplash";
+
 
 function NotFoundComponent() {
   return (
@@ -123,9 +125,11 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Starfield />
-        {children}
+        <BootSplash />
+        <div className="app-glide-in">{children}</div>
         <Scripts />
       </body>
+
     </html>
   );
 }

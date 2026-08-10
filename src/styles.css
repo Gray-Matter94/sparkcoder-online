@@ -145,6 +145,78 @@
   to { opacity: 1; }
 }
 
+/* ---- Boot splash + app glide-in ---- */
+.boot-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--color-panel) 70%, transparent), var(--color-background) 70%);
+  backdrop-filter: blur(6px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 700ms ease;
+}
+.boot-splash-leaving {
+  opacity: 0;
+  transform: scale(1.04);
+  filter: blur(8px);
+  pointer-events: none;
+}
+.boot-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: boot-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.boot-splash-mark {
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  letter-spacing: 0.22em;
+  color: var(--color-primary);
+}
+.boot-splash-bar {
+  width: 160px;
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-border);
+}
+.boot-splash-bar > span {
+  display: block;
+  height: 100%;
+  width: 45%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  animation: boot-slide 1s ease-in-out infinite;
+}
+@keyframes boot-rise {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes boot-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(260%); }
+}
+.app-glide-in {
+  animation: app-glide-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes app-glide-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.995); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boot-splash,
+  .boot-splash-inner,
+  .boot-splash-bar > span,
+  .app-glide-in { animation: none; transition: opacity 200ms linear; transform: none; filter: none; }
+}
+
+
+
 /* Liquid glass — frosted, saturated, with inner highlight + soft sheen */
 @utility liquid-glass {
   position: relative;
