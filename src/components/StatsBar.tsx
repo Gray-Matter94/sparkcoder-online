@@ -18,17 +18,19 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
             ← Home
           </Link>
         ) : (
-          <Link to="/" aria-label="SparkCoder home">
+          <Link to="/" aria-label="SparkCoder home" className="shrink-0 flex items-center">
             <img
               src={logoAsset.url}
               alt="SparkCoder - ServiceNow Interview Practice logo"
-              width={56}
-              height={56}
+              width={64}
+              height={64}
               fetchPriority="high"
-              className="size-14 object-contain"
+              sizes="(max-width: 639px) 36px, (max-width: 1023px) 44px, 52px"
+              className="size-9 sm:size-11 lg:size-13 object-contain"
             />
           </Link>
         )}
+
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1.5">
           <span className="text-accent">🔥</span>
