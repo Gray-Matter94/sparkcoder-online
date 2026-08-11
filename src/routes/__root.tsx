@@ -86,7 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
     ],
     links: [
-      { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/b611279e-19cc-4b23-8209-afef87067622/sparkcoder-logo.png" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "stylesheet", href: appCss },
     ],
     scripts: [
