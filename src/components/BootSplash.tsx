@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import logoAsset from "@/assets/sparkcoder-logo.webp.asset.json";
+
 
 /**
  * Boot splash: shown in the initial HTML, then glides away once hydration
