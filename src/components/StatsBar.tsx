@@ -7,8 +7,9 @@ import logoAsset from "@/assets/sparkcoder-logo.webp.asset.json";
 
 export function StatsBar({ progress, back }: { progress: Progress; back?: boolean }) {
   return (
-    <header className="liquid-glass p-4 flex items-center justify-between sticky top-0 z-50 rounded-none">
-      <div className="flex items-center gap-4">
+    <header className="liquid-glass px-3 py-2 sm:px-4 sm:py-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sticky top-0 z-50 rounded-none">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-4">
+
         {back ? (
           <Link
             to="/"
