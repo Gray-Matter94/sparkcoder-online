@@ -27,8 +27,19 @@ export function BootSplash() {
       className={`boot-splash${leaving ? " boot-splash-leaving" : ""}`}
     >
       <div className="boot-splash-inner">
-        <div className="boot-splash-mark font-display">SPARKCODER</div>
+        <div className="boot-splash-brand">
+          <img
+            src={logoAsset.url}
+            alt=""
+            width={96}
+            height={96}
+            fetchPriority="high"
+            className="boot-splash-logo"
+          />
+          <div className="boot-splash-mark font-display">SPARKCODER</div>
+        </div>
         <div className="boot-splash-bar">
+
           <span />
         </div>
       </div>
