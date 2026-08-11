@@ -22,10 +22,10 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
             <img
               src={logoAsset.url}
               alt="SparkCoder - ServiceNow Interview Practice logo"
-              width={40}
-              height={40}
+              width={56}
+              height={56}
               fetchPriority="high"
-              className="size-10 object-contain"
+              className="size-14 object-contain"
             />
           </Link>
         )}
