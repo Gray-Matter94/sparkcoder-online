@@ -259,17 +259,51 @@ function IRMGuide() {
           <p className="text-sm text-foreground/85 leading-relaxed">
             Senior ServiceNow IRM/GRC interviews probe risk math, control
             testing strategy, and how the profile layer connects everything.
-            Four scenario-based lessons below — each with a runnable simulator
-            trace so the platform behavior is visible, not hand-waved.
+            Below: a fast answer summary, four simulator-backed lessons, and ten
+            architect-level scenario questions with a recommended answer, a
+            defensible alternate approach, and the pitfall interviewers listen
+            for.
           </p>
           <p className="text-[11px] font-mono text-muted-foreground">
             Pair with the{" "}
             <Link to="/learn/acl-scripting" className="text-accent underline">
               ACL scripting guide
             </Link>{" "}
-            for platform security depth.
+            for platform security depth, or drill the same topics in the{" "}
+            <Link
+              to="/servicenow-irm-architect-practice"
+              className="text-accent underline"
+            >
+              IRM practice track
+            </Link>
+            .
           </p>
         </header>
+
+        <section
+          aria-labelledby="summary-heading"
+          className="rounded-2xl border-2 border-accent/40 bg-panel p-5 space-y-4"
+        >
+          <h2 id="summary-heading" className="font-display text-xl tracking-tight">
+            Answer summary — the ten things you must be able to say
+          </h2>
+          <p className="text-sm text-foreground/80">
+            Short, quotable answers to the questions that open almost every IRM
+            architect screen. Read these first, then work the scenarios.
+          </p>
+          <dl className="space-y-3">
+            {QUICK_ANSWERS.map((qa) => (
+              <div
+                key={qa.q}
+                className="rounded-xl border border-border bg-background/40 p-3"
+              >
+                <dt className="text-sm font-bold text-accent">{qa.q}</dt>
+                <dd className="mt-1 text-sm text-foreground/85">{qa.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
 
         <ol className="space-y-6">
           {LESSONS.map((l) => (
