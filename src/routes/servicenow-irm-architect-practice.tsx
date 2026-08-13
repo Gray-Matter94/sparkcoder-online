@@ -145,7 +145,7 @@ function IRMTrackLanding() {
               to="/learn/irm-architect-interview-questions"
               className="h-11 px-5 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-primary/50"
             >
-              Interview Q&amp;A
+              IRM architect interview questions
             </Link>
           </div>
         </header>
