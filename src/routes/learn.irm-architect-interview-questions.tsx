@@ -5,10 +5,11 @@ import { Simulator } from "@/components/Simulator";
 import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
+import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/irm-interview";
 
-const TITLE = "ServiceNow IRM Architect Interview Questions";
+const TITLE = "ServiceNow IRM Architect Interview Questions & Answers";
 const DESCRIPTION =
-  "ServiceNow IRM/GRC architect interview prep: risk assessment, control testing, profile types, and continuous monitoring — with simulator traces.";
+  "14 ServiceNow IRM architect interview questions with answers: risk scoring, control architecture, entity filters, vendor risk, audit evidence — plus simulator traces.";
 const URL =
   "https://www.sparkcoder.online/learn/irm-architect-interview-questions";
 
@@ -167,14 +168,29 @@ if (current.state == 3 && !current.evidence_attachment) {
 const FAQ_JSONLD = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: LESSONS.map((l) => ({
-    "@type": "Question",
-    name: l.prompt,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
-    },
-  })),
+  mainEntity: [
+    ...QUICK_ANSWERS.map((q) => ({
+      "@type": "Question",
+      name: q.q,
+      acceptedAnswer: { "@type": "Answer", text: q.a },
+    })),
+    ...LESSONS.map((l) => ({
+      "@type": "Question",
+      name: l.prompt,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
+      },
+    })),
+    ...SCENARIO_QA.map((s) => ({
+      "@type": "Question",
+      name: s.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${s.answer.join(" ")} Alternate approach: ${s.alternate} Watch out: ${s.pitfall}`,
+      },
+    })),
+  ],
 };
 
 const ARTICLE_JSONLD = {
@@ -243,17 +259,51 @@ function IRMGuide() {
           <p className="text-sm text-foreground/85 leading-relaxed">
             Senior ServiceNow IRM/GRC interviews probe risk math, control
             testing strategy, and how the profile layer connects everything.
-            Four scenario-based lessons below — each with a runnable simulator
-            trace so the platform behavior is visible, not hand-waved.
+            Below: a fast answer summary, four simulator-backed lessons, and ten
+            architect-level scenario questions with a recommended answer, a
+            defensible alternate approach, and the pitfall interviewers listen
+            for.
           </p>
           <p className="text-[11px] font-mono text-muted-foreground">
             Pair with the{" "}
             <Link to="/learn/acl-scripting" className="text-accent underline">
               ACL scripting guide
             </Link>{" "}
-            for platform security depth.
+            for platform security depth, or drill the same topics in the{" "}
+            <Link
+              to="/servicenow-irm-architect-practice"
+              className="text-accent underline"
+            >
+              IRM practice track
+            </Link>
+            .
           </p>
         </header>
+
+        <section
+          aria-labelledby="summary-heading"
+          className="rounded-2xl border-2 border-accent/40 bg-panel p-5 space-y-4"
+        >
+          <h2 id="summary-heading" className="font-display text-xl tracking-tight">
+            Answer summary — the ten things you must be able to say
+          </h2>
+          <p className="text-sm text-foreground/80">
+            Short, quotable answers to the questions that open almost every IRM
+            architect screen. Read these first, then work the scenarios.
+          </p>
+          <dl className="space-y-3">
+            {QUICK_ANSWERS.map((qa) => (
+              <div
+                key={qa.q}
+                className="rounded-xl border border-border bg-background/40 p-3"
+              >
+                <dt className="text-sm font-bold text-accent">{qa.q}</dt>
+                <dd className="mt-1 text-sm text-foreground/85">{qa.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
 
         <ol className="space-y-6">
           {LESSONS.map((l) => (
@@ -314,13 +364,82 @@ function IRMGuide() {
           ))}
         </ol>
 
+        <section aria-labelledby="scenarios-heading" className="space-y-5">
+          <div className="space-y-2">
+            <h2
+              id="scenarios-heading"
+              className="font-display text-2xl tracking-tight"
+            >
+              Ten architect-level scenario questions
+            </h2>
+            <p className="text-sm text-foreground/85">
+              These are the design-judgement questions that separate an IRM
+              architect from an IRM admin. Each one gives the recommended answer,
+              a genuine alternate approach with its trade-off, and the pitfall
+              that ends the interview early.
+            </p>
+          </div>
+
+          <ol className="space-y-5">
+            {SCENARIO_QA.map((s, i) => (
+              <li
+                key={s.id}
+                id={s.id}
+                className="rounded-2xl border-2 border-border bg-panel p-5 space-y-4"
+              >
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold">
+                    {s.role}
+                  </span>
+                  <h3 className="font-display text-lg tracking-tight">
+                    {i + 5}. {s.question}
+                  </h3>
+                  <p className="text-sm text-foreground/75">{s.situation}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold mb-2">
+                    Recommended answer
+                  </h4>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">
+                    {s.answer.map((a, j) => (
+                      <li key={j}>{a}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border border-secondary/40 bg-secondary/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold mb-1">
+                    Alternate approach
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.alternate}</p>
+                </div>
+
+                <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-destructive font-bold mb-1">
+                    Pitfall
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.pitfall}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
         <section className="rounded-2xl border-2 border-border bg-panel p-5 space-y-3">
           <h2 className="font-display text-xl tracking-tight">Keep going</h2>
           <p className="text-sm text-foreground/85">
             IRM sits on top of platform fundamentals — ACLs gate risk visibility,
-            Flow Designer drives remediation. Tighten those next.
+            Flow Designer drives remediation. Tighten those next, or practice the
+            risk-scoring math and GRC tables hands-on.
           </p>
           <div className="flex flex-wrap gap-2">
+            <Link
+              to="/servicenow-irm-architect-practice"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-sm font-display tracking-wider uppercase hover:bg-accent/20"
+            >
+              IRM practice track
+            </Link>
             <Link
               to="/learn"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
