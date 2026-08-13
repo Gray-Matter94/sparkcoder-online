@@ -221,7 +221,15 @@ function IRMTrackLanding() {
             <li className="rounded-xl border border-border p-3">
               <strong className="text-primary">Simulator traces.</strong> Every
               answer explains the platform's response — right or wrong — so you
-              build intuition, not just recall.
+              build intuition, not just recall. Rehearsing the verbal round too?
+              Work through the{" "}
+              <Link
+                to="/learn/irm-architect-interview-questions"
+                className="text-primary underline"
+              >
+                ServiceNow IRM architect interview questions and answers
+              </Link>
+              .
             </li>
           </ul>
         </section>
