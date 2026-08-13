@@ -5,10 +5,11 @@ import { Simulator } from "@/components/Simulator";
 import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
+import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/irm-interview";
 
-const TITLE = "ServiceNow IRM Architect Interview Questions";
+const TITLE = "ServiceNow IRM Architect Interview Questions & Answers";
 const DESCRIPTION =
-  "ServiceNow IRM/GRC architect interview prep: risk assessment, control testing, profile types, and continuous monitoring — with simulator traces.";
+  "14 ServiceNow IRM architect interview questions with answers: risk scoring, control architecture, entity filters, vendor risk, audit evidence — plus simulator traces.";
 const URL =
   "https://www.sparkcoder.online/learn/irm-architect-interview-questions";
 
