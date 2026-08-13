@@ -364,13 +364,82 @@ function IRMGuide() {
           ))}
         </ol>
 
+        <section aria-labelledby="scenarios-heading" className="space-y-5">
+          <div className="space-y-2">
+            <h2
+              id="scenarios-heading"
+              className="font-display text-2xl tracking-tight"
+            >
+              Ten architect-level scenario questions
+            </h2>
+            <p className="text-sm text-foreground/85">
+              These are the design-judgement questions that separate an IRM
+              architect from an IRM admin. Each one gives the recommended answer,
+              a genuine alternate approach with its trade-off, and the pitfall
+              that ends the interview early.
+            </p>
+          </div>
+
+          <ol className="space-y-5">
+            {SCENARIO_QA.map((s, i) => (
+              <li
+                key={s.id}
+                id={s.id}
+                className="rounded-2xl border-2 border-border bg-panel p-5 space-y-4"
+              >
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold">
+                    {s.role}
+                  </span>
+                  <h3 className="font-display text-lg tracking-tight">
+                    {i + 5}. {s.question}
+                  </h3>
+                  <p className="text-sm text-foreground/75">{s.situation}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold mb-2">
+                    Recommended answer
+                  </h4>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">
+                    {s.answer.map((a, j) => (
+                      <li key={j}>{a}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border border-secondary/40 bg-secondary/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold mb-1">
+                    Alternate approach
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.alternate}</p>
+                </div>
+
+                <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-destructive font-bold mb-1">
+                    Pitfall
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.pitfall}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
         <section className="rounded-2xl border-2 border-border bg-panel p-5 space-y-3">
           <h2 className="font-display text-xl tracking-tight">Keep going</h2>
           <p className="text-sm text-foreground/85">
             IRM sits on top of platform fundamentals — ACLs gate risk visibility,
-            Flow Designer drives remediation. Tighten those next.
+            Flow Designer drives remediation. Tighten those next, or practice the
+            risk-scoring math and GRC tables hands-on.
           </p>
           <div className="flex flex-wrap gap-2">
+            <Link
+              to="/servicenow-irm-architect-practice"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-sm font-display tracking-wider uppercase hover:bg-accent/20"
+            >
+              IRM practice track
+            </Link>
             <Link
               to="/learn"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
