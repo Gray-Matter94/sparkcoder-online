@@ -205,6 +205,12 @@ gr.query();`}</code>
               GlideRecord drills
             </Link>
             <Link
+              to="/guides/acl-script-examples"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
+            >
+              ACL script examples
+            </Link>
+            <Link
               to="/learn/scenario-based-scripting"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
             >
