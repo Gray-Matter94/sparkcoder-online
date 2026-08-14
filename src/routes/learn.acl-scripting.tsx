@@ -311,6 +311,12 @@ function ACLGuide() {
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
+              to="/guides/acl-script-examples"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent font-display tracking-wider text-xs uppercase hover:bg-accent/20"
+            >
+              ACL script examples by table
+            </Link>
+            <Link
               to="/learn"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
             >

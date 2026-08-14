@@ -40,6 +40,7 @@ import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-script
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
+import { Route as GuidesAclScriptExamplesRouteImport } from './routes/guides.acl-script-examples'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
@@ -214,6 +215,11 @@ const GuidesGliderecordQueryReferenceFieldRoute =
     path: '/guides/gliderecord-query-reference-field',
     getParentRoute: () => rootRouteImport,
   } as any)
+const GuidesAclScriptExamplesRoute = GuidesAclScriptExamplesRouteImport.update({
+  id: '/guides/acl-script-examples',
+  path: '/guides/acl-script-examples',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
     | '/learn/$topic'
@@ -464,6 +476,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  GuidesAclScriptExamplesRoute: typeof GuidesAclScriptExamplesRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesGliderecordQueryReferenceFieldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides/acl-script-examples': {
+      id: '/guides/acl-script-examples'
+      path: '/guides/acl-script-examples'
+      fullPath: '/guides/acl-script-examples'
+      preLoaderRoute: typeof GuidesAclScriptExamplesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -757,6 +777,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   BlogSlugRoute: BlogSlugRoute,
+  GuidesAclScriptExamplesRoute: GuidesAclScriptExamplesRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
     GuidesGliderecordQueryReferenceFieldRoute,
   InsightsBacklinksRoute: InsightsBacklinksRoute,
