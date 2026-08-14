@@ -81,7 +81,6 @@ if (gs.hasRole('cmdb_admin') && current.install_status == '7') {
     scenario: "Users may edit their own email; only user_admin may edit anyone else's.",
     code: `answer = gs.hasRole('user_admin')
        || current.sys_id == gs.getUserID();`,
-    view: undefined as unknown as never,
     why: "Self-service ACLs compare the record's sys_id with the session user — the cheapest possible check and no query.",
     pitfall:
       "Comparing `current.user_name == gs.getUserName()` breaks when the user name changes; always compare sys_ids.",
