@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
+import { Route as ServicenowInterviewQuestionsAndAnswersRouteImport } from './routes/servicenow-interview-questions-and-answers'
 import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
 import { Route as ServicenowCodingExamplesForInterviewRouteImport } from './routes/servicenow-coding-examples-for-interview'
 import { Route as PlayRouteImport } from './routes/play'
@@ -54,6 +55,12 @@ const ServicenowIrmArchitectPracticeRoute =
   ServicenowIrmArchitectPracticeRouteImport.update({
     id: '/servicenow-irm-architect-practice',
     path: '/servicenow-irm-architect-practice',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicenowInterviewQuestionsAndAnswersRoute =
+  ServicenowInterviewQuestionsAndAnswersRouteImport.update({
+    id: '/servicenow-interview-questions-and-answers',
+    path: '/servicenow-interview-questions-and-answers',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ServicenowCsaInterviewQuestions2026Route =
@@ -246,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/play': typeof PlayRoute
   '/servicenow-coding-examples-for-interview': typeof ServicenowCodingExamplesForInterviewRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-interview-questions-and-answers': typeof ServicenowInterviewQuestionsAndAnswersRoute
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
@@ -283,6 +291,7 @@ export interface FileRoutesByTo {
   '/play': typeof PlayRoute
   '/servicenow-coding-examples-for-interview': typeof ServicenowCodingExamplesForInterviewRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-interview-questions-and-answers': typeof ServicenowInterviewQuestionsAndAnswersRoute
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
@@ -321,6 +330,7 @@ export interface FileRoutesById {
   '/play': typeof PlayRoute
   '/servicenow-coding-examples-for-interview': typeof ServicenowCodingExamplesForInterviewRoute
   '/servicenow-csa-interview-questions-2026': typeof ServicenowCsaInterviewQuestions2026Route
+  '/servicenow-interview-questions-and-answers': typeof ServicenowInterviewQuestionsAndAnswersRoute
   '/servicenow-irm-architect-practice': typeof ServicenowIrmArchitectPracticeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-coding-examples-for-interview'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-interview-questions-and-answers'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/admin/feedback'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-coding-examples-for-interview'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-interview-questions-and-answers'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/admin/feedback'
@@ -434,6 +446,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/servicenow-coding-examples-for-interview'
     | '/servicenow-csa-interview-questions-2026'
+    | '/servicenow-interview-questions-and-answers'
     | '/servicenow-irm-architect-practice'
     | '/sitemap.xml'
     | '/admin/feedback'
@@ -472,6 +485,7 @@ export interface RootRouteChildren {
   PlayRoute: typeof PlayRoute
   ServicenowCodingExamplesForInterviewRoute: typeof ServicenowCodingExamplesForInterviewRoute
   ServicenowCsaInterviewQuestions2026Route: typeof ServicenowCsaInterviewQuestions2026Route
+  ServicenowInterviewQuestionsAndAnswersRoute: typeof ServicenowInterviewQuestionsAndAnswersRoute
   ServicenowIrmArchitectPracticeRoute: typeof ServicenowIrmArchitectPracticeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
@@ -513,6 +527,13 @@ declare module '@tanstack/react-router' {
       path: '/servicenow-irm-architect-practice'
       fullPath: '/servicenow-irm-architect-practice'
       preLoaderRoute: typeof ServicenowIrmArchitectPracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-interview-questions-and-answers': {
+      id: '/servicenow-interview-questions-and-answers'
+      path: '/servicenow-interview-questions-and-answers'
+      fullPath: '/servicenow-interview-questions-and-answers'
+      preLoaderRoute: typeof ServicenowInterviewQuestionsAndAnswersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/servicenow-csa-interview-questions-2026': {
@@ -773,6 +794,8 @@ const rootRouteChildren: RootRouteChildren = {
     ServicenowCodingExamplesForInterviewRoute,
   ServicenowCsaInterviewQuestions2026Route:
     ServicenowCsaInterviewQuestions2026Route,
+  ServicenowInterviewQuestionsAndAnswersRoute:
+    ServicenowInterviewQuestionsAndAnswersRoute,
   ServicenowIrmArchitectPracticeRoute: ServicenowIrmArchitectPracticeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
