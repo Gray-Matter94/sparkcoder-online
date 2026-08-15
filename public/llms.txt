@@ -7,6 +7,7 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 ## Pages
 
 - [Arcade lobby](/): Module list, stats, streak, badges, and the daily challenge.
+- [ServiceNow interview questions and answers](/servicenow-interview-questions-and-answers): Role-by-role interview Q&A hub (developer, admin, IRM, CMDB/Discovery, ITSM).
 - [Daily challenge](/daily): One curated puzzle per day for bonus XP and streak protection.
 - [Learn & quiz](/learn): Illustrated ServiceNow glossary and topic quizzes.
 - [Platform basics](/learn/platform): Instance, tables, scope, update sets.
