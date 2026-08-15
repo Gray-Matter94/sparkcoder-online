@@ -40,6 +40,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.7",
           })),
           { path: "/feedback", changefreq: "monthly", priority: "0.4" },
+          { path: "/servicenow-interview-questions-and-answers", changefreq: "weekly", priority: "0.95" },
           { path: "/servicenow-irm-architect-practice", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-coding-examples-for-interview", changefreq: "monthly", priority: "0.9" },
