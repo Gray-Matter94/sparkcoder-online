@@ -236,6 +236,12 @@ function CsaInterviewPage() {
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
+              to="/servicenow-interview-questions-and-answers"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-accent/50 bg-accent/10 text-accent text-sm font-display tracking-wider uppercase hover:bg-accent/20"
+            >
+              All ServiceNow interview Q&amp;A
+            </Link>
+            <Link
               to="/learn/acl-scripting"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
             >
