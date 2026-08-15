@@ -58,12 +58,14 @@ const CARD_ACCENTS: Record<CardAccent, { wrap: string; text: string }> = {
 
 const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
   "servicenow-dev": [
+    { title: "INTERVIEW Q&A HUB", blurb: "ServiceNow interview questions and answers, grouped by role.", tag: "ALL ROLES", icon: "🎯", bgEmoji: "❓", accent: "accent", to: "/servicenow-interview-questions-and-answers" },
     { title: "LEARN & QUIZ", blurb: "ServiceNow glossary + topic quizzes with illustrations.", tag: "GLOSSARY + QUIZ", icon: "🧠", bgEmoji: "📚", accent: "secondary", to: "/learn" },
     { title: "GLIDE API MATCH", blurb: "Speed-match Glide APIs to their descriptions. Beat the clock.", tag: "MINI-GAME", icon: "⚡", bgEmoji: "🎮", accent: "accent", to: "/play" },
     { title: "20-DAY CURRICULUM", blurb: "Day-by-day ServiceNow scripting plan. Goals, drills, takeaways.", tag: "4 WEEKS", icon: "📅", bgEmoji: "📝", accent: "primary", to: "/blog" },
     { title: "LIVE CODING SIMULATOR", blurb: "Instance-style editor · AI points at the exact line to fix.", tag: "500 TASKS", icon: "🤖", bgEmoji: "💻", accent: "amber", to: "/live-coding" },
   ],
   "servicenow-admin": [
+    { title: "INTERVIEW Q&A HUB", blurb: "ServiceNow interview questions and answers, grouped by role.", tag: "ALL ROLES", icon: "🎯", bgEmoji: "❓", accent: "accent", to: "/servicenow-interview-questions-and-answers" },
     { title: "ADMIN GLOSSARY & QUIZ", blurb: "ACLs, UI policies, catalogs, update sets — with quick quizzes.", tag: "GLOSSARY + QUIZ", icon: "🛡️", bgEmoji: "📚", accent: "secondary", to: "/learn" },
     { title: "CSA INTERVIEW Q&A 2026", blurb: "Curated Certified System Administrator questions with answers.", tag: "CSA PREP", icon: "🎓", bgEmoji: "❓", accent: "accent", to: "/servicenow-csa-interview-questions-2026" },
     { title: "ACL SCRIPTING DEEP-DIVE", blurb: "How ACLs evaluate, the four gates, and the scripts that unlock them.", tag: "GUIDE", icon: "🔐", bgEmoji: "🛡️", accent: "primary", to: "/learn/acl-scripting" },
