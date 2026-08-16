@@ -73,6 +73,24 @@ function Learn() {
           </p>
         </section>
         <Link
+          to="/glossary"
+          aria-label="Open the ServiceNow and ITSM glossary"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
+          className="dark-glass-option floating-glass block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            Reference
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            📖 ServiceNow &amp; ITSM Glossary
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            Definitions with platform examples and the interview angle — incident, CI,
+            CMDB, CSDM, update set, ACL, GlideRecord, MID Server and more.
+          </p>
+        </Link>
+        <Link
+
           to="/learn/scenario-based-scripting"
           aria-label="Open the Scenario-Based Scripting Questions guide"
           style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}

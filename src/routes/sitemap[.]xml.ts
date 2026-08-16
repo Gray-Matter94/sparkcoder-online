@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 import { BLOG_POSTS } from "@/lib/blog";
+import { GLOSSARY_ENTRIES } from "@/lib/glossary-hub";
+
 import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
 
 
@@ -39,7 +41,14 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "monthly" as const,
             priority: "0.7",
           })),
+          { path: "/glossary", changefreq: "weekly", priority: "0.9" },
+          ...GLOSSARY_ENTRIES.map((e) => ({
+            path: `/glossary/${e.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
           { path: "/feedback", changefreq: "monthly", priority: "0.4" },
+
           { path: "/servicenow-interview-questions-and-answers", changefreq: "weekly", priority: "0.95" },
           { path: "/servicenow-irm-architect-practice", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
