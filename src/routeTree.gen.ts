@@ -22,6 +22,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as GlossaryIndexRouteImport } from './routes/glossary.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
@@ -42,6 +43,7 @@ import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
 import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
 import { Route as GuidesAclScriptExamplesRouteImport } from './routes/guides.acl-script-examples'
+import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
@@ -113,6 +115,11 @@ const IndexRoute = IndexRouteImport.update({
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
+  id: '/glossary/',
+  path: '/glossary/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -227,6 +234,11 @@ const GuidesAclScriptExamplesRoute = GuidesAclScriptExamplesRouteImport.update({
   path: '/guides/acl-script-examples',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossarySlugRoute = GlossarySlugRouteImport.update({
+  id: '/glossary/$slug',
+  path: '/glossary/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -258,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -278,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
+  '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
@@ -296,6 +310,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -316,6 +331,7 @@ export interface FileRoutesByTo {
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog': typeof BlogIndexRoute
+  '/glossary': typeof GlossaryIndexRoute
   '/learn': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
@@ -335,6 +351,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/guides/acl-script-examples': typeof GuidesAclScriptExamplesRoute
   '/guides/gliderecord-query-reference-field': typeof GuidesGliderecordQueryReferenceFieldRoute
   '/insights/backlinks': typeof InsightsBacklinksRoute
@@ -355,6 +372,7 @@ export interface FileRoutesById {
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
+  '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
 }
@@ -375,6 +393,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/glossary/$slug'
     | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -395,6 +414,7 @@ export interface FileRouteTypes {
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
+    | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
   fileRoutesByTo: FileRoutesByTo
@@ -413,6 +433,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/glossary/$slug'
     | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -433,6 +454,7 @@ export interface FileRouteTypes {
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
     | '/blog'
+    | '/glossary'
     | '/learn'
     | '/learn/discovery/$section'
   id:
@@ -451,6 +473,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/feedback'
     | '/blog/$slug'
+    | '/glossary/$slug'
     | '/guides/acl-script-examples'
     | '/guides/gliderecord-query-reference-field'
     | '/insights/backlinks'
@@ -471,6 +494,7 @@ export interface FileRouteTypes {
     | '/practice/$category'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
+    | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
   fileRoutesById: FileRoutesById
@@ -490,6 +514,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  GlossarySlugRoute: typeof GlossarySlugRoute
   GuidesAclScriptExamplesRoute: typeof GuidesAclScriptExamplesRoute
   GuidesGliderecordQueryReferenceFieldRoute: typeof GuidesGliderecordQueryReferenceFieldRoute
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
@@ -510,6 +535,7 @@ export interface RootRouteChildren {
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  GlossaryIndexRoute: typeof GlossaryIndexRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -604,6 +630,13 @@ declare module '@tanstack/react-router' {
       path: '/learn'
       fullPath: '/learn/'
       preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary/': {
+      id: '/glossary/'
+      path: '/glossary'
+      fullPath: '/glossary/'
+      preLoaderRoute: typeof GlossaryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -746,6 +779,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesAclScriptExamplesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/glossary/$slug': {
+      id: '/glossary/$slug'
+      path: '/glossary/$slug'
+      fullPath: '/glossary/$slug'
+      preLoaderRoute: typeof GlossarySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -800,6 +840,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   BlogSlugRoute: BlogSlugRoute,
+  GlossarySlugRoute: GlossarySlugRoute,
   GuidesAclScriptExamplesRoute: GuidesAclScriptExamplesRoute,
   GuidesGliderecordQueryReferenceFieldRoute:
     GuidesGliderecordQueryReferenceFieldRoute,
@@ -824,6 +865,7 @@ const rootRouteChildren: RootRouteChildren = {
   PracticeCategoryRoute: PracticeCategoryRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
   BlogIndexRoute: BlogIndexRoute,
+  GlossaryIndexRoute: GlossaryIndexRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
