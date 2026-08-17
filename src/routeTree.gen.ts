@@ -25,6 +25,7 @@ import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
+import { Route as ToolsServicenowEncodedQueryBuilderRouteImport } from './routes/tools.servicenow-encoded-query-builder'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
@@ -131,6 +132,12 @@ const ToolsServicenowRegexTesterRoute =
   ToolsServicenowRegexTesterRouteImport.update({
     id: '/tools/servicenow-regex-tester',
     path: '/tools/servicenow-regex-tester',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ToolsServicenowEncodedQueryBuilderRoute =
+  ToolsServicenowEncodedQueryBuilderRouteImport.update({
+    id: '/tools/servicenow-encoded-query-builder',
+    path: '/tools/servicenow-encoded-query-builder',
     getParentRoute: () => rootRouteImport,
   } as any)
 const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
@@ -289,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
@@ -329,6 +337,7 @@ export interface FileRoutesByTo {
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog': typeof BlogIndexRoute
   '/glossary': typeof GlossaryIndexRoute
@@ -370,6 +379,7 @@ export interface FileRoutesById {
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
   '/practice/$category': typeof PracticeCategoryRoute
+  '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
     | '/glossary/'
@@ -452,6 +463,7 @@ export interface FileRouteTypes {
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog'
     | '/glossary'
@@ -492,6 +504,7 @@ export interface FileRouteTypes {
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
     | '/practice/$category'
+    | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
     | '/glossary/'
@@ -533,6 +546,7 @@ export interface RootRouteChildren {
   LearnItsmInterviewQuestionsRoute: typeof LearnItsmInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
+  ToolsServicenowEncodedQueryBuilderRoute: typeof ToolsServicenowEncodedQueryBuilderRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
   BlogIndexRoute: typeof BlogIndexRoute
   GlossaryIndexRoute: typeof GlossaryIndexRoute
@@ -651,6 +665,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/servicenow-regex-tester'
       fullPath: '/tools/servicenow-regex-tester'
       preLoaderRoute: typeof ToolsServicenowRegexTesterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/servicenow-encoded-query-builder': {
+      id: '/tools/servicenow-encoded-query-builder'
+      path: '/tools/servicenow-encoded-query-builder'
+      fullPath: '/tools/servicenow-encoded-query-builder'
+      preLoaderRoute: typeof ToolsServicenowEncodedQueryBuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice/$category': {
@@ -863,6 +884,8 @@ const rootRouteChildren: RootRouteChildren = {
   LearnItsmInterviewQuestionsRoute: LearnItsmInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
+  ToolsServicenowEncodedQueryBuilderRoute:
+    ToolsServicenowEncodedQueryBuilderRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,
   BlogIndexRoute: BlogIndexRoute,
   GlossaryIndexRoute: GlossaryIndexRoute,
