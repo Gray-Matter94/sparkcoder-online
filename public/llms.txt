@@ -11,6 +11,8 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 - [Daily challenge](/daily): One curated puzzle per day for bonus XP and streak protection.
 - [ServiceNow & ITSM glossary](/glossary): Term hub — definitions, platform examples and interview angles, one page per term (/glossary/incident, /glossary/cmdb, /glossary/acl, ...).
 - [Learn & quiz](/learn): Illustrated ServiceNow glossary and topic quizzes.
+- [Encoded query builder](/tools/servicenow-encoded-query-builder): Free tool — build ServiceNow encoded queries and copy GlideRecord / GlideAggregate / REST snippets.
+- [Regex tester](/tools/servicenow-regex-tester): Live regex tester with ServiceNow presets and copy-ready snippets.
 
 - [Platform basics](/learn/platform): Instance, tables, scope, update sets.
 - [ITSM](/learn/itsm): Incident, Problem, Change, Request, SLA.
