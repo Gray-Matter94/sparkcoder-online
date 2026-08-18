@@ -178,14 +178,29 @@ current.work_notes = 'Field dispatch: ' + wo.number;`,
 const FAQ_JSONLD = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: LESSONS.map((l) => ({
-    "@type": "Question",
-    name: l.prompt,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
-    },
-  })),
+  mainEntity: [
+    ...QUICK_ANSWERS.map((q) => ({
+      "@type": "Question",
+      name: q.q,
+      acceptedAnswer: { "@type": "Answer", text: q.a },
+    })),
+    ...LESSONS.map((l) => ({
+      "@type": "Question",
+      name: l.prompt,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
+      },
+    })),
+    ...SCENARIO_QA.map((s) => ({
+      "@type": "Question",
+      name: s.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${s.answer.join(" ")} Alternate approach: ${s.alternate} Watch out: ${s.pitfall}`,
+      },
+    })),
+  ],
 };
 
 const ARTICLE_JSONLD = {
