@@ -5,10 +5,11 @@ import { Simulator } from "@/components/Simulator";
 import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
+import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/csm-interview";
 
 const TITLE = "ServiceNow CSM Interview Questions — SparkCoder";
 const DESCRIPTION =
-  "ServiceNow CSM interview prep: Case management, Accounts & Contacts, Entitlements & Assets, CSM/FSM data model, and ITSM integration — with runnable simulator traces.";
+  "ServiceNow CSM interview questions and answers: 20 case management, entitlement, portal security, CSM/FSM and major issue scenarios with model answers, alternates and pitfalls.";
 const URL = "https://www.sparkcoder.online/learn/csm-interview-questions";
 
 interface Lesson {
@@ -178,14 +179,29 @@ current.work_notes = 'Field dispatch: ' + wo.number;`,
 const FAQ_JSONLD = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: LESSONS.map((l) => ({
-    "@type": "Question",
-    name: l.prompt,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
-    },
-  })),
+  mainEntity: [
+    ...QUICK_ANSWERS.map((q) => ({
+      "@type": "Question",
+      name: q.q,
+      acceptedAnswer: { "@type": "Answer", text: q.a },
+    })),
+    ...LESSONS.map((l) => ({
+      "@type": "Question",
+      name: l.prompt,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${l.approach.join(" ")} Watch out: ${l.pitfall}`,
+      },
+    })),
+    ...SCENARIO_QA.map((s) => ({
+      "@type": "Question",
+      name: s.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `${s.answer.join(" ")} Alternate approach: ${s.alternate} Watch out: ${s.pitfall}`,
+      },
+    })),
+  ],
 };
 
 const ARTICLE_JSONLD = {
@@ -195,7 +211,7 @@ const ARTICLE_JSONLD = {
   description: DESCRIPTION,
   url: URL,
   datePublished: "2026-07-16",
-  dateModified: "2026-07-16",
+  dateModified: "2026-08-18",
   author: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   publisher: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   about: "ServiceNow CSM, Case Management, Entitlements, CSM/FSM data model, ITSM integration",
@@ -244,10 +260,13 @@ function CsmGuide() {
             <span className="text-accent">INTERVIEW.</span>
           </h1>
           <p className="text-sm text-foreground/85 leading-relaxed">
-            Four scenario lessons on Case management, Entitlements & Assets, the
-            CSM/FSM data model, and ITSM integration — the exact Customer Service
-            Management topics senior interview loops probe, each with a runnable
-            simulator trace.
+            A full ServiceNow CSM interview prep guide: ten quotable answers to the
+            questions that open almost every screen, four scenario lessons with
+            runnable simulator traces (Case management, Entitlements &amp; Assets,
+            the CSM/FSM data model, ITSM integration), and six role-scoped
+            scenarios for CSM developers, admins and architects — each with the
+            recommended answer, a real alternate approach, and the pitfall
+            interviewers listen for.
           </p>
           <p className="text-[11px] font-mono text-muted-foreground">
             Pair with the{" "}
@@ -261,6 +280,30 @@ function CsmGuide() {
             for full platform coverage.
           </p>
         </header>
+
+        <section
+          aria-labelledby="summary-heading"
+          className="rounded-2xl border-2 border-accent/40 bg-panel p-5 space-y-4"
+        >
+          <h2 id="summary-heading" className="font-display text-xl tracking-tight">
+            Answer summary — the ten things you must be able to say
+          </h2>
+          <p className="text-sm text-foreground/80">
+            Short, quotable answers to the CSM questions that open almost every
+            interview. Read these first, then work the scenarios below.
+          </p>
+          <dl className="space-y-3">
+            {QUICK_ANSWERS.map((qa) => (
+              <div
+                key={qa.q}
+                className="rounded-xl border border-border bg-background/40 p-3"
+              >
+                <dt className="text-sm font-bold text-accent">{qa.q}</dt>
+                <dd className="mt-1 text-sm text-foreground/85">{qa.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
         <ol className="space-y-6">
           {LESSONS.map((l) => (
@@ -320,6 +363,67 @@ function CsmGuide() {
             </li>
           ))}
         </ol>
+
+        <section aria-labelledby="scenarios-heading" className="space-y-5">
+          <div className="space-y-2">
+            <h2 id="scenarios-heading" className="font-display text-2xl tracking-tight">
+              Role-scoped CSM scenario questions
+            </h2>
+            <p className="text-sm text-foreground/85">
+              These are the design-judgement questions that separate a CSM
+              developer from someone who has only clicked through the portal. Each
+              gives the recommended answer, a genuine alternate approach with its
+              trade-off, and the pitfall that ends the interview early.
+            </p>
+          </div>
+
+          <ol className="space-y-5">
+            {SCENARIO_QA.map((s, i) => (
+              <li
+                key={s.id}
+                id={s.id}
+                className="rounded-2xl border-2 border-border bg-panel p-5 space-y-4"
+              >
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold">
+                    {s.role}
+                  </span>
+                  <h3 className="font-display text-lg tracking-tight">
+                    {i + 5}. {s.question}
+                  </h3>
+                  <p className="text-sm text-foreground/75">{s.situation}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold mb-2">
+                    Recommended answer
+                  </h4>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">
+                    {s.answer.map((a, j) => (
+                      <li key={j}>{a}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border border-secondary/40 bg-secondary/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-secondary font-bold mb-1">
+                    Alternate approach
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.alternate}</p>
+                </div>
+
+                <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3">
+                  <h4 className="text-[10px] uppercase tracking-[0.25em] text-destructive font-bold mb-1">
+                    Pitfall
+                  </h4>
+                  <p className="text-sm text-foreground/85">{s.pitfall}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+
 
         <section className="rounded-2xl border-2 border-border bg-panel p-5 space-y-3">
           <h2 className="font-display text-xl tracking-tight">Keep going</h2>
