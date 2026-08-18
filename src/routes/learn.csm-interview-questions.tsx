@@ -260,10 +260,13 @@ function CsmGuide() {
             <span className="text-accent">INTERVIEW.</span>
           </h1>
           <p className="text-sm text-foreground/85 leading-relaxed">
-            Four scenario lessons on Case management, Entitlements & Assets, the
-            CSM/FSM data model, and ITSM integration — the exact Customer Service
-            Management topics senior interview loops probe, each with a runnable
-            simulator trace.
+            A full ServiceNow CSM interview prep guide: ten quotable answers to the
+            questions that open almost every screen, four scenario lessons with
+            runnable simulator traces (Case management, Entitlements &amp; Assets,
+            the CSM/FSM data model, ITSM integration), and six role-scoped
+            scenarios for CSM developers, admins and architects — each with the
+            recommended answer, a real alternate approach, and the pitfall
+            interviewers listen for.
           </p>
           <p className="text-[11px] font-mono text-muted-foreground">
             Pair with the{" "}
@@ -277,6 +280,30 @@ function CsmGuide() {
             for full platform coverage.
           </p>
         </header>
+
+        <section
+          aria-labelledby="summary-heading"
+          className="rounded-2xl border-2 border-accent/40 bg-panel p-5 space-y-4"
+        >
+          <h2 id="summary-heading" className="font-display text-xl tracking-tight">
+            Answer summary — the ten things you must be able to say
+          </h2>
+          <p className="text-sm text-foreground/80">
+            Short, quotable answers to the CSM questions that open almost every
+            interview. Read these first, then work the scenarios below.
+          </p>
+          <dl className="space-y-3">
+            {QUICK_ANSWERS.map((qa) => (
+              <div
+                key={qa.q}
+                className="rounded-xl border border-border bg-background/40 p-3"
+              >
+                <dt className="text-sm font-bold text-accent">{qa.q}</dt>
+                <dd className="mt-1 text-sm text-foreground/85">{qa.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
         <ol className="space-y-6">
           {LESSONS.map((l) => (
