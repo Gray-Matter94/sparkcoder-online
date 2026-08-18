@@ -9,7 +9,7 @@ import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/csm-interview";
 
 const TITLE = "ServiceNow CSM Interview Questions — SparkCoder";
 const DESCRIPTION =
-  "ServiceNow CSM interview prep: Case management, Accounts & Contacts, Entitlements & Assets, CSM/FSM data model, and ITSM integration — with runnable simulator traces.";
+  "ServiceNow CSM interview questions and answers: 20 case management, entitlement, portal security, CSM/FSM and major issue scenarios with model answers, alternates and pitfalls.";
 const URL = "https://www.sparkcoder.online/learn/csm-interview-questions";
 
 interface Lesson {
@@ -211,7 +211,7 @@ const ARTICLE_JSONLD = {
   description: DESCRIPTION,
   url: URL,
   datePublished: "2026-07-16",
-  dateModified: "2026-07-16",
+  dateModified: "2026-08-18",
   author: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   publisher: { "@type": "Organization", name: "SparkCoder Online", url: "https://www.sparkcoder.online" },
   about: "ServiceNow CSM, Case Management, Entitlements, CSM/FSM data model, ITSM integration",
