@@ -5,6 +5,7 @@ import { Simulator } from "@/components/Simulator";
 import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
+import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/csm-interview";
 
 const TITLE = "ServiceNow CSM Interview Questions — SparkCoder";
 const DESCRIPTION =
