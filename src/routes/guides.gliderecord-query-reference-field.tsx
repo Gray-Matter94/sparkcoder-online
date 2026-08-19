@@ -3,9 +3,9 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 
-const TITLE = "Query a Reference Field with GlideRecord (ServiceNow)";
+const TITLE = "GlideRecord Reference Field Query: 4 Ways With Code";
 const DESCRIPTION =
-  "Query a ServiceNow reference field with GlideRecord: sys_id matching, dot-walking, addQuery vs addJoinQuery, and getRefRecord() — with examples.";
+  "Short answer plus copy-ready code: match a reference field by sys_id, dot-walk to the referenced record, read it with getRefRecord(), and use addJoinQuery.";
 const URL =
   "https://www.sparkcoder.online/guides/gliderecord-query-reference-field";
 
@@ -85,6 +85,57 @@ function ReferenceFieldGuide() {
             without firing extra round trips.
           </p>
         </header>
+
+        <section
+          className="space-y-3 rounded-2xl border-2 border-accent/40 bg-accent/5 p-5"
+          aria-labelledby="short-answer"
+        >
+          <h2
+            id="short-answer"
+            className="font-display text-xl tracking-tight text-accent"
+          >
+            Short answer
+          </h2>
+          <p className="text-sm text-foreground/90 leading-relaxed">
+            To query a reference field with GlideRecord, pass the referenced record's{" "}
+            <code className="font-mono">sys_id</code> to{" "}
+            <code className="font-mono">addQuery()</code>, or dot-walk the reference to
+            filter on the referenced record's own fields. To read the referenced row,
+            call <code className="font-mono">getRefRecord()</code> instead of running a
+            second query.
+          </p>
+          <pre className="rounded-xl bg-zinc-900 text-foreground/90 text-[12px] font-mono p-4 overflow-x-auto border border-white/10">
+            <code>{`var gr = new GlideRecord('incident');
+gr.addQuery('assigned_to', userSysId);          // match by sys_id
+gr.addQuery('assigned_to.department.name', 'IT'); // dot-walk filter
+gr.query();
+while (gr.next()) {
+  var user = gr.assigned_to.getRefRecord();     // no extra query
+  gs.info(gr.number + ' → ' + user.email);
+}`}</code>
+          </pre>
+          <ul className="text-xs text-foreground/75 space-y-1">
+            <li>
+              <strong className="text-foreground/90">Match:</strong>{" "}
+              <code className="font-mono">addQuery('field', sys_id)</code> — never the
+              display value.
+            </li>
+            <li>
+              <strong className="text-foreground/90">Filter deeper:</strong> dot-walk{" "}
+              <code className="font-mono">'field.other_field'</code> (each dot is a
+              join).
+            </li>
+            <li>
+              <strong className="text-foreground/90">Read:</strong>{" "}
+              <code className="font-mono">getRefRecord()</code> server-side,{" "}
+              <code className="font-mono">g_form.getReference()</code> client-side.
+            </li>
+            <li>
+              <strong className="text-foreground/90">Join tables:</strong>{" "}
+              <code className="font-mono">addJoinQuery()</code>.
+            </li>
+          </ul>
+        </section>
 
         <section className="space-y-3">
           <h2 className="font-display text-2xl tracking-tight">
