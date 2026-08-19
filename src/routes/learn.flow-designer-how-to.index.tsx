@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
+import { FLOW_HOWTO_GUIDES } from "@/lib/content/flow-howto";
 
 const TITLE = "ServiceNow Flow Designer How-To Guide — SparkCoder";
 const DESCRIPTION =
@@ -229,6 +230,37 @@ function FlowDesignerHowTo() {
             the same flow engine under the hood.
           </p>
         </header>
+
+        <section
+          aria-labelledby="deep-dives"
+          className="rounded-2xl border-2 border-accent/40 bg-accent/5 p-5 space-y-3"
+        >
+          <h2 id="deep-dives" className="font-display text-xl tracking-tight text-accent">
+            Full step-by-step guides
+          </h2>
+          <p className="text-sm text-foreground/85">
+            These three tasks come up constantly — each has its own page with
+            numbered UI steps, copy-ready code, common mistakes and an FAQ.
+          </p>
+          <ul className="grid gap-2 sm:grid-cols-3">
+            {FLOW_HOWTO_GUIDES.map((g) => (
+              <li key={g.slug}>
+                <Link
+                  to="/learn/flow-designer-how-to/$slug"
+                  params={{ slug: g.slug }}
+                  className="block h-full rounded-xl border-2 border-border bg-panel p-3 hover:border-accent/60 transition-colors"
+                >
+                  <span className="block font-display text-sm tracking-tight text-foreground">
+                    {g.heading}
+                  </span>
+                  <span className="block text-[10px] uppercase tracking-widest text-accent mt-1">
+                    Read guide →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <nav
           aria-label="Question index"

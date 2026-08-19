@@ -3,6 +3,7 @@ import { CATEGORIES } from "@/lib/questions";
 import { TOPICS } from "@/lib/glossary";
 import { BLOG_POSTS } from "@/lib/blog";
 import { GLOSSARY_ENTRIES } from "@/lib/glossary-hub";
+import { FLOW_HOWTO_GUIDES } from "@/lib/content/flow-howto";
 
 import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
 
@@ -28,6 +29,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/learn/glideajax-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/flow-designer-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/flow-designer-how-to", changefreq: "monthly", priority: "0.8" },
+          ...FLOW_HOWTO_GUIDES.map((g) => ({
+            path: `/learn/flow-designer-how-to/${g.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.8",
+          })),
           { path: "/learn/itsm-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/discovery-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/irm-architect-interview-questions", changefreq: "monthly", priority: "0.8" },

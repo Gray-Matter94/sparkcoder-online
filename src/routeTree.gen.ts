@@ -48,6 +48,7 @@ import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as LearnFlowDesignerHowToIndexRouteImport } from './routes/learn.flow-designer-how-to.index'
+import { Route as LearnFlowDesignerHowToSlugRouteImport } from './routes/learn.flow-designer-how-to.$slug'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -263,6 +264,12 @@ const LearnFlowDesignerHowToIndexRoute =
     path: '/',
     getParentRoute: () => LearnFlowDesignerHowToRoute,
   } as any)
+const LearnFlowDesignerHowToSlugRoute =
+  LearnFlowDesignerHowToSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => LearnFlowDesignerHowToRoute,
+  } as any)
 const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
   id: '/$section',
   path: '/$section',
@@ -309,6 +316,7 @@ export interface FileRoutesByFullPath {
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRoutesByTo {
@@ -350,6 +358,7 @@ export interface FileRoutesByTo {
   '/glossary': typeof GlossaryIndexRoute
   '/learn': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRoutesById {
@@ -393,6 +402,7 @@ export interface FileRoutesById {
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRouteTypes {
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -478,6 +489,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/learn'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to'
   id:
     | '__root__'
@@ -520,6 +532,7 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to/'
   fileRoutesById: FileRoutesById
 }
@@ -839,6 +852,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnFlowDesignerHowToIndexRouteImport
       parentRoute: typeof LearnFlowDesignerHowToRoute
     }
+    '/learn/flow-designer-how-to/$slug': {
+      id: '/learn/flow-designer-how-to/$slug'
+      path: '/$slug'
+      fullPath: '/learn/flow-designer-how-to/$slug'
+      preLoaderRoute: typeof LearnFlowDesignerHowToSlugRouteImport
+      parentRoute: typeof LearnFlowDesignerHowToRoute
+    }
     '/learn/discovery/$section': {
       id: '/learn/discovery/$section'
       path: '/$section'
@@ -862,11 +882,13 @@ const LearnDiscoveryRouteWithChildren = LearnDiscoveryRoute._addFileChildren(
 )
 
 interface LearnFlowDesignerHowToRouteChildren {
+  LearnFlowDesignerHowToSlugRoute: typeof LearnFlowDesignerHowToSlugRoute
   LearnFlowDesignerHowToIndexRoute: typeof LearnFlowDesignerHowToIndexRoute
 }
 
 const LearnFlowDesignerHowToRouteChildren: LearnFlowDesignerHowToRouteChildren =
   {
+    LearnFlowDesignerHowToSlugRoute: LearnFlowDesignerHowToSlugRoute,
     LearnFlowDesignerHowToIndexRoute: LearnFlowDesignerHowToIndexRoute,
   }
 
