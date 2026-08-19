@@ -186,7 +186,7 @@ const articleJsonLd = {
   },
 };
 
-export const Route = createFileRoute("/learn/flow-designer-how-to")({
+export const Route = createFileRoute("/learn/flow-designer-how-to/")({
   head: () => ({
     meta: [
       { title: TITLE },
