@@ -47,6 +47,8 @@ import { Route as GuidesAclScriptExamplesRouteImport } from './routes/guides.acl
 import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
+import { Route as LearnFlowDesignerHowToIndexRouteImport } from './routes/learn.flow-designer-how-to.index'
+import { Route as LearnFlowDesignerHowToSlugRouteImport } from './routes/learn.flow-designer-how-to.$slug'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -256,6 +258,18 @@ const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnFlowDesignerHowToIndexRoute =
+  LearnFlowDesignerHowToIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => LearnFlowDesignerHowToRoute,
+  } as any)
+const LearnFlowDesignerHowToSlugRoute =
+  LearnFlowDesignerHowToSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => LearnFlowDesignerHowToRoute,
+  } as any)
 const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
   id: '/$section',
   path: '/$section',
@@ -287,7 +301,7 @@ export interface FileRoutesByFullPath {
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
-  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
+  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRouteWithChildren
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
@@ -302,6 +316,8 @@ export interface FileRoutesByFullPath {
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
+  '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -328,7 +344,6 @@ export interface FileRoutesByTo {
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
-  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
@@ -343,6 +358,8 @@ export interface FileRoutesByTo {
   '/glossary': typeof GlossaryIndexRoute
   '/learn': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
+  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -370,7 +387,7 @@ export interface FileRoutesById {
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
-  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRoute
+  '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToRouteWithChildren
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
@@ -385,6 +402,8 @@ export interface FileRoutesById {
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
+  '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
+  '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -428,6 +447,8 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
+    | '/learn/flow-designer-how-to/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -454,7 +475,6 @@ export interface FileRouteTypes {
     | '/learn/csm-interview-questions'
     | '/learn/discovery'
     | '/learn/discovery-interview-questions'
-    | '/learn/flow-designer-how-to'
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/hrsd-interview-questions'
@@ -469,6 +489,8 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/learn'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
+    | '/learn/flow-designer-how-to'
   id:
     | '__root__'
     | '/'
@@ -510,6 +532,8 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/learn/'
     | '/learn/discovery/$section'
+    | '/learn/flow-designer-how-to/$slug'
+    | '/learn/flow-designer-how-to/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -537,7 +561,7 @@ export interface RootRouteChildren {
   LearnCsmInterviewQuestionsRoute: typeof LearnCsmInterviewQuestionsRoute
   LearnDiscoveryRoute: typeof LearnDiscoveryRouteWithChildren
   LearnDiscoveryInterviewQuestionsRoute: typeof LearnDiscoveryInterviewQuestionsRoute
-  LearnFlowDesignerHowToRoute: typeof LearnFlowDesignerHowToRoute
+  LearnFlowDesignerHowToRoute: typeof LearnFlowDesignerHowToRouteWithChildren
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnHrsdInterviewQuestionsRoute: typeof LearnHrsdInterviewQuestionsRoute
@@ -821,6 +845,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/flow-designer-how-to/': {
+      id: '/learn/flow-designer-how-to/'
+      path: '/'
+      fullPath: '/learn/flow-designer-how-to/'
+      preLoaderRoute: typeof LearnFlowDesignerHowToIndexRouteImport
+      parentRoute: typeof LearnFlowDesignerHowToRoute
+    }
+    '/learn/flow-designer-how-to/$slug': {
+      id: '/learn/flow-designer-how-to/$slug'
+      path: '/$slug'
+      fullPath: '/learn/flow-designer-how-to/$slug'
+      preLoaderRoute: typeof LearnFlowDesignerHowToSlugRouteImport
+      parentRoute: typeof LearnFlowDesignerHowToRoute
+    }
     '/learn/discovery/$section': {
       id: '/learn/discovery/$section'
       path: '/$section'
@@ -842,6 +880,22 @@ const LearnDiscoveryRouteChildren: LearnDiscoveryRouteChildren = {
 const LearnDiscoveryRouteWithChildren = LearnDiscoveryRoute._addFileChildren(
   LearnDiscoveryRouteChildren,
 )
+
+interface LearnFlowDesignerHowToRouteChildren {
+  LearnFlowDesignerHowToSlugRoute: typeof LearnFlowDesignerHowToSlugRoute
+  LearnFlowDesignerHowToIndexRoute: typeof LearnFlowDesignerHowToIndexRoute
+}
+
+const LearnFlowDesignerHowToRouteChildren: LearnFlowDesignerHowToRouteChildren =
+  {
+    LearnFlowDesignerHowToSlugRoute: LearnFlowDesignerHowToSlugRoute,
+    LearnFlowDesignerHowToIndexRoute: LearnFlowDesignerHowToIndexRoute,
+  }
+
+const LearnFlowDesignerHowToRouteWithChildren =
+  LearnFlowDesignerHowToRoute._addFileChildren(
+    LearnFlowDesignerHowToRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -872,7 +926,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnCsmInterviewQuestionsRoute: LearnCsmInterviewQuestionsRoute,
   LearnDiscoveryRoute: LearnDiscoveryRouteWithChildren,
   LearnDiscoveryInterviewQuestionsRoute: LearnDiscoveryInterviewQuestionsRoute,
-  LearnFlowDesignerHowToRoute: LearnFlowDesignerHowToRoute,
+  LearnFlowDesignerHowToRoute: LearnFlowDesignerHowToRouteWithChildren,
   LearnFlowDesignerInterviewQuestionsRoute:
     LearnFlowDesignerInterviewQuestionsRoute,
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
