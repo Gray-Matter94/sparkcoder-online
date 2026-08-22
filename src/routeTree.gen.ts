@@ -9,63 +9,87 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
-import { Route as ServicenowInterviewQuestionsAndAnswersRouteImport } from './routes/servicenow-interview-questions-and-answers'
-import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
-import { Route as ServicenowCodingExamplesForInterviewRouteImport } from './routes/servicenow-coding-examples-for-interview'
-import { Route as PlayRouteImport } from './routes/play'
-import { Route as LiveCodingRouteImport } from './routes/live-coding'
-import { Route as FeedbackRouteImport } from './routes/feedback'
-import { Route as DailyRouteImport } from './routes/daily'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LearnIndexRouteImport } from './routes/learn.index'
-import { Route as GlossaryIndexRouteImport } from './routes/glossary.index'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
-import { Route as ToolsServicenowEncodedQueryBuilderRouteImport } from './routes/tools.servicenow-encoded-query-builder'
-import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
-import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
-import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
-import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
-import { Route as LearnIntegrationhubInterviewQuestionsRouteImport } from './routes/learn.integrationhub-interview-questions'
-import { Route as LearnHrsdInterviewQuestionsRouteImport } from './routes/learn.hrsd-interview-questions'
-import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
-import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
-import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-designer-how-to'
-import { Route as LearnDiscoveryInterviewQuestionsRouteImport } from './routes/learn.discovery-interview-questions'
-import { Route as LearnDiscoveryRouteImport } from './routes/learn.discovery'
-import { Route as LearnCsmInterviewQuestionsRouteImport } from './routes/learn.csm-interview-questions'
-import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
-import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
-import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
-import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
-import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
-import { Route as GuidesAclScriptExamplesRouteImport } from './routes/guides.acl-script-examples'
-import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DailyRouteImport } from './routes/daily'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as LiveCodingRouteImport } from './routes/live-coding'
+import { Route as PlayRouteImport } from './routes/play'
+import { Route as ServicenowCodingExamplesForInterviewRouteImport } from './routes/servicenow-coding-examples-for-interview'
+import { Route as ServicenowCsaInterviewQuestions2026RouteImport } from './routes/servicenow-csa-interview-questions-2026'
+import { Route as ServicenowInterviewQuestionsAndAnswersRouteImport } from './routes/servicenow-interview-questions-and-answers'
+import { Route as ServicenowIrmArchitectPracticeRouteImport } from './routes/servicenow-irm-architect-practice'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as GlossaryIndexRouteImport } from './routes/glossary.index'
+import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
+import { Route as GuidesAclScriptExamplesRouteImport } from './routes/guides.acl-script-examples'
+import { Route as GuidesGliderecordQueryReferenceFieldRouteImport } from './routes/guides.gliderecord-query-reference-field'
+import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlinks'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
+import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
+import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
+import { Route as LearnCsmInterviewQuestionsRouteImport } from './routes/learn.csm-interview-questions'
+import { Route as LearnDiscoveryRouteImport } from './routes/learn.discovery'
+import { Route as LearnDiscoveryInterviewQuestionsRouteImport } from './routes/learn.discovery-interview-questions'
+import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-designer-how-to'
+import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
+import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
+import { Route as LearnHrsdInterviewQuestionsRouteImport } from './routes/learn.hrsd-interview-questions'
+import { Route as LearnIntegrationhubInterviewQuestionsRouteImport } from './routes/learn.integrationhub-interview-questions'
+import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
+import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
+import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
+import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
+import { Route as ToolsServicenowEncodedQueryBuilderRouteImport } from './routes/tools.servicenow-encoded-query-builder'
+import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
+import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
 import { Route as LearnFlowDesignerHowToIndexRouteImport } from './routes/learn.flow-designer-how-to.index'
 import { Route as LearnFlowDesignerHowToSlugRouteImport } from './routes/learn.flow-designer-how-to.$slug'
-import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicenowIrmArchitectPracticeRoute =
-  ServicenowIrmArchitectPracticeRouteImport.update({
-    id: '/servicenow-irm-architect-practice',
-    path: '/servicenow-irm-architect-practice',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ServicenowInterviewQuestionsAndAnswersRoute =
-  ServicenowInterviewQuestionsAndAnswersRouteImport.update({
-    id: '/servicenow-interview-questions-and-answers',
-    path: '/servicenow-interview-questions-and-answers',
+const AngularjsCodingTestRoute = AngularjsCodingTestRouteImport.update({
+  id: '/angularjs-coding-test',
+  path: '/angularjs-coding-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyRoute = DailyRouteImport.update({
+  id: '/daily',
+  path: '/daily',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveCodingRoute = LiveCodingRouteImport.update({
+  id: '/live-coding',
+  path: '/live-coding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayRoute = PlayRouteImport.update({
+  id: '/play',
+  path: '/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicenowCodingExamplesForInterviewRoute =
+  ServicenowCodingExamplesForInterviewRouteImport.update({
+    id: '/servicenow-coding-examples-for-interview',
+    path: '/servicenow-coding-examples-for-interview',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ServicenowCsaInterviewQuestions2026Route =
@@ -74,55 +98,26 @@ const ServicenowCsaInterviewQuestions2026Route =
     path: '/servicenow-csa-interview-questions-2026',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ServicenowCodingExamplesForInterviewRoute =
-  ServicenowCodingExamplesForInterviewRouteImport.update({
-    id: '/servicenow-coding-examples-for-interview',
-    path: '/servicenow-coding-examples-for-interview',
+const ServicenowInterviewQuestionsAndAnswersRoute =
+  ServicenowInterviewQuestionsAndAnswersRouteImport.update({
+    id: '/servicenow-interview-questions-and-answers',
+    path: '/servicenow-interview-questions-and-answers',
     getParentRoute: () => rootRouteImport,
   } as any)
-const PlayRoute = PlayRouteImport.update({
-  id: '/play',
-  path: '/play',
+const ServicenowIrmArchitectPracticeRoute =
+  ServicenowIrmArchitectPracticeRouteImport.update({
+    id: '/servicenow-irm-architect-practice',
+    path: '/servicenow-irm-architect-practice',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LiveCodingRoute = LiveCodingRouteImport.update({
-  id: '/live-coding',
-  path: '/live-coding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedbackRoute = FeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DailyRoute = DailyRouteImport.update({
-  id: '/daily',
-  path: '/daily',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AngularjsCodingTestRoute = AngularjsCodingTestRouteImport.update({
-  id: '/angularjs-coding-test',
-  path: '/angularjs-coding-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnIndexRoute = LearnIndexRouteImport.update({
-  id: '/learn/',
-  path: '/learn/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
-  id: '/glossary/',
-  path: '/glossary/',
+const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
+  id: '/admin/feedback',
+  path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -130,106 +125,24 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToolsServicenowRegexTesterRoute =
-  ToolsServicenowRegexTesterRouteImport.update({
-    id: '/tools/servicenow-regex-tester',
-    path: '/tools/servicenow-regex-tester',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ToolsServicenowEncodedQueryBuilderRoute =
-  ToolsServicenowEncodedQueryBuilderRouteImport.update({
-    id: '/tools/servicenow-encoded-query-builder',
-    path: '/tools/servicenow-encoded-query-builder',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
-  id: '/practice/$category',
-  path: '/practice/$category',
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LearnScenarioBasedScriptingRoute =
-  LearnScenarioBasedScriptingRouteImport.update({
-    id: '/learn/scenario-based-scripting',
-    path: '/learn/scenario-based-scripting',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnItsmInterviewQuestionsRoute =
-  LearnItsmInterviewQuestionsRouteImport.update({
-    id: '/learn/itsm-interview-questions',
-    path: '/learn/itsm-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnIrmArchitectInterviewQuestionsRoute =
-  LearnIrmArchitectInterviewQuestionsRouteImport.update({
-    id: '/learn/irm-architect-interview-questions',
-    path: '/learn/irm-architect-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnIntegrationhubInterviewQuestionsRoute =
-  LearnIntegrationhubInterviewQuestionsRouteImport.update({
-    id: '/learn/integrationhub-interview-questions',
-    path: '/learn/integrationhub-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnHrsdInterviewQuestionsRoute =
-  LearnHrsdInterviewQuestionsRouteImport.update({
-    id: '/learn/hrsd-interview-questions',
-    path: '/learn/hrsd-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnGlideajaxInterviewQuestionsRoute =
-  LearnGlideajaxInterviewQuestionsRouteImport.update({
-    id: '/learn/glideajax-interview-questions',
-    path: '/learn/glideajax-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnFlowDesignerInterviewQuestionsRoute =
-  LearnFlowDesignerInterviewQuestionsRouteImport.update({
-    id: '/learn/flow-designer-interview-questions',
-    path: '/learn/flow-designer-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnFlowDesignerHowToRoute = LearnFlowDesignerHowToRouteImport.update({
-  id: '/learn/flow-designer-how-to',
-  path: '/learn/flow-designer-how-to',
+const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
+  id: '/glossary/',
+  path: '/glossary/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LearnDiscoveryInterviewQuestionsRoute =
-  LearnDiscoveryInterviewQuestionsRouteImport.update({
-    id: '/learn/discovery-interview-questions',
-    path: '/learn/discovery-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnDiscoveryRoute = LearnDiscoveryRouteImport.update({
-  id: '/learn/discovery',
-  path: '/learn/discovery',
+const GlossarySlugRoute = GlossarySlugRouteImport.update({
+  id: '/glossary/$slug',
+  path: '/glossary/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LearnCsmInterviewQuestionsRoute =
-  LearnCsmInterviewQuestionsRouteImport.update({
-    id: '/learn/csm-interview-questions',
-    path: '/learn/csm-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnCmdbInterviewQuestionsRoute =
-  LearnCmdbInterviewQuestionsRouteImport.update({
-    id: '/learn/cmdb-interview-questions',
-    path: '/learn/cmdb-interview-questions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
-  id: '/learn/acl-scripting',
-  path: '/learn/acl-scripting',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnTopicRoute = LearnTopicRouteImport.update({
-  id: '/learn/$topic',
-  path: '/learn/$topic',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InsightsBacklinksRoute = InsightsBacklinksRouteImport.update({
-  id: '/insights/backlinks',
-  path: '/insights/backlinks',
+const GuidesAclScriptExamplesRoute = GuidesAclScriptExamplesRouteImport.update({
+  id: '/guides/acl-script-examples',
+  path: '/guides/acl-script-examples',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuidesGliderecordQueryReferenceFieldRoute =
@@ -238,25 +151,117 @@ const GuidesGliderecordQueryReferenceFieldRoute =
     path: '/guides/gliderecord-query-reference-field',
     getParentRoute: () => rootRouteImport,
   } as any)
-const GuidesAclScriptExamplesRoute = GuidesAclScriptExamplesRouteImport.update({
-  id: '/guides/acl-script-examples',
-  path: '/guides/acl-script-examples',
+const InsightsBacklinksRoute = InsightsBacklinksRouteImport.update({
+  id: '/insights/backlinks',
+  path: '/insights/backlinks',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GlossarySlugRoute = GlossarySlugRouteImport.update({
-  id: '/glossary/$slug',
-  path: '/glossary/$slug',
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const LearnTopicRoute = LearnTopicRouteImport.update({
+  id: '/learn/$topic',
+  path: '/learn/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
-  id: '/admin/feedback',
-  path: '/admin/feedback',
+const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
+  id: '/learn/acl-scripting',
+  path: '/learn/acl-scripting',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LearnCmdbInterviewQuestionsRoute =
+  LearnCmdbInterviewQuestionsRouteImport.update({
+    id: '/learn/cmdb-interview-questions',
+    path: '/learn/cmdb-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnCsmInterviewQuestionsRoute =
+  LearnCsmInterviewQuestionsRouteImport.update({
+    id: '/learn/csm-interview-questions',
+    path: '/learn/csm-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnDiscoveryRoute = LearnDiscoveryRouteImport.update({
+  id: '/learn/discovery',
+  path: '/learn/discovery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnDiscoveryInterviewQuestionsRoute =
+  LearnDiscoveryInterviewQuestionsRouteImport.update({
+    id: '/learn/discovery-interview-questions',
+    path: '/learn/discovery-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnFlowDesignerHowToRoute = LearnFlowDesignerHowToRouteImport.update({
+  id: '/learn/flow-designer-how-to',
+  path: '/learn/flow-designer-how-to',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnFlowDesignerInterviewQuestionsRoute =
+  LearnFlowDesignerInterviewQuestionsRouteImport.update({
+    id: '/learn/flow-designer-interview-questions',
+    path: '/learn/flow-designer-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnGlideajaxInterviewQuestionsRoute =
+  LearnGlideajaxInterviewQuestionsRouteImport.update({
+    id: '/learn/glideajax-interview-questions',
+    path: '/learn/glideajax-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnHrsdInterviewQuestionsRoute =
+  LearnHrsdInterviewQuestionsRouteImport.update({
+    id: '/learn/hrsd-interview-questions',
+    path: '/learn/hrsd-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnIntegrationhubInterviewQuestionsRoute =
+  LearnIntegrationhubInterviewQuestionsRouteImport.update({
+    id: '/learn/integrationhub-interview-questions',
+    path: '/learn/integrationhub-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnIrmArchitectInterviewQuestionsRoute =
+  LearnIrmArchitectInterviewQuestionsRouteImport.update({
+    id: '/learn/irm-architect-interview-questions',
+    path: '/learn/irm-architect-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnItsmInterviewQuestionsRoute =
+  LearnItsmInterviewQuestionsRouteImport.update({
+    id: '/learn/itsm-interview-questions',
+    path: '/learn/itsm-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnScenarioBasedScriptingRoute =
+  LearnScenarioBasedScriptingRouteImport.update({
+    id: '/learn/scenario-based-scripting',
+    path: '/learn/scenario-based-scripting',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
+  id: '/practice/$category',
+  path: '/practice/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsServicenowEncodedQueryBuilderRoute =
+  ToolsServicenowEncodedQueryBuilderRouteImport.update({
+    id: '/tools/servicenow-encoded-query-builder',
+    path: '/tools/servicenow-encoded-query-builder',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ToolsServicenowRegexTesterRoute =
+  ToolsServicenowRegexTesterRouteImport.update({
+    id: '/tools/servicenow-regex-tester',
+    path: '/tools/servicenow-regex-tester',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
+  getParentRoute: () => LearnDiscoveryRoute,
 } as any)
 const LearnFlowDesignerHowToIndexRoute =
   LearnFlowDesignerHowToIndexRouteImport.update({
@@ -270,11 +275,6 @@ const LearnFlowDesignerHowToSlugRoute =
     path: '/$slug',
     getParentRoute: () => LearnFlowDesignerHowToRoute,
   } as any)
-const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
-  id: '/$section',
-  path: '/$section',
-  getParentRoute: () => LearnDiscoveryRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -579,74 +579,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/servicenow-irm-architect-practice': {
-      id: '/servicenow-irm-architect-practice'
-      path: '/servicenow-irm-architect-practice'
-      fullPath: '/servicenow-irm-architect-practice'
-      preLoaderRoute: typeof ServicenowIrmArchitectPracticeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/servicenow-interview-questions-and-answers': {
-      id: '/servicenow-interview-questions-and-answers'
-      path: '/servicenow-interview-questions-and-answers'
-      fullPath: '/servicenow-interview-questions-and-answers'
-      preLoaderRoute: typeof ServicenowInterviewQuestionsAndAnswersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/servicenow-csa-interview-questions-2026': {
-      id: '/servicenow-csa-interview-questions-2026'
-      path: '/servicenow-csa-interview-questions-2026'
-      fullPath: '/servicenow-csa-interview-questions-2026'
-      preLoaderRoute: typeof ServicenowCsaInterviewQuestions2026RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/servicenow-coding-examples-for-interview': {
-      id: '/servicenow-coding-examples-for-interview'
-      path: '/servicenow-coding-examples-for-interview'
-      fullPath: '/servicenow-coding-examples-for-interview'
-      preLoaderRoute: typeof ServicenowCodingExamplesForInterviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/play': {
-      id: '/play'
-      path: '/play'
-      fullPath: '/play'
-      preLoaderRoute: typeof PlayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/live-coding': {
-      id: '/live-coding'
-      path: '/live-coding'
-      fullPath: '/live-coding'
-      preLoaderRoute: typeof LiveCodingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feedback': {
-      id: '/feedback'
-      path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof FeedbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/daily': {
-      id: '/daily'
-      path: '/daily'
-      fullPath: '/daily'
-      preLoaderRoute: typeof DailyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/angularjs-coding-test': {
@@ -656,25 +593,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AngularjsCodingTestRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/learn/': {
-      id: '/learn/'
-      path: '/learn'
-      fullPath: '/learn/'
-      preLoaderRoute: typeof LearnIndexRouteImport
+    '/daily': {
+      id: '/daily'
+      path: '/daily'
+      fullPath: '/daily'
+      preLoaderRoute: typeof DailyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/glossary/': {
-      id: '/glossary/'
-      path: '/glossary'
-      fullPath: '/glossary/'
-      preLoaderRoute: typeof GlossaryIndexRouteImport
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-coding': {
+      id: '/live-coding'
+      path: '/live-coding'
+      fullPath: '/live-coding'
+      preLoaderRoute: typeof LiveCodingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play': {
+      id: '/play'
+      path: '/play'
+      fullPath: '/play'
+      preLoaderRoute: typeof PlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-coding-examples-for-interview': {
+      id: '/servicenow-coding-examples-for-interview'
+      path: '/servicenow-coding-examples-for-interview'
+      fullPath: '/servicenow-coding-examples-for-interview'
+      preLoaderRoute: typeof ServicenowCodingExamplesForInterviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-csa-interview-questions-2026': {
+      id: '/servicenow-csa-interview-questions-2026'
+      path: '/servicenow-csa-interview-questions-2026'
+      fullPath: '/servicenow-csa-interview-questions-2026'
+      preLoaderRoute: typeof ServicenowCsaInterviewQuestions2026RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-interview-questions-and-answers': {
+      id: '/servicenow-interview-questions-and-answers'
+      path: '/servicenow-interview-questions-and-answers'
+      fullPath: '/servicenow-interview-questions-and-answers'
+      preLoaderRoute: typeof ServicenowInterviewQuestionsAndAnswersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/servicenow-irm-architect-practice': {
+      id: '/servicenow-irm-architect-practice'
+      path: '/servicenow-irm-architect-practice'
+      fullPath: '/servicenow-irm-architect-practice'
+      preLoaderRoute: typeof ServicenowIrmArchitectPracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/feedback': {
+      id: '/admin/feedback'
+      path: '/admin/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -684,144 +677,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tools/servicenow-regex-tester': {
-      id: '/tools/servicenow-regex-tester'
-      path: '/tools/servicenow-regex-tester'
-      fullPath: '/tools/servicenow-regex-tester'
-      preLoaderRoute: typeof ToolsServicenowRegexTesterRouteImport
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tools/servicenow-encoded-query-builder': {
-      id: '/tools/servicenow-encoded-query-builder'
-      path: '/tools/servicenow-encoded-query-builder'
-      fullPath: '/tools/servicenow-encoded-query-builder'
-      preLoaderRoute: typeof ToolsServicenowEncodedQueryBuilderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/practice/$category': {
-      id: '/practice/$category'
-      path: '/practice/$category'
-      fullPath: '/practice/$category'
-      preLoaderRoute: typeof PracticeCategoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/scenario-based-scripting': {
-      id: '/learn/scenario-based-scripting'
-      path: '/learn/scenario-based-scripting'
-      fullPath: '/learn/scenario-based-scripting'
-      preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/itsm-interview-questions': {
-      id: '/learn/itsm-interview-questions'
-      path: '/learn/itsm-interview-questions'
-      fullPath: '/learn/itsm-interview-questions'
-      preLoaderRoute: typeof LearnItsmInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/irm-architect-interview-questions': {
-      id: '/learn/irm-architect-interview-questions'
-      path: '/learn/irm-architect-interview-questions'
-      fullPath: '/learn/irm-architect-interview-questions'
-      preLoaderRoute: typeof LearnIrmArchitectInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/integrationhub-interview-questions': {
-      id: '/learn/integrationhub-interview-questions'
-      path: '/learn/integrationhub-interview-questions'
-      fullPath: '/learn/integrationhub-interview-questions'
-      preLoaderRoute: typeof LearnIntegrationhubInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/hrsd-interview-questions': {
-      id: '/learn/hrsd-interview-questions'
-      path: '/learn/hrsd-interview-questions'
-      fullPath: '/learn/hrsd-interview-questions'
-      preLoaderRoute: typeof LearnHrsdInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/glideajax-interview-questions': {
-      id: '/learn/glideajax-interview-questions'
-      path: '/learn/glideajax-interview-questions'
-      fullPath: '/learn/glideajax-interview-questions'
-      preLoaderRoute: typeof LearnGlideajaxInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/flow-designer-interview-questions': {
-      id: '/learn/flow-designer-interview-questions'
-      path: '/learn/flow-designer-interview-questions'
-      fullPath: '/learn/flow-designer-interview-questions'
-      preLoaderRoute: typeof LearnFlowDesignerInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/flow-designer-how-to': {
-      id: '/learn/flow-designer-how-to'
-      path: '/learn/flow-designer-how-to'
-      fullPath: '/learn/flow-designer-how-to'
-      preLoaderRoute: typeof LearnFlowDesignerHowToRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/discovery-interview-questions': {
-      id: '/learn/discovery-interview-questions'
-      path: '/learn/discovery-interview-questions'
-      fullPath: '/learn/discovery-interview-questions'
-      preLoaderRoute: typeof LearnDiscoveryInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/discovery': {
-      id: '/learn/discovery'
-      path: '/learn/discovery'
-      fullPath: '/learn/discovery'
-      preLoaderRoute: typeof LearnDiscoveryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/csm-interview-questions': {
-      id: '/learn/csm-interview-questions'
-      path: '/learn/csm-interview-questions'
-      fullPath: '/learn/csm-interview-questions'
-      preLoaderRoute: typeof LearnCsmInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/cmdb-interview-questions': {
-      id: '/learn/cmdb-interview-questions'
-      path: '/learn/cmdb-interview-questions'
-      fullPath: '/learn/cmdb-interview-questions'
-      preLoaderRoute: typeof LearnCmdbInterviewQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/acl-scripting': {
-      id: '/learn/acl-scripting'
-      path: '/learn/acl-scripting'
-      fullPath: '/learn/acl-scripting'
-      preLoaderRoute: typeof LearnAclScriptingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn/$topic': {
-      id: '/learn/$topic'
-      path: '/learn/$topic'
-      fullPath: '/learn/$topic'
-      preLoaderRoute: typeof LearnTopicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/insights/backlinks': {
-      id: '/insights/backlinks'
-      path: '/insights/backlinks'
-      fullPath: '/insights/backlinks'
-      preLoaderRoute: typeof InsightsBacklinksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/guides/gliderecord-query-reference-field': {
-      id: '/guides/gliderecord-query-reference-field'
-      path: '/guides/gliderecord-query-reference-field'
-      fullPath: '/guides/gliderecord-query-reference-field'
-      preLoaderRoute: typeof GuidesGliderecordQueryReferenceFieldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/guides/acl-script-examples': {
-      id: '/guides/acl-script-examples'
-      path: '/guides/acl-script-examples'
-      fullPath: '/guides/acl-script-examples'
-      preLoaderRoute: typeof GuidesAclScriptExamplesRouteImport
+    '/glossary/': {
+      id: '/glossary/'
+      path: '/glossary'
+      fullPath: '/glossary/'
+      preLoaderRoute: typeof GlossaryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossary/$slug': {
@@ -831,19 +698,159 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlossarySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/guides/acl-script-examples': {
+      id: '/guides/acl-script-examples'
+      path: '/guides/acl-script-examples'
+      fullPath: '/guides/acl-script-examples'
+      preLoaderRoute: typeof GuidesAclScriptExamplesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/feedback': {
-      id: '/admin/feedback'
-      path: '/admin/feedback'
-      fullPath: '/admin/feedback'
-      preLoaderRoute: typeof AdminFeedbackRouteImport
+    '/guides/gliderecord-query-reference-field': {
+      id: '/guides/gliderecord-query-reference-field'
+      path: '/guides/gliderecord-query-reference-field'
+      fullPath: '/guides/gliderecord-query-reference-field'
+      preLoaderRoute: typeof GuidesGliderecordQueryReferenceFieldRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/insights/backlinks': {
+      id: '/insights/backlinks'
+      path: '/insights/backlinks'
+      fullPath: '/insights/backlinks'
+      preLoaderRoute: typeof InsightsBacklinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/': {
+      id: '/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/$topic': {
+      id: '/learn/$topic'
+      path: '/learn/$topic'
+      fullPath: '/learn/$topic'
+      preLoaderRoute: typeof LearnTopicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/acl-scripting': {
+      id: '/learn/acl-scripting'
+      path: '/learn/acl-scripting'
+      fullPath: '/learn/acl-scripting'
+      preLoaderRoute: typeof LearnAclScriptingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/cmdb-interview-questions': {
+      id: '/learn/cmdb-interview-questions'
+      path: '/learn/cmdb-interview-questions'
+      fullPath: '/learn/cmdb-interview-questions'
+      preLoaderRoute: typeof LearnCmdbInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/csm-interview-questions': {
+      id: '/learn/csm-interview-questions'
+      path: '/learn/csm-interview-questions'
+      fullPath: '/learn/csm-interview-questions'
+      preLoaderRoute: typeof LearnCsmInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/discovery': {
+      id: '/learn/discovery'
+      path: '/learn/discovery'
+      fullPath: '/learn/discovery'
+      preLoaderRoute: typeof LearnDiscoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/discovery-interview-questions': {
+      id: '/learn/discovery-interview-questions'
+      path: '/learn/discovery-interview-questions'
+      fullPath: '/learn/discovery-interview-questions'
+      preLoaderRoute: typeof LearnDiscoveryInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/flow-designer-how-to': {
+      id: '/learn/flow-designer-how-to'
+      path: '/learn/flow-designer-how-to'
+      fullPath: '/learn/flow-designer-how-to'
+      preLoaderRoute: typeof LearnFlowDesignerHowToRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/flow-designer-interview-questions': {
+      id: '/learn/flow-designer-interview-questions'
+      path: '/learn/flow-designer-interview-questions'
+      fullPath: '/learn/flow-designer-interview-questions'
+      preLoaderRoute: typeof LearnFlowDesignerInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/glideajax-interview-questions': {
+      id: '/learn/glideajax-interview-questions'
+      path: '/learn/glideajax-interview-questions'
+      fullPath: '/learn/glideajax-interview-questions'
+      preLoaderRoute: typeof LearnGlideajaxInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/hrsd-interview-questions': {
+      id: '/learn/hrsd-interview-questions'
+      path: '/learn/hrsd-interview-questions'
+      fullPath: '/learn/hrsd-interview-questions'
+      preLoaderRoute: typeof LearnHrsdInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/integrationhub-interview-questions': {
+      id: '/learn/integrationhub-interview-questions'
+      path: '/learn/integrationhub-interview-questions'
+      fullPath: '/learn/integrationhub-interview-questions'
+      preLoaderRoute: typeof LearnIntegrationhubInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/irm-architect-interview-questions': {
+      id: '/learn/irm-architect-interview-questions'
+      path: '/learn/irm-architect-interview-questions'
+      fullPath: '/learn/irm-architect-interview-questions'
+      preLoaderRoute: typeof LearnIrmArchitectInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/itsm-interview-questions': {
+      id: '/learn/itsm-interview-questions'
+      path: '/learn/itsm-interview-questions'
+      fullPath: '/learn/itsm-interview-questions'
+      preLoaderRoute: typeof LearnItsmInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/scenario-based-scripting': {
+      id: '/learn/scenario-based-scripting'
+      path: '/learn/scenario-based-scripting'
+      fullPath: '/learn/scenario-based-scripting'
+      preLoaderRoute: typeof LearnScenarioBasedScriptingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice/$category': {
+      id: '/practice/$category'
+      path: '/practice/$category'
+      fullPath: '/practice/$category'
+      preLoaderRoute: typeof PracticeCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/servicenow-encoded-query-builder': {
+      id: '/tools/servicenow-encoded-query-builder'
+      path: '/tools/servicenow-encoded-query-builder'
+      fullPath: '/tools/servicenow-encoded-query-builder'
+      preLoaderRoute: typeof ToolsServicenowEncodedQueryBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/servicenow-regex-tester': {
+      id: '/tools/servicenow-regex-tester'
+      path: '/tools/servicenow-regex-tester'
+      fullPath: '/tools/servicenow-regex-tester'
+      preLoaderRoute: typeof ToolsServicenowRegexTesterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/discovery/$section': {
+      id: '/learn/discovery/$section'
+      path: '/$section'
+      fullPath: '/learn/discovery/$section'
+      preLoaderRoute: typeof LearnDiscoverySectionRouteImport
+      parentRoute: typeof LearnDiscoveryRoute
     }
     '/learn/flow-designer-how-to/': {
       id: '/learn/flow-designer-how-to/'
@@ -858,13 +865,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/learn/flow-designer-how-to/$slug'
       preLoaderRoute: typeof LearnFlowDesignerHowToSlugRouteImport
       parentRoute: typeof LearnFlowDesignerHowToRoute
-    }
-    '/learn/discovery/$section': {
-      id: '/learn/discovery/$section'
-      path: '/$section'
-      fullPath: '/learn/discovery/$section'
-      preLoaderRoute: typeof LearnDiscoverySectionRouteImport
-      parentRoute: typeof LearnDiscoveryRoute
     }
   }
 }
