@@ -197,6 +197,7 @@ function ClientScriptHowToDetail() {
             <Link
               to="/practice/$category"
               params={{ category: "client-scripts" }}
+              search={{ difficulty: undefined }}
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-xs font-display tracking-wider uppercase hover:border-accent/50"
             >
               Practice puzzles
