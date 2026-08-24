@@ -51,6 +51,7 @@ import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as LearnFlowDesignerHowToIndexRouteImport } from './routes/learn.flow-designer-how-to.index'
 import { Route as LearnFlowDesignerHowToSlugRouteImport } from './routes/learn.flow-designer-how-to.$slug'
 import { Route as LearnDiscoverySectionRouteImport } from './routes/learn.discovery.$section'
+import { Route as LearnClientScriptHowToSlugRouteImport } from './routes/learn.client-script-how-to.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -281,6 +282,12 @@ const LearnDiscoverySectionRoute = LearnDiscoverySectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => LearnDiscoveryRoute,
 } as any)
+const LearnClientScriptHowToSlugRoute =
+  LearnClientScriptHowToSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => LearnClientScriptHowToRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -303,7 +310,7 @@ export interface FileRoutesByFullPath {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
-  '/learn/client-script-how-to': typeof LearnClientScriptHowToRoute
+  '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
@@ -322,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/learn/client-script-how-to/$slug': typeof LearnClientScriptHowToSlugRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
   '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
@@ -347,7 +355,7 @@ export interface FileRoutesByTo {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
-  '/learn/client-script-how-to': typeof LearnClientScriptHowToRoute
+  '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
@@ -365,6 +373,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/glossary': typeof GlossaryIndexRoute
   '/learn': typeof LearnIndexRoute
+  '/learn/client-script-how-to/$slug': typeof LearnClientScriptHowToSlugRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
   '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to': typeof LearnFlowDesignerHowToIndexRoute
@@ -391,7 +400,7 @@ export interface FileRoutesById {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
-  '/learn/client-script-how-to': typeof LearnClientScriptHowToRoute
+  '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
@@ -410,6 +419,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/learn/client-script-how-to/$slug': typeof LearnClientScriptHowToSlugRoute
   '/learn/discovery/$section': typeof LearnDiscoverySectionRoute
   '/learn/flow-designer-how-to/$slug': typeof LearnFlowDesignerHowToSlugRoute
   '/learn/flow-designer-how-to/': typeof LearnFlowDesignerHowToIndexRoute
@@ -456,6 +466,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/glossary/'
     | '/learn/'
+    | '/learn/client-script-how-to/$slug'
     | '/learn/discovery/$section'
     | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to/'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/glossary'
     | '/learn'
+    | '/learn/client-script-how-to/$slug'
     | '/learn/discovery/$section'
     | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to'
@@ -543,6 +555,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/glossary/'
     | '/learn/'
+    | '/learn/client-script-how-to/$slug'
     | '/learn/discovery/$section'
     | '/learn/flow-designer-how-to/$slug'
     | '/learn/flow-designer-how-to/'
@@ -569,7 +582,7 @@ export interface RootRouteChildren {
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
-  LearnClientScriptHowToRoute: typeof LearnClientScriptHowToRoute
+  LearnClientScriptHowToRoute: typeof LearnClientScriptHowToRouteWithChildren
   LearnCmdbInterviewQuestionsRoute: typeof LearnCmdbInterviewQuestionsRoute
   LearnCsmInterviewQuestionsRoute: typeof LearnCsmInterviewQuestionsRoute
   LearnDiscoveryRoute: typeof LearnDiscoveryRouteWithChildren
@@ -886,8 +899,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnDiscoverySectionRouteImport
       parentRoute: typeof LearnDiscoveryRoute
     }
+    '/learn/client-script-how-to/$slug': {
+      id: '/learn/client-script-how-to/$slug'
+      path: '/$slug'
+      fullPath: '/learn/client-script-how-to/$slug'
+      preLoaderRoute: typeof LearnClientScriptHowToSlugRouteImport
+      parentRoute: typeof LearnClientScriptHowToRoute
+    }
   }
 }
+
+interface LearnClientScriptHowToRouteChildren {
+  LearnClientScriptHowToSlugRoute: typeof LearnClientScriptHowToSlugRoute
+}
+
+const LearnClientScriptHowToRouteChildren: LearnClientScriptHowToRouteChildren =
+  {
+    LearnClientScriptHowToSlugRoute: LearnClientScriptHowToSlugRoute,
+  }
+
+const LearnClientScriptHowToRouteWithChildren =
+  LearnClientScriptHowToRoute._addFileChildren(
+    LearnClientScriptHowToRouteChildren,
+  )
 
 interface LearnDiscoveryRouteChildren {
   LearnDiscoverySectionRoute: typeof LearnDiscoverySectionRoute
@@ -942,7 +976,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
-  LearnClientScriptHowToRoute: LearnClientScriptHowToRoute,
+  LearnClientScriptHowToRoute: LearnClientScriptHowToRouteWithChildren,
   LearnCmdbInterviewQuestionsRoute: LearnCmdbInterviewQuestionsRoute,
   LearnCsmInterviewQuestionsRoute: LearnCsmInterviewQuestionsRoute,
   LearnDiscoveryRoute: LearnDiscoveryRouteWithChildren,
