@@ -313,6 +313,15 @@ function FlowDesignerHowTo() {
           >
             🌊 Flow Designer Interview Questions →
           </Link>
+          <p className="text-sm text-foreground/85 pt-2">
+            Working on the client side instead?
+          </p>
+          <Link
+            to="/learn/client-script-how-to"
+            className="inline-block text-sm font-bold text-accent hover:underline"
+          >
+            🧩 Client Script How-To Guides →
+          </Link>
         </aside>
       </main>
     </div>
