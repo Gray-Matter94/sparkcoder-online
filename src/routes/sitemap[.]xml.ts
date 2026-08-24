@@ -34,6 +34,12 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "monthly" as const,
             priority: "0.8",
           })),
+          { path: "/learn/client-script-how-to", changefreq: "monthly", priority: "0.8" },
+          ...CLIENT_SCRIPT_GUIDES.map((g) => ({
+            path: `/learn/client-script-how-to/${g.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.8",
+          })),
           { path: "/learn/itsm-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/discovery-interview-questions", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/irm-architect-interview-questions", changefreq: "monthly", priority: "0.8" },
