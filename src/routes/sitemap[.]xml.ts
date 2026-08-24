@@ -4,6 +4,7 @@ import { TOPICS } from "@/lib/glossary";
 import { BLOG_POSTS } from "@/lib/blog";
 import { GLOSSARY_ENTRIES } from "@/lib/glossary-hub";
 import { FLOW_HOWTO_GUIDES } from "@/lib/content/flow-howto";
+import { CLIENT_SCRIPT_GUIDES } from "@/lib/content/client-script-howto";
 
 import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
 
