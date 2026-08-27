@@ -171,6 +171,64 @@ const faqJsonLd = {
   })),
 };
 
+const howToJsonLd = HOWTOS.map((h) => ({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: h.q.replace(/\?$/, ""),
+  description: h.short,
+  url: `${URL}#${h.id}`,
+  step: h.steps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: `Step ${i + 1}`,
+    text: s,
+  })),
+}));
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "SparkCoder", item: "https://www.sparkcoder.online/" },
+    { "@type": "ListItem", position: 2, name: "Learn", item: "https://www.sparkcoder.online/learn" },
+    { "@type": "ListItem", position: 3, name: "Flow Designer how-to", item: URL },
+  ],
+};
+
+const itemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "ServiceNow Flow Designer how-to tasks",
+  itemListElement: HOWTOS.map((h, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: h.q,
+    url: `${URL}#${h.id}`,
+  })),
+};
+
+const qaPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "QAPage",
+  url: URL,
+  mainEntity: {
+    "@type": "Question",
+    name: "How do I script in ServiceNow Flow Designer?",
+    text: "How do I add script steps, call subflows, call Script Includes and use REST steps in ServiceNow Flow Designer?",
+    answerCount: HOWTOS.length,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: `${HOWTOS[0]!.q} ${HOWTOS[0]!.short}`,
+      url: `${URL}#${HOWTOS[0]!.id}`,
+    },
+    suggestedAnswer: HOWTOS.slice(1).map((h) => ({
+      "@type": "Answer",
+      text: `${h.q} ${h.short}`,
+      url: `${URL}#${h.id}`,
+    })),
+  },
+};
+
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
@@ -196,13 +254,22 @@ export const Route = createFileRoute("/learn/flow-designer-how-to/")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: URL },
       { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(faqJsonLd) },
+      ...howToJsonLd.map((h) => ({
+        type: "application/ld+json",
+        children: JSON.stringify(h),
+      })),
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbJsonLd) },
+      { type: "application/ld+json", children: JSON.stringify(itemListJsonLd) },
+      { type: "application/ld+json", children: JSON.stringify(qaPageJsonLd) },
       { type: "application/ld+json", children: JSON.stringify(articleJsonLd) },
     ],
   }),
+
   component: FlowDesignerHowTo,
 });
 
