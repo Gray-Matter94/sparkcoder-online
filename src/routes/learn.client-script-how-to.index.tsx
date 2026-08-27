@@ -31,6 +31,67 @@ const faqJsonLd = {
   })),
 };
 
+const howToJsonLd = CLIENT_SCRIPT_GUIDES.map((g) => ({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: g.heading,
+  description: g.description,
+  url: `${URL}/${g.slug}`,
+  step: g.steps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: s.title,
+    text: s.body,
+    url: `${URL}/${g.slug}`,
+  })),
+}));
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "SparkCoder", item: "https://www.sparkcoder.online/" },
+    { "@type": "ListItem", position: 2, name: "Learn", item: "https://www.sparkcoder.online/learn" },
+    { "@type": "ListItem", position: 3, name: "Client script how-to", item: URL },
+  ],
+};
+
+const qaPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "QAPage",
+  url: URL,
+  mainEntity: {
+    "@type": "Question",
+    name: "How do I get field and reference values in a ServiceNow client script?",
+    text: "How do I get display values, read reference field values, work around dot-walking limits and debug a ServiceNow client script?",
+    answerCount: CLIENT_SCRIPT_GUIDES.length,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: `${CLIENT_SCRIPT_GUIDES[0]!.heading} — ${CLIENT_SCRIPT_GUIDES[0]!.shortAnswer}`,
+      url: `${URL}/${CLIENT_SCRIPT_GUIDES[0]!.slug}`,
+    },
+    suggestedAnswer: CLIENT_SCRIPT_GUIDES.slice(1).map((g) => ({
+      "@type": "Answer",
+      text: `${g.heading} — ${g.shortAnswer}`,
+      url: `${URL}/${g.slug}`,
+    })),
+  },
+};
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: TITLE,
+  description: DESCRIPTION,
+  url: URL,
+  author: { "@type": "Organization", name: "SparkCoder" },
+  publisher: {
+    "@type": "Organization",
+    name: "SparkCoder",
+    url: "https://www.sparkcoder.online",
+  },
+};
+
 export const Route = createFileRoute("/learn/client-script-how-to/")({
   head: () => ({
     meta: [
@@ -46,8 +107,16 @@ export const Route = createFileRoute("/learn/client-script-how-to/")({
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(itemListJsonLd) },
       { type: "application/ld+json", children: JSON.stringify(faqJsonLd) },
+      ...howToJsonLd.map((h) => ({
+        type: "application/ld+json",
+        children: JSON.stringify(h),
+      })),
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbJsonLd) },
+      { type: "application/ld+json", children: JSON.stringify(qaPageJsonLd) },
+      { type: "application/ld+json", children: JSON.stringify(articleJsonLd) },
     ],
   }),
+
   component: ClientScriptHowToHub,
 });
 
