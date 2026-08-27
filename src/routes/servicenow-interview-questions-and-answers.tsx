@@ -191,6 +191,49 @@ const FAQ_JSONLD = {
   })),
 };
 
+const QAPAGE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "QAPage",
+  url: URL,
+  mainEntity: {
+    "@type": "Question",
+    name: "What questions are asked in a ServiceNow interview?",
+    text: "What questions are asked in a ServiceNow interview for developer, admin, IRM, CMDB and ITSM roles?",
+    answerCount: ALL_QAS.length,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: `${ALL_QAS[0]!.q} ${ALL_QAS[0]!.a}`,
+      url: `${URL}#roles`,
+    },
+    suggestedAnswer: ALL_QAS.slice(1, 12).map((q) => ({
+      "@type": "Answer",
+      text: `${q.q} ${q.a}`,
+      url: `${URL}#roles`,
+    })),
+  },
+};
+
+const BREADCRUMB_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "SparkCoder", item: "https://www.sparkcoder.online/" },
+    { "@type": "ListItem", position: 2, name: "ServiceNow Interview Questions and Answers", item: URL },
+  ],
+};
+
+const ROLE_ITEMLIST_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "ServiceNow interview question sets by role",
+  itemListElement: ROLES.map((r, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: r.role,
+    url: `${URL}#roles`,
+  })),
+};
+
 const ARTICLE_JSONLD = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
@@ -201,6 +244,7 @@ const ARTICLE_JSONLD = {
   about: "ServiceNow interview preparation across developer, admin, IRM, CMDB and ITSM roles",
   audience: { "@type": "Audience", audienceType: "ServiceNow professionals" },
 };
+
 
 export const Route = createFileRoute("/servicenow-interview-questions-and-answers")({
   head: () => ({
