@@ -203,12 +203,12 @@ const QAPAGE_JSONLD = {
     acceptedAnswer: {
       "@type": "Answer",
       text: `${ALL_QAS[0]!.q} ${ALL_QAS[0]!.a}`,
-      url: `${URL}#roles`,
+      url: URL,
     },
     suggestedAnswer: ALL_QAS.slice(1, 12).map((q) => ({
       "@type": "Answer",
       text: `${q.q} ${q.a}`,
-      url: `${URL}#roles`,
+      url: URL,
     })),
   },
 };
@@ -230,7 +230,7 @@ const ROLE_ITEMLIST_JSONLD = {
     "@type": "ListItem",
     position: i + 1,
     name: r.role,
-    url: `${URL}#roles`,
+    url: `${URL}#${r.slug}`,
   })),
 };
 
@@ -260,6 +260,9 @@ export const Route = createFileRoute("/servicenow-interview-questions-and-answer
     links: [{ rel: "canonical", href: URL }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(FAQ_JSONLD) },
+      { type: "application/ld+json", children: JSON.stringify(QAPAGE_JSONLD) },
+      { type: "application/ld+json", children: JSON.stringify(BREADCRUMB_JSONLD) },
+      { type: "application/ld+json", children: JSON.stringify(ROLE_ITEMLIST_JSONLD) },
       { type: "application/ld+json", children: JSON.stringify(ARTICLE_JSONLD) },
     ],
   }),
