@@ -604,6 +604,20 @@ function QueryBuilder() {
             </Link>
           </div>
         </section>
+
+        <ToolAboutBlock toolName="ServiceNow Encoded Query Builder">
+          <p>
+            The SparkCoder ServiceNow Encoded Query Builder turns filter conditions into a valid
+            sysparm_query string you can paste straight into GlideRecord, GlideAggregate, or REST
+            calls. It is designed for ServiceNow developers, admins, and interview candidates who
+            need to reason about queries without opening an instance.
+          </p>
+          <p>
+            Every condition is encoded locally in your browser — no data is sent to a server. Use the
+            presets to see common patterns, import a query copied from a list filter, and switch
+            between GlideRecord, GlideAggregate, and REST snippets.
+          </p>
+        </ToolAboutBlock>
       </main>
     </div>
   );

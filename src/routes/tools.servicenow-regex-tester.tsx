@@ -538,6 +538,19 @@ function RegexTester() {
             </Link>
           </div>
         </section>
+
+        <ToolAboutBlock toolName="ServiceNow Regex Tester">
+          <p>
+            The SparkCoder ServiceNow Regex Tester is a free, browser-based utility for building and
+            testing regular expressions used in ServiceNow client scripts, business rules, inbound
+            email actions, and ACL conditions. It includes presets for sys_id, incident numbers,
+            emails, URLs, and more.
+          </p>
+          <p>
+            Pick a preset, edit the pattern and flags, and copy a ready-to-paste snippet. All matching
+            happens locally — your test strings never leave the browser.
+          </p>
+        </ToolAboutBlock>
       </main>
     </div>
   );
