@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ToolAboutBlock } from "@/components/ToolAboutBlock";
 import { useProgress } from "@/lib/progress";
 import { useMemo, useState } from "react";
 
