@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Rocket } from "lucide-react";
 
 interface ToolAboutBlockProps {
   toolName: string;
@@ -12,8 +13,8 @@ export function ToolAboutBlock({ toolName, children }: ToolAboutBlockProps) {
       className="rounded-2xl border-2 border-border bg-panel p-5 space-y-3"
     >
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent text-lg">
-          🚀
+        <div className="h-10 w-10 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent">
+          <Rocket className="w-5 h-5" aria-hidden="true" />
         </div>
         <div>
           <h2 className="font-display text-xl tracking-tight">About this tool</h2>
