@@ -55,6 +55,7 @@ const ROLES: RoleSection[] = [
       { label: "GlideRecord puzzles", to: "/practice/$category", params: { category: "gliderecord" }, search: { difficulty: undefined } },
       { label: "Business rules", to: "/practice/$category", params: { category: "business-rules" }, search: { difficulty: undefined } },
       { label: "GlideAjax Q&A", to: "/learn/glideajax-interview-questions" },
+      { label: "Service Portal Q&A", to: "/learn/service-portal-interview-questions" },
       { label: "Coding examples", to: "/servicenow-coding-examples-for-interview" },
     ],
   },

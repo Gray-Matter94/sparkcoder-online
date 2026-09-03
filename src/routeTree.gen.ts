@@ -27,6 +27,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as ToolsServicenowEncodedQueryBuilderRouteImport } from './routes/tools.servicenow-encoded-query-builder'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
+import { Route as LearnServicePortalInterviewQuestionsRouteImport } from './routes/learn.service-portal-interview-questions'
 import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.scenario-based-scripting'
 import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
 import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
@@ -150,6 +151,12 @@ const PracticeCategoryRoute = PracticeCategoryRouteImport.update({
   path: '/practice/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnServicePortalInterviewQuestionsRoute =
+  LearnServicePortalInterviewQuestionsRouteImport.update({
+    id: '/learn/service-portal-interview-questions',
+    path: '/learn/service-portal-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnScenarioBasedScriptingRoute =
   LearnScenarioBasedScriptingRouteImport.update({
     id: '/learn/scenario-based-scripting',
@@ -330,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
+  '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -374,6 +382,7 @@ export interface FileRoutesByTo {
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
+  '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -421,6 +430,7 @@ export interface FileRoutesById {
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
   '/learn/scenario-based-scripting': typeof LearnScenarioBasedScriptingRoute
+  '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
+    | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
+    | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
@@ -559,6 +571,7 @@ export interface FileRouteTypes {
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
     | '/learn/scenario-based-scripting'
+    | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
@@ -606,6 +619,7 @@ export interface RootRouteChildren {
   LearnIrmArchitectInterviewQuestionsRoute: typeof LearnIrmArchitectInterviewQuestionsRoute
   LearnItsmInterviewQuestionsRoute: typeof LearnItsmInterviewQuestionsRoute
   LearnScenarioBasedScriptingRoute: typeof LearnScenarioBasedScriptingRoute
+  LearnServicePortalInterviewQuestionsRoute: typeof LearnServicePortalInterviewQuestionsRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   ToolsServicenowEncodedQueryBuilderRoute: typeof ToolsServicenowEncodedQueryBuilderRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
@@ -740,6 +754,13 @@ declare module '@tanstack/react-router' {
       path: '/practice/$category'
       fullPath: '/practice/$category'
       preLoaderRoute: typeof PracticeCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/service-portal-interview-questions': {
+      id: '/learn/service-portal-interview-questions'
+      path: '/learn/service-portal-interview-questions'
+      fullPath: '/learn/service-portal-interview-questions'
+      preLoaderRoute: typeof LearnServicePortalInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/scenario-based-scripting': {
@@ -1012,6 +1033,8 @@ const rootRouteChildren: RootRouteChildren = {
     LearnIrmArchitectInterviewQuestionsRoute,
   LearnItsmInterviewQuestionsRoute: LearnItsmInterviewQuestionsRoute,
   LearnScenarioBasedScriptingRoute: LearnScenarioBasedScriptingRoute,
+  LearnServicePortalInterviewQuestionsRoute:
+    LearnServicePortalInterviewQuestionsRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   ToolsServicenowEncodedQueryBuilderRoute:
     ToolsServicenowEncodedQueryBuilderRoute,
