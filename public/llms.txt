@@ -14,6 +14,7 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 - [Encoded query builder](/tools/servicenow-encoded-query-builder): Free tool — build ServiceNow encoded queries and copy GlideRecord / GlideAggregate / REST snippets.
 - [Regex tester](/tools/servicenow-regex-tester): Live regex tester with ServiceNow presets and copy-ready snippets.
 - [Client script how-to](/learn/client-script-how-to): Task guides — display values, reference field values, dot-walking limits, debugging (/learn/client-script-how-to/get-display-value, ...).
+- [Service Portal interview questions](/learn/service-portal-interview-questions): Widget anatomy, $sp API, data/options flow, portal security, theming, search sources, Employee Center trade-offs.
 
 - [Platform basics](/learn/platform): Instance, tables, scope, update sets.
 - [ITSM](/learn/itsm): Incident, Problem, Change, Request, SLA.
