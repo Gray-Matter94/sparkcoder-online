@@ -37,6 +37,14 @@ export const Route = createFileRoute("/live-coding")({
       },
       { property: "og:url", content: "https://www.sparkcoder.online/live-coding" },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Live Coding Simulator — SparkCoder" },
+      {
+        name: "twitter:description",
+        content:
+          "Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, 500 curated tasks.",
+      },
+
     ],
     links: [{ rel: "canonical", href: "https://www.sparkcoder.online/live-coding" }],
     scripts: [

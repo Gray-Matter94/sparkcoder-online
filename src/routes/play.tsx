@@ -19,6 +19,15 @@ export const Route = createFileRoute("/play")({
           "Speed-match ServiceNow Glide APIs with their descriptions across 50 levels of progressively harder challenges.",
       },
       { property: "og:url", content: "https://www.sparkcoder.online/play" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Glide API Match — SparkCoder Mini-Game" },
+      {
+        name: "twitter:description",
+        content:
+          "Speed-match ServiceNow Glide APIs with their descriptions across 50 levels of progressively harder challenges.",
+      },
+
     ],
     links: [{ rel: "canonical", href: "https://www.sparkcoder.online/play" }],
   }),
