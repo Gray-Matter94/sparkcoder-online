@@ -14,8 +14,24 @@ export const Route = createFileRoute("/feedback")({
         content:
           "Report an issue or share feedback about SparkCoder. Attach a screenshot and track the resolution status.",
       },
+      { property: "og:title", content: "Feedback & Issues — SparkCoder" },
+      {
+        property: "og:description",
+        content:
+          "Report an issue or share feedback about SparkCoder. Attach a screenshot and track the resolution status.",
+      },
+      { property: "og:url", content: "https://www.sparkcoder.online/feedback" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Feedback & Issues — SparkCoder" },
+      {
+        name: "twitter:description",
+        content:
+          "Report an issue or share feedback about SparkCoder. Attach a screenshot and track the resolution status.",
+      },
       { name: "robots", content: "noindex" },
     ],
+
   }),
   component: FeedbackPage,
 });
