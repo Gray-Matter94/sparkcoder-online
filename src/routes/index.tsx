@@ -389,6 +389,37 @@ function Home() {
           </button>
         </section>
 
+        <section aria-labelledby="why-sparkcoder-heading" className="space-y-3">
+          <h2
+            id="why-sparkcoder-heading"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1"
+          >
+            Why practice ServiceNow scripting with SparkCoder
+          </h2>
+          <div className="liquid-glass rounded-2xl p-5 space-y-3 text-xs text-foreground/80 leading-relaxed">
+            <p>
+              SparkCoder is a free ServiceNow scripting interview practice app. Instead of reading
+              static question lists, you solve bite-size code puzzles covering GlideRecord queries,
+              GlideAjax, Script Includes, business rules, client scripts and ACL scripting — the
+              exact topics ServiceNow developer and admin interviews test.
+            </p>
+            <p>
+              Every answer runs in a simulated ServiceNow instance that shows colorful,
+              simulator-style output. When a script fails, the built-in coach points at the exact
+              line, explains the cause, and offers an editable fix you can apply and re-run.
+              Mistake analytics track which API patterns you keep missing so you can drill them
+              before the real interview.
+            </p>
+            <p>
+              Beyond puzzles, the site includes role-scoped interview question guides for ITSM,
+              CMDB, Discovery, CSM, HRSD, IntegrationHub, Flow Designer, Service Portal and IRM,
+              a ServiceNow glossary, how-to guides with copy-ready code, and free tools like the
+              encoded query builder. Progress, XP and streaks are saved on your device — no signup
+              required.
+            </p>
+          </div>
+        </section>
+
         <section aria-labelledby="home-faq-heading" className="space-y-3">
           <h2
             id="home-faq-heading"
