@@ -388,7 +388,25 @@ function Home() {
             Reset all progress
           </button>
         </section>
+
+        <section aria-labelledby="home-faq-heading" className="space-y-3">
+          <h2
+            id="home-faq-heading"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1"
+          >
+            Frequently asked questions
+          </h2>
+          <dl className="space-y-3">
+            {HOME_FAQ.map((f) => (
+              <div key={f.q} className="liquid-glass rounded-2xl p-4">
+                <dt className="font-display text-base tracking-wide">{f.q}</dt>
+                <dd className="mt-1.5 text-xs text-foreground/80 leading-relaxed">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </main>
+
       <nav
         aria-label="Explore tracks"
         className="max-w-md mx-auto px-4 pb-4 flex flex-wrap gap-2 justify-center text-[11px]"
