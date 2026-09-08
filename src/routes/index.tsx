@@ -89,6 +89,27 @@ const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
   ],
 };
 
+const HOME_FAQ: { q: string; a: string }[] = [
+  {
+    q: "What is SparkCoder?",
+    a: "SparkCoder is a free practice app for ServiceNow scripting interviews. You solve code puzzles, run scripts in a simulated instance, and get instant teaching when an answer is wrong.",
+  },
+  {
+    q: "Which learning tracks are available?",
+    a: "Tracks cover ServiceNow developer scripting, ServiceNow admin and IRM, Java and AngularJS, each with its own curated modules, quizzes and challenges.",
+  },
+  {
+    q: "Is SparkCoder free to use?",
+    a: "Yes. All practice puzzles, the live coding simulator and the interview question guides are free, and progress is saved on your device.",
+  },
+  {
+    q: "Does SparkCoder help with ServiceNow interview preparation?",
+    a: "Yes. It includes interview question guides for ITSM, CMDB, Discovery, CSM, HRSD, IntegrationHub, Flow Designer and IRM, plus scenario-based scripting drills with model answers.",
+  },
+];
+
+
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
