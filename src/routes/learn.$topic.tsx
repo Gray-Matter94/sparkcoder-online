@@ -67,7 +67,7 @@ function TopicPage() {
             {meta.image ? (
               <img
                 src={meta.image}
-                alt={`${meta.name} illustration`}
+                alt={`Illustration for the ${meta.name} ServiceNow learning module`}
                 width={768}
                 height={384}
                 className="size-full object-cover opacity-90"

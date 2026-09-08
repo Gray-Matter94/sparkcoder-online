@@ -89,6 +89,27 @@ const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
   ],
 };
 
+const HOME_FAQ: { q: string; a: string }[] = [
+  {
+    q: "What is SparkCoder?",
+    a: "SparkCoder is a free practice app for ServiceNow scripting interviews. You solve code puzzles, run scripts in a simulated instance, and get instant teaching when an answer is wrong.",
+  },
+  {
+    q: "Which learning tracks are available?",
+    a: "Tracks cover ServiceNow developer scripting, ServiceNow admin and IRM, Java and AngularJS, each with its own curated modules, quizzes and challenges.",
+  },
+  {
+    q: "Is SparkCoder free to use?",
+    a: "Yes. All practice puzzles, the live coding simulator and the interview question guides are free, and progress is saved on your device.",
+  },
+  {
+    q: "Does SparkCoder help with ServiceNow interview preparation?",
+    a: "Yes. It includes interview question guides for ITSM, CMDB, Discovery, CSM, HRSD, IntegrationHub, Flow Designer and IRM, plus scenario-based scripting drills with model answers.",
+  },
+];
+
+
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -144,40 +165,12 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: "What is SparkCoder?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "SparkCoder is a free practice app for ServiceNow scripting interviews. You solve code puzzles, run scripts in a simulated instance, and get instant teaching when an answer is wrong.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Which learning tracks are available?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Tracks cover ServiceNow developer scripting, ServiceNow admin and IRM, Java and AngularJS, each with its own curated modules, quizzes and challenges.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Is SparkCoder free to use?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes. All practice puzzles, the live coding simulator and the interview question guides are free, and progress is saved on your device.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Does SparkCoder help with ServiceNow interview preparation?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "Yes. It includes interview question guides for ITSM, CMDB, Discovery, CSM, HRSD, IntegrationHub, Flow Designer and IRM, plus scenario-based scripting drills with model answers.",
-              },
-            },
-          ],
+          mainEntity: HOME_FAQ.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+
         }),
       },
     ],
@@ -395,7 +388,25 @@ function Home() {
             Reset all progress
           </button>
         </section>
+
+        <section aria-labelledby="home-faq-heading" className="space-y-3">
+          <h2
+            id="home-faq-heading"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1"
+          >
+            Frequently asked questions
+          </h2>
+          <dl className="space-y-3">
+            {HOME_FAQ.map((f) => (
+              <div key={f.q} className="liquid-glass rounded-2xl p-4">
+                <dt className="font-display text-base tracking-wide">{f.q}</dt>
+                <dd className="mt-1.5 text-xs text-foreground/80 leading-relaxed">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </main>
+
       <nav
         aria-label="Explore tracks"
         className="max-w-md mx-auto px-4 pb-4 flex flex-wrap gap-2 justify-center text-[11px]"
