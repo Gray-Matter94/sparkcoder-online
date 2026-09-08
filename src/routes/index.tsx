@@ -420,6 +420,53 @@ function Home() {
           </div>
         </section>
 
+        <section aria-labelledby="how-it-works-heading" className="space-y-3">
+          <h2
+            id="how-it-works-heading"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1"
+          >
+            How SparkCoder works
+          </h2>
+          <ol className="liquid-glass rounded-2xl p-5 space-y-3 text-xs text-foreground/80 leading-relaxed list-decimal list-inside">
+            <li>
+              <span className="font-display text-sm tracking-wide text-foreground">Pick a track.</span>{" "}
+              Choose the role you are interviewing for — ServiceNow developer, ITSM admin, CMDB and
+              Discovery, CSM, HRSD, IntegrationHub or IRM architect. Each track loads its own
+              modules and question bank instead of one generic list.
+            </li>
+            <li>
+              <span className="font-display text-sm tracking-wide text-foreground">Solve a puzzle.</span>{" "}
+              Every module opens a short scripting task: fix a GlideRecord query, return the right
+              value from a Script Include, correct a client script that reads a reference field, or
+              tighten an ACL script. You write real ServiceNow server- or client-side JavaScript.
+            </li>
+            <li>
+              <span className="font-display text-sm tracking-wide text-foreground">Run it and read the output.</span>{" "}
+              The simulator executes your script and shows the query, the records it touched and the
+              result. Any valid approach that produces the correct result passes — there is no single
+              hard-coded answer to guess.
+            </li>
+            <li>
+              <span className="font-display text-sm tracking-wide text-foreground">Fix what failed.</span>{" "}
+              Failing runs are mapped back to the exact code line with a plain-language cause, a
+              suggested patch you can edit and re-run, and alternative ways to solve the same task.
+            </li>
+            <li>
+              <span className="font-display text-sm tracking-wide text-foreground">Review and repeat.</span>{" "}
+              XP, streaks and mistake analytics show which APIs keep tripping you up, so your next
+              session drills the weak spots rather than what you already know.
+            </li>
+          </ol>
+          <p className="text-xs text-foreground/70 leading-relaxed px-1">
+            Prefer reading first? Start with the{" "}
+            <Link to="/servicenow-interview-questions-and-answers" className="underline text-accent">
+              ServiceNow interview questions and answers hub
+            </Link>
+            , then come back and practise the scripting equivalents here.
+          </p>
+        </section>
+
+
         <section aria-labelledby="home-faq-heading" className="space-y-3">
           <h2
             id="home-faq-heading"
