@@ -101,6 +101,7 @@ function AuthButton() {
             <div className="text-[11px] text-muted-foreground truncate">{user.email}</div>
           </div>
           <button
+            aria-label="Sign out of your SparkCoder account"
             onClick={async () => {
               setOpen(false);
               await signOut();
