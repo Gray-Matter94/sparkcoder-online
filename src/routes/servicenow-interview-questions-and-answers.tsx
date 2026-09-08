@@ -235,16 +235,31 @@ const ROLE_ITEMLIST_JSONLD = {
   })),
 };
 
+const ARTICLE_IMAGE = "https://www.sparkcoder.online/og/blog-curriculum.jpg";
+
 const ARTICLE_JSONLD = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   headline: "ServiceNow Interview Questions and Answers",
   description: DESCRIPTION,
   url: URL,
+  image: ARTICLE_IMAGE,
   datePublished: "2026-08-15",
+  dateModified: "2026-09-08",
+  author: { "@type": "Organization", name: "SparkCoder", url: "https://www.sparkcoder.online" },
+  publisher: {
+    "@type": "Organization",
+    name: "SparkCoder",
+    url: "https://www.sparkcoder.online",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.sparkcoder.online/android-chrome-192x192.png",
+    },
+  },
   about: "ServiceNow interview preparation across developer, admin, IRM, CMDB and ITSM roles",
   audience: { "@type": "Audience", audienceType: "ServiceNow professionals" },
 };
+
 
 
 export const Route = createFileRoute("/servicenow-interview-questions-and-answers")({
