@@ -20,6 +20,7 @@ import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AngularjsCodingTestRouteImport } from './routes/angularjs-coding-test'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary.index'
@@ -112,6 +113,11 @@ const AuthRoute = AuthRouteImport.update({
 const AngularjsCodingTestRoute = AngularjsCodingTestRouteImport.update({
   id: '/angularjs-coding-test',
   path: '/angularjs-coding-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -305,6 +311,7 @@ const LearnClientScriptHowToSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
@@ -352,6 +359,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
@@ -398,6 +406,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/angularjs-coding-test': typeof AngularjsCodingTestRoute
   '/auth': typeof AuthRoute
   '/daily': typeof DailyRoute
@@ -447,6 +456,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
@@ -494,6 +504,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
@@ -539,6 +550,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/angularjs-coding-test'
     | '/auth'
     | '/daily'
@@ -587,6 +599,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AngularjsCodingTestRoute: typeof AngularjsCodingTestRoute
   AuthRoute: typeof AuthRoute
   DailyRoute: typeof DailyRoute
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       path: '/angularjs-coding-test'
       fullPath: '/angularjs-coding-test'
       preLoaderRoute: typeof AngularjsCodingTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -994,6 +1014,7 @@ const LearnFlowDesignerHowToRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AngularjsCodingTestRoute: AngularjsCodingTestRoute,
   AuthRoute: AuthRoute,
   DailyRoute: DailyRoute,
