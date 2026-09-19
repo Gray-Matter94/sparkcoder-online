@@ -237,7 +237,7 @@ function Home() {
         <section className="grid grid-cols-3 gap-3">
           <Stat label="XP" value={progress.xp.toLocaleString()} accent="primary" />
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
-          <Stat label="Solved" value={`${solved}/${total}`} accent="secondary" />
+          <Stat label="Puzzles solved" value={`${solved}/${total}`} accent="secondary" />
         </section>
 
 
