@@ -675,8 +675,8 @@ function LiveCoding() {
               >
                 ‹
               </button>
-              <span aria-live="polite">
-                {noResults ? "0/0" : `#${idx + 1}/${list.length}`}
+              <span aria-live="polite" title="Your position in the current filtered list">
+                {noResults ? "Task 0 of 0" : `Task ${idx + 1} of ${list.length}`}
               </span>
               <button
                 onClick={nextQuestion}
@@ -700,7 +700,7 @@ function LiveCoding() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…"
+              placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…`}
               aria-label="Search live coding tasks by keyword"
               className="w-full h-10 pl-9 pr-24 rounded-xl bg-panel border-2 border-border text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:border-amber-500/60"
             />
