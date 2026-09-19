@@ -223,7 +223,18 @@ function Practice() {
               <span className="px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/30 text-accent">
                 {tier.emoji} {tier.name} · ×{tier.xpMultiplier.toFixed(2)}
               </span>
-              <span className="text-muted-foreground">{index + 1}/{questions.length}</span>
+              <span
+                className="text-muted-foreground"
+                title="Your position in this module's puzzle queue"
+              >
+                Q {index + 1} of {questions.length}
+              </span>
+              <span
+                className="px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/30 text-primary"
+                title="Distinct puzzles you have solved in this module"
+              >
+                ✅ {solvedUnique}/{counts.unlocked} solved
+              </span>
             </div>
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
