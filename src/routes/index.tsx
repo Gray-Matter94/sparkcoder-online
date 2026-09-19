@@ -189,11 +189,13 @@ function Home() {
   const { progress, reset, track } = useProgress();
   const tier = getCurrentTier(progress);
   const trackCategories = categoriesForTrack(track);
-  const trackCategoryIds = new Set(trackCategories.map((c) => c.id));
-  const trackQuestions = QUESTIONS.filter((q) => trackCategoryIds.has(q.category));
-  const unlockedQuestions = trackQuestions.filter((q) => q.level <= tier.maxLevel);
-  const total = unlockedQuestions.length;
-  const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
+  // Guided-puzzle counts for this track, from the same data /practice uses.
+  const counts = useMemo(
+    () => puzzleCountsForTrack(track, tier.maxLevel, progress.solved),
+    [track, tier.maxLevel, progress.solved],
+  );
+  const total = counts.unlocked;
+  const solved = counts.solvedUnique;
   const pct = total ? Math.round((solved / total) * 100) : 0;
   const daily = getDailyChallenge(track);
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
@@ -316,11 +318,10 @@ function Home() {
           </h2>
           <div className="grid grid-cols-1 gap-3">
             {trackCategories.map((c) => {
-              const allQs = QUESTIONS.filter((q) => q.category === c.id);
-              const qs = allQs.filter((q) => q.level <= tier.maxLevel);
-              const locked = allQs.length - qs.length;
-              const done = qs.filter((q) => progress.solved[q.id]).length;
-              const full = qs.length;
+              const n = puzzleCountsForCategory(c.id, tier.maxLevel, progress.solved);
+              const locked = n.locked;
+              const done = n.solvedUnique;
+              const full = n.unlocked;
               const ringColor =
                 c.color === "primary"
                   ? "hover:border-primary/60"
