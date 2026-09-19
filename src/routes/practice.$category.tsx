@@ -75,7 +75,7 @@ function Practice() {
   const { progress, award, recordMistake, track } = useProgress();
   const tier = useMemo(() => getCurrentTier(progress), [progress]);
   const nextTier = useMemo(() => getNextTier(progress), [progress]);
-  const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
+  const allQuestions = useMemo(() => allPuzzlesFor(category as Category), [category]);
   const tierAllowed = useMemo(
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
