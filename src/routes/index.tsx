@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CATEGORIES, categoriesForTrack } from "@/lib/questions";
 import {
