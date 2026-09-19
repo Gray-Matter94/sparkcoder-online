@@ -2,8 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment, useMemo, useRef, useState, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  LIVE_CODING_TASK_TOTAL,
+  LIVE_CODING_SERVER_TOTAL,
+  LIVE_CODING_CLIENT_TOTAL,
+} from "@/lib/task-counts";
+import {
   LIVE_CODING_QUESTIONS,
-  LIVE_CODING_TOTAL,
   validateSolution,
   acceptAsAlternative,
   type LiveCodingQuestion,
@@ -26,14 +30,12 @@ export const Route = createFileRoute("/live-coding")({
       { title: "Live Coding Simulator — SparkCoder" },
       {
         name: "description",
-        content:
-          "Write ServiceNow scripts in an instance-style editor. 2000+ server & client tasks with an AI coach that points at the exact failing line.",
+        content: `Write ServiceNow scripts in an instance-style editor. ${LIVE_CODING_TASK_TOTAL} server & client live-coding tasks with an AI coach that points at the exact failing line.`,
       },
       { property: "og:title", content: "Live Coding Simulator — SparkCoder" },
       {
         property: "og:description",
-        content:
-          "Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, 500 curated tasks.",
+        content: `Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, ${LIVE_CODING_TASK_TOTAL} curated live-coding tasks.`,
       },
       { property: "og:url", content: "https://www.sparkcoder.online/live-coding" },
       { property: "og:type", content: "website" },
@@ -41,8 +43,7 @@ export const Route = createFileRoute("/live-coding")({
       { name: "twitter:title", content: "Live Coding Simulator — SparkCoder" },
       {
         name: "twitter:description",
-        content:
-          "Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, 500 curated tasks.",
+        content: `Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, ${LIVE_CODING_TASK_TOTAL} curated live-coding tasks.`,
       },
 
     ],
@@ -608,8 +609,8 @@ function LiveCoding() {
     handleRun(nextCode);
   }
 
-  const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
-  const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
+  const serverCount = LIVE_CODING_SERVER_TOTAL;
+  const clientCount = LIVE_CODING_CLIENT_TOTAL;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -629,7 +630,7 @@ function LiveCoding() {
             Live Coding <span className="text-amber-300">Simulator.</span>
           </h1>
           <p className="text-xs text-muted-foreground max-w-xl">
-            {LIVE_CODING_TOTAL} interview-grade tasks ({serverCount} server-side · {clientCount}{" "}
+            {LIVE_CODING_TASK_TOTAL} interview-grade tasks ({serverCount} server-side · {clientCount}{" "}
             client-side). The AI interviewer briefs you, you write the full script, and if you slip
             it points at the exact line to fix — just like a real ServiceNow instance review.
           </p>
@@ -645,7 +646,7 @@ function LiveCoding() {
             >
               {(
                 [
-                  { id: "all" as const, label: "ALL", count: LIVE_CODING_TOTAL },
+                  { id: "all" as const, label: "ALL", count: LIVE_CODING_TASK_TOTAL },
                   { id: "server" as const, label: "SERVER", count: serverCount },
                   { id: "client" as const, label: "CLIENT", count: clientCount },
                 ]
@@ -674,8 +675,8 @@ function LiveCoding() {
               >
                 ‹
               </button>
-              <span aria-live="polite">
-                {noResults ? "0/0" : `#${idx + 1}/${list.length}`}
+              <span aria-live="polite" title="Your position in the current filtered list">
+                {noResults ? "Task 0 of 0" : `Task ${idx + 1} of ${list.length}`}
               </span>
               <button
                 onClick={nextQuestion}
@@ -699,7 +700,7 @@ function LiveCoding() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search 500 tasks — try 'GlideAggregate', 'onChange', 'incident'…"
+              placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…`}
               aria-label="Search live coding tasks by keyword"
               className="w-full h-10 pl-9 pr-24 rounded-xl bg-panel border-2 border-border text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:border-amber-500/60"
             />

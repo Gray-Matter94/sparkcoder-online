@@ -1,6 +1,11 @@
-import type { CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, QUESTIONS, categoriesForTrack } from "@/lib/questions";
+import { CATEGORIES, categoriesForTrack } from "@/lib/questions";
+import {
+  LIVE_CODING_TASK_TOTAL,
+  puzzleCountsForCategory,
+  puzzleCountsForTrack,
+} from "@/lib/task-counts";
 import { useProgress, todayStr } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -62,7 +67,7 @@ const TRACK_CARDS: Record<TrackId, TrackCard[]> = {
     { title: "LEARN & QUIZ", blurb: "ServiceNow glossary + topic quizzes with illustrations.", tag: "GLOSSARY + QUIZ", icon: "🧠", bgEmoji: "📚", accent: "secondary", to: "/learn" },
     { title: "GLIDE API MATCH", blurb: "Speed-match Glide APIs to their descriptions. Beat the clock.", tag: "MINI-GAME", icon: "⚡", bgEmoji: "🎮", accent: "accent", to: "/play" },
     { title: "20-DAY CURRICULUM", blurb: "Day-by-day ServiceNow scripting plan. Goals, drills, takeaways.", tag: "4 WEEKS", icon: "📅", bgEmoji: "📝", accent: "primary", to: "/blog" },
-    { title: "LIVE CODING SIMULATOR", blurb: "Instance-style editor · AI points at the exact line to fix.", tag: "500 TASKS", icon: "🤖", bgEmoji: "💻", accent: "amber", to: "/live-coding" },
+    { title: "LIVE CODING SIMULATOR", blurb: "Instance-style editor · AI points at the exact line to fix.", tag: `${LIVE_CODING_TASK_TOTAL} CODING TASKS`, icon: "🤖", bgEmoji: "💻", accent: "amber", to: "/live-coding" },
   ],
   "servicenow-admin": [
     { title: "INTERVIEW Q&A HUB", blurb: "ServiceNow interview questions and answers, grouped by role.", tag: "ALL ROLES", icon: "🎯", bgEmoji: "❓", accent: "accent", to: "/servicenow-interview-questions-and-answers" },
@@ -184,11 +189,13 @@ function Home() {
   const { progress, reset, track } = useProgress();
   const tier = getCurrentTier(progress);
   const trackCategories = categoriesForTrack(track);
-  const trackCategoryIds = new Set(trackCategories.map((c) => c.id));
-  const trackQuestions = QUESTIONS.filter((q) => trackCategoryIds.has(q.category));
-  const unlockedQuestions = trackQuestions.filter((q) => q.level <= tier.maxLevel);
-  const total = unlockedQuestions.length;
-  const solved = unlockedQuestions.filter((q) => progress.solved[q.id]).length;
+  // Guided-puzzle counts for this track, from the same data /practice uses.
+  const counts = useMemo(
+    () => puzzleCountsForTrack(track, tier.maxLevel, progress.solved),
+    [track, tier.maxLevel, progress.solved],
+  );
+  const total = counts.unlocked;
+  const solved = counts.solvedUnique;
   const pct = total ? Math.round((solved / total) * 100) : 0;
   const daily = getDailyChallenge(track);
   const dailyMeta = CATEGORIES.find((c) => c.id === daily.category)!;
@@ -230,7 +237,7 @@ function Home() {
         <section className="grid grid-cols-3 gap-3">
           <Stat label="XP" value={progress.xp.toLocaleString()} accent="primary" />
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
-          <Stat label="Solved" value={`${solved}/${total}`} accent="secondary" />
+          <Stat label="Puzzles solved" value={`${solved}/${total}`} accent="secondary" />
         </section>
 
 
@@ -307,15 +314,14 @@ function Home() {
 
         <section className="space-y-3">
           <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
-            Choose a module
+            Choose a module · solved / unlocked puzzles
           </h2>
           <div className="grid grid-cols-1 gap-3">
             {trackCategories.map((c) => {
-              const allQs = QUESTIONS.filter((q) => q.category === c.id);
-              const qs = allQs.filter((q) => q.level <= tier.maxLevel);
-              const locked = allQs.length - qs.length;
-              const done = qs.filter((q) => progress.solved[q.id]).length;
-              const full = qs.length;
+              const n = puzzleCountsForCategory(c.id, tier.maxLevel, progress.solved);
+              const locked = n.locked;
+              const done = n.solvedUnique;
+              const full = n.unlocked;
               const ringColor =
                 c.color === "primary"
                   ? "hover:border-primary/60"
@@ -344,7 +350,10 @@ function Home() {
                       <h2 className={`font-display text-lg tracking-wide ${textColor}`}>
                         {c.name.toUpperCase()}
                       </h2>
-                      <span className="text-[10px] text-muted-foreground font-mono">
+                      <span
+                        className="text-[10px] text-muted-foreground font-mono"
+                        title={`${done} solved of ${full} unlocked puzzles${locked > 0 ? ` · ${locked} locked` : ""}`}
+                      >
                         {done}/{full}
                         {locked > 0 && (
                           <span className="text-muted-foreground ml-1">· 🔒{locked}</span>

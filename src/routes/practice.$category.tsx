@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
-import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
+import { CATEGORIES, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
+import { allPuzzlesFor, puzzleCountsForCategory } from "@/lib/task-counts";
 import { useProgress } from "@/lib/progress";
 import { getCurrentTier, getNextTier } from "@/lib/difficulty";
 import { StatsBar } from "@/components/StatsBar";
@@ -74,7 +75,7 @@ function Practice() {
   const { progress, award, recordMistake, track } = useProgress();
   const tier = useMemo(() => getCurrentTier(progress), [progress]);
   const nextTier = useMemo(() => getNextTier(progress), [progress]);
-  const allQuestions = useMemo(() => questionsFor(category as Category), [category]);
+  const allQuestions = useMemo(() => allPuzzlesFor(category as Category), [category]);
   const tierAllowed = useMemo(
     () => allQuestions.filter((q) => q.level <= tier.maxLevel),
     [allQuestions, tier.maxLevel]
@@ -113,7 +114,13 @@ function Practice() {
     const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
     return filtered.length > 0 ? filtered : tierAllowed;
   }, [tierAllowed, difficulty]);
-  const lockedCount = allQuestions.length - tierAllowed.length;
+  // Shared, data-derived counts for this module (total / unlocked / locked / unique solved).
+  const counts = useMemo(
+    () => puzzleCountsForCategory(category as Category, tier.maxLevel, progress.solved),
+    [category, tier.maxLevel, progress.solved],
+  );
+  const solvedUnique = counts.solvedUnique;
+  const lockedCount = counts.locked;
   const noneAtDifficulty =
     tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty)).length === 0;
 
@@ -223,7 +230,18 @@ function Practice() {
               <span className="px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/30 text-accent">
                 {tier.emoji} {tier.name} · ×{tier.xpMultiplier.toFixed(2)}
               </span>
-              <span className="text-muted-foreground">{index + 1}/{questions.length}</span>
+              <span
+                className="text-muted-foreground"
+                title="Your position in this module's puzzle queue"
+              >
+                Q {index + 1} of {questions.length}
+              </span>
+              <span
+                className="px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/30 text-primary"
+                title="Distinct puzzles you have solved in this module"
+              >
+                ✅ {solvedUnique}/{counts.unlocked} solved
+              </span>
             </div>
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
