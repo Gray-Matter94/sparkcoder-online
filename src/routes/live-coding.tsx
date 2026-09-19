@@ -609,8 +609,8 @@ function LiveCoding() {
     handleRun(nextCode);
   }
 
-  const serverCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "server").length;
-  const clientCount = LIVE_CODING_QUESTIONS.filter((x) => x.side === "client").length;
+  const serverCount = LIVE_CODING_SERVER_TOTAL;
+  const clientCount = LIVE_CODING_CLIENT_TOTAL;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -630,7 +630,7 @@ function LiveCoding() {
             Live Coding <span className="text-amber-300">Simulator.</span>
           </h1>
           <p className="text-xs text-muted-foreground max-w-xl">
-            {LIVE_CODING_TOTAL} interview-grade tasks ({serverCount} server-side · {clientCount}{" "}
+            {LIVE_CODING_TASK_TOTAL} interview-grade tasks ({serverCount} server-side · {clientCount}{" "}
             client-side). The AI interviewer briefs you, you write the full script, and if you slip
             it points at the exact line to fix — just like a real ServiceNow instance review.
           </p>
@@ -646,7 +646,7 @@ function LiveCoding() {
             >
               {(
                 [
-                  { id: "all" as const, label: "ALL", count: LIVE_CODING_TOTAL },
+                  { id: "all" as const, label: "ALL", count: LIVE_CODING_TASK_TOTAL },
                   { id: "server" as const, label: "SERVER", count: serverCount },
                   { id: "client" as const, label: "CLIENT", count: clientCount },
                 ]
@@ -700,7 +700,7 @@ function LiveCoding() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search 500 tasks — try 'GlideAggregate', 'onChange', 'incident'…"
+              placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…"
               aria-label="Search live coding tasks by keyword"
               className="w-full h-10 pl-9 pr-24 rounded-xl bg-panel border-2 border-border text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:border-amber-500/60"
             />
