@@ -314,7 +314,7 @@ function Home() {
 
         <section className="space-y-3">
           <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
-            Choose a module
+            Choose a module · solved / unlocked puzzles
           </h2>
           <div className="grid grid-cols-1 gap-3">
             {trackCategories.map((c) => {
@@ -350,7 +350,10 @@ function Home() {
                       <h2 className={`font-display text-lg tracking-wide ${textColor}`}>
                         {c.name.toUpperCase()}
                       </h2>
-                      <span className="text-[10px] text-muted-foreground font-mono">
+                      <span
+                        className="text-[10px] text-muted-foreground font-mono"
+                        title={`${done} solved of ${full} unlocked puzzles${locked > 0 ? ` · ${locked} locked` : ""}`}
+                      >
                         {done}/{full}
                         {locked > 0 && (
                           <span className="text-muted-foreground ml-1">· 🔒{locked}</span>
