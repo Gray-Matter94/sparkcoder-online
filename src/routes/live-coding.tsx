@@ -2,8 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment, useMemo, useRef, useState, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  LIVE_CODING_TASK_TOTAL,
+  LIVE_CODING_SERVER_TOTAL,
+  LIVE_CODING_CLIENT_TOTAL,
+} from "@/lib/task-counts";
+import {
   LIVE_CODING_QUESTIONS,
-  LIVE_CODING_TOTAL,
   validateSolution,
   acceptAsAlternative,
   type LiveCodingQuestion,
@@ -26,14 +30,12 @@ export const Route = createFileRoute("/live-coding")({
       { title: "Live Coding Simulator — SparkCoder" },
       {
         name: "description",
-        content:
-          "Write ServiceNow scripts in an instance-style editor. 2000+ server & client tasks with an AI coach that points at the exact failing line.",
+        content: `Write ServiceNow scripts in an instance-style editor. ${LIVE_CODING_TASK_TOTAL} server & client live-coding tasks with an AI coach that points at the exact failing line.`,
       },
       { property: "og:title", content: "Live Coding Simulator — SparkCoder" },
       {
         property: "og:description",
-        content:
-          "Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, 500 curated tasks.",
+        content: `Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, ${LIVE_CODING_TASK_TOTAL} curated live-coding tasks.`,
       },
       { property: "og:url", content: "https://www.sparkcoder.online/live-coding" },
       { property: "og:type", content: "website" },
@@ -41,8 +43,7 @@ export const Route = createFileRoute("/live-coding")({
       { name: "twitter:title", content: "Live Coding Simulator — SparkCoder" },
       {
         name: "twitter:description",
-        content:
-          "Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, 500 curated tasks.",
+        content: `Practice ServiceNow scripting like a real interview: a live coding pane, AI feedback on the failing line, ${LIVE_CODING_TASK_TOTAL} curated live-coding tasks.`,
       },
 
     ],
