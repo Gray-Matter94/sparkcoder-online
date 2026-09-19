@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
-import { CATEGORIES, questionsFor, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
+import { CATEGORIES, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
+import { allPuzzlesFor, puzzleCountsForCategory } from "@/lib/task-counts";
 import { useProgress } from "@/lib/progress";
 import { getCurrentTier, getNextTier } from "@/lib/difficulty";
 import { StatsBar } from "@/components/StatsBar";
@@ -113,7 +114,13 @@ function Practice() {
     const filtered = tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty));
     return filtered.length > 0 ? filtered : tierAllowed;
   }, [tierAllowed, difficulty]);
-  const lockedCount = allQuestions.length - tierAllowed.length;
+  // Shared, data-derived counts for this module (total / unlocked / locked / unique solved).
+  const counts = useMemo(
+    () => puzzleCountsForCategory(category as Category, tier.maxLevel, progress.solved),
+    [category, tier.maxLevel, progress.solved],
+  );
+  const solvedUnique = counts.solvedUnique;
+  const lockedCount = counts.locked;
   const noneAtDifficulty =
     tierAllowed.filter((q) => matchesDifficulty(q.level, difficulty)).length === 0;
 
