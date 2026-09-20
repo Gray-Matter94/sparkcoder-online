@@ -232,7 +232,7 @@ function Practice() {
               </span>
               <span
                 className="text-muted-foreground"
-                title="Your position in this module's puzzle queue"
+                title={`Your position in this module's ${difficulty} puzzle queue`}
               >
                 Q {index + 1} of {questions.length}
               </span>
