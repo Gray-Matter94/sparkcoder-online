@@ -1,8 +1,9 @@
 import { useMemo, type CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, categoriesForTrack } from "@/lib/questions";
+import { CATEGORIES, categoriesForTrack, type Category } from "@/lib/questions";
 import {
   LIVE_CODING_TASK_TOTAL,
+  allPuzzlesFor,
   puzzleCountsForCategory,
   puzzleCountsForTrack,
 } from "@/lib/task-counts";
@@ -16,6 +17,7 @@ import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
 import { trackMeta, type TrackId } from "@/lib/tracks";
 import { TopWeeklyBlogs } from "@/components/TopWeeklyBlogs";
+import { levelDifficulty, type Difficulty } from "@/lib/hints";
 
 type CardAccent = "primary" | "accent" | "secondary" | "amber" | "destructive";
 
@@ -29,6 +31,25 @@ interface TrackCard {
   to: string;
   params?: Record<string, string>;
 }
+
+interface LearningStep {
+  title: string;
+  blurb: string;
+  icon: string;
+  to: string;
+  params?: Record<string, string>;
+}
+
+const INTERVIEW_PATHS: Partial<Record<TrackId, string>> = {
+  "servicenow-dev": "/servicenow-interview-questions-and-answers",
+  "servicenow-admin": "/servicenow-csa-interview-questions-2026",
+  "servicenow-irm": "/learn/irm-architect-interview-questions",
+};
+
+const LIVE_PATHS: Partial<Record<TrackId, { to: string; label: string }>> = {
+  "servicenow-dev": { to: "/live-coding", label: "Write and run scripts in the instance-style simulator." },
+  "angular-dev": { to: "/angularjs-coding-test", label: "Apply the concepts in a timed AngularJS coding round." },
+};
 
 const ACCENT_GLOW: Record<CardAccent, string> = {
   primary: "var(--color-primary)",
@@ -204,9 +225,50 @@ function Home() {
   const accentText =
     meta.accent === "primary" ? "text-primary" : meta.accent === "accent" ? "text-accent" : "text-secondary";
 
+  const start = useMemo(() => {
+    const available = trackCategories.flatMap((category) =>
+      allPuzzlesFor(category.id)
+        .filter((question) => question.level <= tier.maxLevel)
+        .map((question) => ({ question, category })),
+    );
+    if (available.length === 0) return null;
+
+    const solvedIds = Object.keys(progress.solved).filter((id) => progress.solved[id]).reverse();
+    const recentIndex = solvedIds
+      .map((id) => available.findIndex(({ question }) => question.id === id))
+      .find((index) => index >= 0);
+
+    if (recentIndex === undefined) {
+      const beginner = available.find(({ question }) => question.level === 1) ?? available[0];
+      return { ...beginner, returning: false };
+    }
+
+    const recent = available[recentIndex];
+    const sameModule = available.filter(({ category }) => category.id === recent.category.id);
+    const withinModule = sameModule.findIndex(({ question }) => question.id === recent.question.id);
+    const following = sameModule.slice(withinModule + 1).find(({ question }) => !progress.solved[question.id]);
+    const firstUnsolved = sameModule.find(({ question }) => !progress.solved[question.id]);
+    return { ...(following ?? firstUnsolved ?? recent), returning: true };
+  }, [progress.solved, tier.maxLevel, trackCategories]);
+
+  const learningSteps = useMemo(() => {
+    const firstCategory = trackCategories[0];
+    const steps: LearningStep[] = [
+      { title: "Learn the concepts", blurb: `Build the foundations for ${meta.short} with concise guides and quizzes.`, icon: "01", to: "/learn" },
+    ];
+    if (firstCategory) {
+      steps.push({ title: "Guided puzzles", blurb: `Practise with hints and instant explanations across ${trackCategories.length} modules.`, icon: "02", to: "/practice/$category", params: { category: firstCategory.id } });
+    }
+    const live = LIVE_PATHS[track];
+    if (live) steps.push({ title: "Live coding", blurb: live.label, icon: "03", to: live.to });
+    const interview = INTERVIEW_PATHS[track];
+    if (interview) steps.push({ title: "Interview preparation", blurb: "Review role-focused questions, scenarios, and answer patterns.", icon: String(steps.length + 1).padStart(2, "0"), to: interview });
+    return steps;
+  }, [meta.short, track, trackCategories]);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <ErrorBoundary name="Stats"><StatsBar progress={progress} /></ErrorBoundary>
+      <ErrorBoundary name="Stats"><StatsBar progress={progress} compact /></ErrorBoundary>
       <div className="h-1.5 w-full bg-border">
         <div
           className="h-full bg-primary shadow-[0_0_12px_rgba(34,197,94,0.5)] transition-all duration-700"
@@ -214,7 +276,7 @@ function Home() {
         />
       </div>
 
-      <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-8">
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-8 space-y-8">
         <TrackSwitcher />
 
         <section className="space-y-3 animate-fade-in">
@@ -232,6 +294,59 @@ function Home() {
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
             {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
           </p>
+          {start && (
+            <div className="pt-2 space-y-2">
+              <Link
+                to="/practice/$category"
+                params={{ category: start.category.id }}
+                search={{ difficulty: levelDifficulty(start.question.level), challenge: start.question.id }}
+                className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-primary px-5 py-3 text-primary-foreground shadow-[0_7px_0_var(--color-primary-deep),0_0_26px_color-mix(in_oklab,var(--color-primary)_35%,transparent)] transition-all active:translate-y-1 active:shadow-none"
+              >
+                <span>
+                  <span className="block font-display text-lg tracking-wide">
+                    {start.returning ? "CONTINUE PRACTISING" : "START YOUR FIRST CHALLENGE"}
+                  </span>
+                  <span className="block text-[10px] font-bold opacity-80">
+                    {start.category.emoji} {start.category.name} · {start.question.title}
+                  </span>
+                </span>
+                <span aria-hidden className="text-xl">→</span>
+              </Link>
+              <a
+                href="#learning-paths"
+                className="flex h-10 items-center justify-center gap-2 text-xs font-bold text-accent underline decoration-accent/50 underline-offset-4 hover:text-accent/80"
+              >
+                Explore learning paths <span aria-hidden>↓</span>
+              </a>
+            </div>
+          )}
+        </section>
+
+        <section id="learning-paths" aria-labelledby="learning-paths-heading" className="scroll-mt-20 space-y-3">
+          <div>
+            <span className="text-[10px] uppercase tracking-widest text-accent font-bold">Your route</span>
+            <h2 id="learning-paths-heading" className="font-display text-2xl tracking-wide">LEARNING PATH</h2>
+          </div>
+          <ol className="space-y-2">
+            {learningSteps.map((step, index) => (
+              <li key={step.title} className="relative">
+                {index < learningSteps.length - 1 && <span aria-hidden className="absolute left-5 top-11 h-5 w-px bg-border" />}
+                <Link
+                  to={step.to}
+                  {...(step.params ? { params: step.params } : {})}
+                  {...(step.params ? { search: { difficulty: undefined, challenge: undefined } } : {})}
+                  className="dark-glass-option floating-glass flex items-center gap-4 rounded-2xl border-2 border-border bg-panel p-3 transition-colors hover:border-primary/60"
+                >
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-primary/40 bg-primary/10 font-display text-sm text-primary">{step.icon}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display text-base tracking-wide">{step.title.toUpperCase()}</span>
+                    <span className="block text-[11px] leading-snug text-muted-foreground">{step.blurb}</span>
+                  </span>
+                  <span aria-hidden className="text-muted-foreground">→</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="grid grid-cols-3 gap-3">
@@ -243,7 +358,7 @@ function Home() {
 
         <section aria-labelledby="learning-modules-heading" className="space-y-3">
           <h2 id="learning-modules-heading" className="sr-only">
-            Learning modules for {meta.name}
+            More activities for {meta.name}
           </h2>
           <Link
             to="/daily"

@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import logoAsset from "@/assets/sparkcoder-logo.webp.asset.json";
 
 
-export function StatsBar({ progress, back }: { progress: Progress; back?: boolean }) {
+export function StatsBar({ progress, back, compact = false }: { progress: Progress; back?: boolean; compact?: boolean }) {
   return (
     <header className="liquid-glass px-3 py-2 sm:px-4 sm:py-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sticky top-0 z-50 rounded-none">
       <div className="flex min-w-0 items-center gap-2 sm:gap-4">
@@ -32,16 +32,20 @@ export function StatsBar({ progress, back }: { progress: Progress; back?: boolea
           </Link>
         )}
 
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1.5">
-          <span className="text-accent">🔥</span>
-          <span className="font-bold text-sm">{progress.streak} DAY</span>
-        </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1.5">
-          <span className="text-primary">⚡</span>
-          <span className="font-bold text-sm">{progress.xp.toLocaleString()} XP</span>
-        </div>
+        {!compact && (
+          <>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-accent">🔥</span>
+              <span className="font-bold text-sm">{progress.streak} DAY</span>
+            </div>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-primary">⚡</span>
+              <span className="font-bold text-sm">{progress.xp.toLocaleString()} XP</span>
+            </div>
+          </>
+        )}
       </div>
       <AuthButton />
     </header>
