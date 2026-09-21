@@ -1,6 +1,6 @@
 import { useMemo, type CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CATEGORIES, categoriesForTrack, type Category } from "@/lib/questions";
+import { CATEGORIES, categoriesForTrack } from "@/lib/questions";
 import {
   LIVE_CODING_TASK_TOTAL,
   allPuzzlesFor,
@@ -17,7 +17,7 @@ import { getCurrentTier } from "@/lib/difficulty";
 import { getDailyChallenge } from "@/lib/daily";
 import { trackMeta, type TrackId } from "@/lib/tracks";
 import { TopWeeklyBlogs } from "@/components/TopWeeklyBlogs";
-import { levelDifficulty, type Difficulty } from "@/lib/hints";
+import { levelDifficulty } from "@/lib/hints";
 
 type CardAccent = "primary" | "accent" | "secondary" | "amber" | "destructive";
 

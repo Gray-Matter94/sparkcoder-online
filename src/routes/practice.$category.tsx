@@ -59,10 +59,14 @@ export const Route = createFileRoute("/practice/$category")({
     };
   },
   component: Practice,
-  validateSearch: (search: Record<string, unknown>) => ({
-    difficulty: parseDifficulty(search.difficulty),
-    challenge: typeof search.challenge === "string" ? search.challenge : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const difficulty = parseDifficulty(search.difficulty);
+    const challenge = typeof search.challenge === "string" ? search.challenge : undefined;
+    return {
+      ...(difficulty ? { difficulty } : {}),
+      ...(challenge ? { challenge } : {}),
+    };
+  },
 });
 
 type Status = "picking" | "running" | "wrong" | "right" | "done";
