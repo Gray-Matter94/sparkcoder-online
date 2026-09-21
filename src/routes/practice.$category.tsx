@@ -59,9 +59,14 @@ export const Route = createFileRoute("/practice/$category")({
     };
   },
   component: Practice,
-  validateSearch: (search: Record<string, unknown>) => ({
-    difficulty: parseDifficulty(search.difficulty),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const difficulty = parseDifficulty(search.difficulty);
+    const challenge = typeof search.challenge === "string" ? search.challenge : undefined;
+    return {
+      ...(difficulty ? { difficulty } : {}),
+      ...(challenge ? { challenge } : {}),
+    };
+  },
 });
 
 type Status = "picking" | "running" | "wrong" | "right" | "done";
@@ -102,7 +107,7 @@ function Practice() {
       navigate({
         to: "/practice/$category",
         params: { category },
-        search: { difficulty },
+        search: { difficulty, challenge: search.challenge },
         replace: true,
       });
     }
@@ -131,12 +136,15 @@ function Practice() {
   const [wrongAttempts, setWrongAttempts] = useState<string[]>([]);
   const [hintOpen, setHintOpen] = useState(false);
 
-  // Reset on category or difficulty change
+  // Reset on category or difficulty change, opening a requested challenge directly.
   useEffect(() => {
-    setIndex(0);
+    const requested = search.challenge
+      ? questions.findIndex((question) => question.id === search.challenge)
+      : -1;
+    setIndex(requested >= 0 ? requested : 0);
     resetQuestion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, difficulty]);
+  }, [category, difficulty, search.challenge, questions]);
 
   function resetQuestion() {
     setPicked(null);
