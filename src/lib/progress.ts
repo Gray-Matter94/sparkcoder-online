@@ -30,6 +30,8 @@ export interface Progress {
   xp: number;
   streak: number;
   lastPlayed: string | null; // YYYY-MM-DD
+  /** Most recently completed guided puzzle id, used to resume practice. */
+  lastChallengeId?: string;
   solved: Record<string, boolean>; // questionId -> true
   sessions: number; // total puzzles solved (counts repeats too)
   sessionBadges: number; // floor(sessions / 5)
@@ -124,6 +126,10 @@ function merge(a: Progress, b: Progress): Progress {
     streak: Math.max(a.streak, b.streak),
     lastPlayed:
       (a.lastPlayed ?? "") > (b.lastPlayed ?? "") ? a.lastPlayed : b.lastPlayed,
+    lastChallengeId:
+      (a.lastPlayed ?? "") > (b.lastPlayed ?? "")
+        ? a.lastChallengeId
+        : (b.lastChallengeId ?? a.lastChallengeId),
     solved: { ...a.solved, ...b.solved },
     sessions: Math.max(a.sessions, b.sessions),
     sessionBadges: Math.max(a.sessionBadges, b.sessionBadges),
@@ -362,6 +368,7 @@ export function useProgress() {
           xp: prev.xp + gained,
           streak,
           lastPlayed: today,
+          lastChallengeId: questionId,
           solved: { ...prev.solved, [questionId]: true },
           sessions,
           sessionBadges,
