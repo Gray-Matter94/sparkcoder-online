@@ -233,7 +233,10 @@ function Home() {
     );
     if (available.length === 0) return null;
 
-    const solvedIds = Object.keys(progress.solved).filter((id) => progress.solved[id]).reverse();
+    const solvedIds = [
+      ...(progress.lastChallengeId ? [progress.lastChallengeId] : []),
+      ...Object.keys(progress.solved).filter((id) => progress.solved[id]).reverse(),
+    ];
     const recentIndex = solvedIds
       .map((id) => available.findIndex(({ question }) => question.id === id))
       .find((index) => index >= 0);
@@ -249,7 +252,7 @@ function Home() {
     const following = sameModule.slice(withinModule + 1).find(({ question }) => !progress.solved[question.id]);
     const firstUnsolved = sameModule.find(({ question }) => !progress.solved[question.id]);
     return { ...(following ?? firstUnsolved ?? recent), returning: true };
-  }, [progress.solved, tier.maxLevel, trackCategories]);
+  }, [progress.lastChallengeId, progress.solved, tier.maxLevel, trackCategories]);
 
   const learningSteps = useMemo(() => {
     const firstCategory = trackCategories[0];
