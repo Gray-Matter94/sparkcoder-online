@@ -26,3 +26,4 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 - [Client Script puzzles](/practice/client-scripts): onLoad/onChange/onSubmit logic and DOM-free patterns.
 - [GlideAjax puzzles](/practice/glideajax): Async client-to-server calls and script include wiring.
 - [Script Include puzzles](/practice/script-includes): Reusable server libraries and client-callable patterns.
+- [ServiceNow CSA Practice Exam](https://www.sparkcoder.online/practice/csa-mock-exam): free timed CSA mock test with domain scoring and explanations.

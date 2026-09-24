@@ -184,6 +184,12 @@ function CsaInterviewPage() {
             grouped by topic with model answers tight enough to recite in a phone screen.
             Skim, then practice the muscle memory in the timed quizzes.
           </p>
+          <Link
+            to="/practice/csa-mock-exam"
+            className="flex min-h-12 items-center justify-between rounded-2xl border-2 border-primary bg-primary px-4 font-display tracking-wide text-primary-foreground"
+          >
+            TAKE THE FREE CSA PRACTICE EXAM <span aria-hidden>→</span>
+          </Link>
           <div className="flex flex-wrap gap-2 pt-2">
             <Link
               to="/practice/$category"
