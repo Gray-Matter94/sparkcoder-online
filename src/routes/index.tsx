@@ -279,11 +279,11 @@ function Home() {
         />
       </div>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 space-y-10 px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-8 space-y-8">
         <TrackSwitcher />
 
         <section className="space-y-3 animate-fade-in">
-          <span className={`text-xs uppercase tracking-[0.18em] font-bold ${accentText}`}>
+          <span className={`text-[10px] uppercase tracking-[0.25em] font-bold ${accentText}`}>
             {meta.emoji} {meta.name}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
@@ -294,7 +294,7 @@ function Home() {
               {meta.heading[1].split(" ").slice(-1)[0]}
             </span>
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
             {meta.tagline} Bite-size puzzles, a live simulator, and a coach that explains every miss.
           </p>
           {start && (
@@ -306,10 +306,10 @@ function Home() {
                 className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-primary px-5 py-3 text-primary-foreground shadow-[0_7px_0_var(--color-primary-deep),0_0_26px_color-mix(in_oklab,var(--color-primary)_35%,transparent)] transition-all active:translate-y-1 active:shadow-none"
               >
                 <span>
-                    <span className="block text-base font-extrabold uppercase sm:text-lg">
+                  <span className="block font-display text-lg tracking-wide">
                     {start.returning ? "CONTINUE PRACTISING" : "START YOUR FIRST CHALLENGE"}
                   </span>
-                  <span className="mt-0.5 block text-sm font-medium leading-snug opacity-90">
+                  <span className="block text-[10px] font-bold opacity-80">
                     {start.category.emoji} {start.category.name} · {start.question.title}
                   </span>
                 </span>
@@ -317,7 +317,7 @@ function Home() {
               </Link>
               <a
                 href="#learning-paths"
-                className="flex min-h-11 items-center justify-center gap-2 text-sm font-bold text-accent underline decoration-accent/50 underline-offset-4 hover:text-accent/80"
+                className="flex h-10 items-center justify-center gap-2 text-xs font-bold text-accent underline decoration-accent/50 underline-offset-4 hover:text-accent/80"
               >
                 Explore learning paths <span aria-hidden>↓</span>
               </a>
@@ -327,22 +327,23 @@ function Home() {
 
         <section id="learning-paths" aria-labelledby="learning-paths-heading" className="scroll-mt-20 space-y-3">
           <div>
-            <span className="text-xs uppercase tracking-[0.16em] text-accent font-bold">Your route</span>
+            <span className="text-[10px] uppercase tracking-widest text-accent font-bold">Your route</span>
             <h2 id="learning-paths-heading" className="font-display text-2xl tracking-wide">LEARNING PATH</h2>
           </div>
-          <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <ol className="space-y-2">
             {learningSteps.map((step, index) => (
               <li key={step.title} className="relative">
+                {index < learningSteps.length - 1 && <span aria-hidden className="absolute left-5 top-11 h-5 w-px bg-border" />}
                 <Link
                   to={step.to}
                   {...(step.params ? { params: step.params } : {})}
                   {...(step.params ? { search: { difficulty: undefined, challenge: undefined } } : {})}
-                  className="dark-glass-option floating-glass flex h-full min-h-24 items-center gap-4 rounded-xl border-2 border-border bg-panel p-4 transition-colors hover:border-primary/60"
+                  className="dark-glass-option floating-glass flex items-center gap-4 rounded-2xl border-2 border-border bg-panel p-3 transition-colors hover:border-primary/60"
                 >
                   <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-primary/40 bg-primary/10 font-display text-sm text-primary">{step.icon}</span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-base font-extrabold uppercase">{step.title}</span>
-                    <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{step.blurb}</span>
+                    <span className="block font-display text-base tracking-wide">{step.title.toUpperCase()}</span>
+                    <span className="block text-[11px] leading-snug text-muted-foreground">{step.blurb}</span>
                   </span>
                   <span aria-hidden className="text-muted-foreground">→</span>
                 </Link>
@@ -358,14 +359,14 @@ function Home() {
         </section>
 
 
-        <section aria-labelledby="learning-modules-heading" className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <section aria-labelledby="learning-modules-heading" className="space-y-3">
           <h2 id="learning-modules-heading" className="sr-only">
             More activities for {meta.name}
           </h2>
           <Link
             to="/daily"
             style={{ "--dg-glow": dailyDone ? "var(--color-primary)" : "var(--color-accent)" } as CSSProperties}
-            className={`dark-glass-option floating-glass block p-4 rounded-xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
+            className={`dark-glass-option floating-glass block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${
               dailyDone
                 ? "border-primary/50 bg-primary/5"
                 : "border-accent bg-accent/5 hover:border-accent shadow-[0_0_24px_rgba(245,158,11,0.15)]"
@@ -381,11 +382,11 @@ function Home() {
                   <h3 className={`font-display text-lg tracking-wide ${dailyDone ? "text-primary" : "text-accent"}`}>
                     {meta.short.toUpperCase()} DAILY CHALLENGE
                   </h3>
-                  <span className="shrink-0 text-xs text-muted-foreground font-mono">
+                  <span className="text-[10px] text-muted-foreground font-mono">
                     {dailyDone ? "DONE" : "+50 XP"}
                   </span>
                 </div>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                <p className="text-xs text-muted-foreground truncate">
                   {dailyMeta.emoji} {dailyMeta.name} · {daily.title}
                 </p>
               </div>
@@ -400,7 +401,7 @@ function Home() {
                 to={card.to}
                 {...(card.params ? { params: card.params } : {})}
                 style={{ "--dg-glow": ACCENT_GLOW[card.accent] } as CSSProperties}
-                className={`dark-glass-option floating-glass block p-4 rounded-xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
+                className={`dark-glass-option floating-glass block p-4 rounded-2xl border-2 transition-all active:translate-y-0.5 relative overflow-hidden ${accentClasses.wrap}`}
               >
                 <div className="absolute -top-6 -right-6 text-7xl opacity-10">{card.bgEmoji}</div>
                 <div className="flex items-center gap-3 relative">
@@ -412,9 +413,9 @@ function Home() {
                       <h3 className={`font-display text-lg tracking-wide ${accentClasses.text}`}>
                         {card.title}
                       </h3>
-                      <span className="shrink-0 text-xs text-muted-foreground font-mono">{card.tag}</span>
+                      <span className="text-[10px] text-muted-foreground font-mono">{card.tag}</span>
                     </div>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{card.blurb}</p>
+                    <p className="text-xs text-muted-foreground truncate">{card.blurb}</p>
                   </div>
                 </div>
               </Link>
@@ -430,10 +431,10 @@ function Home() {
         <BadgesPanel progress={progress} />
 
         <section className="space-y-3">
-          <h2 className="ml-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+          <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose a module · solved / unlocked puzzles
           </h2>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3">
             {trackCategories.map((c) => {
               const n = puzzleCountsForCategory(c.id, tier.maxLevel, progress.solved);
               const locked = n.locked;
@@ -477,7 +478,7 @@ function Home() {
                         )}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{c.blurb}</p>
+                    <p className="text-xs text-muted-foreground truncate">{c.blurb}</p>
                     <div className="mt-2 h-1 w-full bg-border rounded-full overflow-hidden">
                       <div
                         className={`h-full ${
@@ -502,14 +503,14 @@ function Home() {
         <section className="pt-2 flex items-center justify-between gap-3">
           <Link
             to="/feedback"
-            className="flex min-h-11 items-center text-xs uppercase tracking-[0.14em] font-bold text-accent hover:text-accent/80"
+            className="text-[10px] uppercase tracking-widest font-bold text-accent hover:text-accent/80"
           >
             📝 Report an issue / feedback
           </Link>
           <button
             onClick={reset}
             aria-label="Reset all progress, XP, and streaks"
-            className="min-h-11 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-destructive transition-colors"
+            className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
           >
             Reset all progress
           </button>

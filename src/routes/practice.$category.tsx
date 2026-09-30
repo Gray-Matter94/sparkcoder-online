@@ -228,13 +228,13 @@ function Practice() {
         />
       </div>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-5 sm:px-6 lg:px-8">
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-5">
         <div className="space-y-1.5 animate-fade-in">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
-            <span className="min-w-0 text-xs uppercase tracking-[0.16em] text-primary font-bold">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-widest text-primary font-bold truncate">
               {meta.name} · Lv {q.level}
             </span>
-            <div className="flex max-w-full shrink-0 flex-wrap justify-end gap-1.5 text-xs font-mono">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono shrink-0">
               <span className="px-1.5 py-0.5 rounded-md bg-accent/10 border border-accent/30 text-accent">
                 {tier.emoji} {tier.name} · ×{tier.xpMultiplier.toFixed(2)}
               </span>
@@ -254,7 +254,7 @@ function Practice() {
           </div>
           <h1 className="text-lg sm:text-xl font-bold leading-tight text-balance">{q.title}</h1>
           {lockedCount > 0 && (
-            <p className="text-xs leading-relaxed text-muted-foreground font-mono">
+            <p className="text-[10px] text-muted-foreground font-mono">
               🔒 {lockedCount} harder puzzle{lockedCount === 1 ? "" : "s"} locked
               {nextTier ? ` — reach ${nextTier.emoji} ${nextTier.name} to unlock` : ""}.
             </p>
@@ -263,11 +263,11 @@ function Practice() {
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="ml-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
               Difficulty
             </h2>
             {noneAtDifficulty && (
-              <span className="text-right text-xs text-accent font-mono">
+              <span className="text-[10px] text-accent font-mono">
                 No {difficulty} puzzles here — showing all.
               </span>
             )}
@@ -281,7 +281,7 @@ function Practice() {
                   role="radio"
                   aria-checked={active}
                   onClick={() => setDifficulty(d.id)}
-                  className={`floating-glass min-h-14 rounded-lg border-2 px-3 py-2 text-left transition-all ${
+                  className={`floating-glass px-2 py-2 rounded-xl border-2 text-left transition-all ${
                     active
                       ? "border-primary bg-primary/5"
                       : "border-border bg-panel hover:border-primary/40"
@@ -292,7 +292,7 @@ function Practice() {
                     <span>{d.emoji}</span>
                     <span className={active ? "text-primary" : "text-foreground"}>{d.label}</span>
                   </div>
-                  <div className="mt-1 text-xs leading-snug text-muted-foreground">
+                  <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
                     {d.blurb}
                   </div>
                 </button>
@@ -312,7 +312,7 @@ function Practice() {
         />
 
         <div className="space-y-2">
-          <h2 className="ml-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+          <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose the right block
           </h2>
           <div className="grid grid-cols-1 gap-2.5">
@@ -325,7 +325,7 @@ function Practice() {
                   key={o.id}
                   disabled={disabled || wasWrong}
                   onClick={() => setPicked(o)}
-                  className={`floating-glass min-h-14 rounded-lg border-2 p-3.5 text-left flex items-center justify-between gap-3 transition-all ${
+                  className={`floating-glass p-3.5 rounded-xl border-2 text-left flex items-center justify-between gap-3 transition-all ${
                     isPicked
                       ? "border-primary bg-primary/5"
                       : wasWrong
@@ -333,7 +333,7 @@ function Practice() {
                         : "border-border bg-panel hover:border-primary/40"
                   } ${disabled ? "cursor-not-allowed" : ""}`}
                 >
-                  <code className={`min-w-0 whitespace-pre-wrap break-words text-sm font-mono ${isPicked ? "text-primary" : "text-foreground/90"}`}>
+                  <code className={`text-xs sm:text-sm font-mono ${isPicked ? "text-primary" : "text-foreground/90"}`}>
                     {o.text}
                   </code>
                   <div
@@ -351,7 +351,7 @@ function Practice() {
       </main>
 
       {/* In-flow controls remain below every answer at all viewport heights. */}
-      <div className="mx-auto w-full max-w-6xl pb-3 sm:px-3 lg:px-5">
+      <div className="w-full max-w-2xl mx-auto pb-2">
         <div className="mx-3 mb-2 animate-slide-up">
           <Simulator
             output={simOutput}
@@ -405,7 +405,7 @@ function Practice() {
                 </p>
               </div>
             )}
-            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-3 border-t border-border bg-background/95 p-3 backdrop-blur-xl">
+            <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
               <button
                 onClick={() => setHintOpen((v) => !v)}
                 disabled={status === "running"}
