@@ -106,13 +106,13 @@ export function Simulator({ output, status, resultTone }: Props) {
         onClick={() => setMinimized(false)}
         aria-label="Expand instance simulator"
         aria-expanded="false"
-        className="w-full group relative rounded-full bg-zinc-900/90 border border-white/10 shadow-lg overflow-hidden flex items-center gap-3 px-4 py-2 animate-tap-line-in hover:border-accent/50 hover:bg-zinc-900 transition-all duration-300"
+        className="group relative flex min-h-11 w-full items-center gap-3 overflow-hidden rounded-full border border-border bg-panel px-4 py-2 shadow-lg transition-all duration-300 hover:border-accent/50 animate-tap-line-in"
       >
         <span className={`size-1.5 rounded-full ${dotColor} animate-pulse shrink-0`} />
         <span className="relative flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
           <span className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-tap-shimmer" />
         </span>
-        <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase shrink-0 group-hover:text-accent transition-colors">
+        <span className="shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors group-hover:text-accent">
           Tap to expand
         </span>
       </button>
@@ -120,11 +120,11 @@ export function Simulator({ output, status, resultTone }: Props) {
   }
 
   return (
-    <div className="relative rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden flex flex-col h-72 md:h-80 animate-sim-expand">
+    <div className="relative flex h-80 flex-col overflow-hidden rounded-xl border border-border bg-panel shadow-xl sm:h-96 animate-sim-expand">
       {/* ambient colour wash */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-60 bg-[radial-gradient(120%_80%_at_0%_0%,color-mix(in_oklab,var(--color-primary)_18%,transparent),transparent_60%),radial-gradient(100%_80%_at_100%_100%,color-mix(in_oklab,var(--color-accent)_16%,transparent),transparent_65%)]"
+        className="pointer-events-none absolute inset-0 opacity-30 bg-[radial-gradient(120%_80%_at_0%_0%,color-mix(in_oklab,var(--color-primary)_12%,transparent),transparent_60%),radial-gradient(100%_80%_at_100%_100%,color-mix(in_oklab,var(--color-accent)_10%,transparent),transparent_65%)]"
       />
       {status === "running" && (
         <div
@@ -133,12 +133,12 @@ export function Simulator({ output, status, resultTone }: Props) {
         />
       )}
 
-      <div className="relative px-4 py-2 bg-white/5 border-b border-white/5 flex items-center justify-between shrink-0">
-        <span className="text-[10px] font-bold text-muted-foreground flex items-center gap-2 tracking-widest uppercase">
+      <div className="relative grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-border bg-muted px-3 py-2 sm:px-4">
+        <span className="flex min-w-0 items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
           <span className={`size-1.5 rounded-full ${dotColor} animate-pulse`} />
           Instance Simulator (dev10294)
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <span className="hidden sm:inline text-[10px] text-muted-foreground font-mono">
             {output?.table ? `DB: ${output.table}` : "idle"}
           </span>
@@ -147,7 +147,7 @@ export function Simulator({ output, status, resultTone }: Props) {
               type="button"
               onClick={() => setView("visual")}
               aria-pressed={view === "visual"}
-              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors ${
+              className={`flex min-h-11 items-center gap-1 px-2 text-xs font-bold uppercase transition-colors ${
                 view === "visual" ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -157,7 +157,7 @@ export function Simulator({ output, status, resultTone }: Props) {
               type="button"
               onClick={() => setView("log")}
               aria-pressed={view === "log"}
-              className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors ${
+              className={`flex min-h-11 items-center gap-1 px-2 text-xs font-bold uppercase transition-colors ${
                 view === "log" ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -168,7 +168,7 @@ export function Simulator({ output, status, resultTone }: Props) {
             type="button"
             onClick={() => setMinimized(true)}
             aria-label="Minimize instance simulator"
-            className="text-muted-foreground hover:text-foreground text-xs leading-none size-5 rounded hover:bg-white/5 grid place-items-center"
+            className="grid size-11 place-items-center rounded text-base leading-none text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             —
           </button>
@@ -177,7 +177,7 @@ export function Simulator({ output, status, resultTone }: Props) {
 
       <div className="relative flex-1 p-3 overflow-y-auto scrollbar-thin flex flex-col gap-3 min-h-0">
         {!output && (
-          <div className="m-auto text-center text-muted-foreground text-xs">
+          <div className="m-auto text-center text-sm leading-relaxed text-muted-foreground">
             Pick a block, then hit <span className="text-primary font-bold">RUN SCRIPT</span> to simulate.
           </div>
         )}
@@ -245,7 +245,7 @@ export function Simulator({ output, status, resultTone }: Props) {
                         </span>
                         {l.time && <span className="text-[9px] font-mono text-muted-foreground">{l.time}</span>}
                       </div>
-                      <p className="text-[11px] leading-snug text-foreground/90 break-words">{l.text}</p>
+                       <p className="break-words text-sm leading-relaxed text-foreground/90">{l.text}</p>
                     </div>
                   </li>
                 );

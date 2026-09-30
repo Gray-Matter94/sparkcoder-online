@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Use a shared 72rem content shell, system sans-serif UI copy, Anton display headings, and JetBrains Mono only for code/technical counters so the arcade interface remains readable across viewports.
