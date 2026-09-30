@@ -20,7 +20,7 @@
   --color-panel-2: #1f1f23;
   --color-border: #27272a;
   --color-muted: #18181b;
-  --color-muted-foreground: #a1a1aa;
+  --color-muted-foreground: #b8b8c2;
   --color-destructive: #ef4444;
   --color-destructive-foreground: #fef2f2;
   --color-success: #22c55e;
@@ -33,7 +33,7 @@
 
   --font-display: "Anton", "Impact", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --font-sans: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
@@ -432,7 +432,8 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at bottom, color-mix(in oklab, var(--color-panel) 75%, var(--color-background)) 0%, var(--color-background) 100%);
+  opacity: 0.58;
 }
 .starfield-layer {
   position: absolute;
@@ -453,9 +454,9 @@
 .starfield-3,
 .starfield-3 .starfield-dup { width: 3px; height: 3px; }
 
-.starfield-1 { animation: animStar 50s linear infinite; }
-.starfield-2 { animation: animStar 100s linear infinite; }
-.starfield-3 { animation: animStar 150s linear infinite; }
+.starfield-1 { animation: animStar 75s linear infinite; opacity: 0.7; }
+.starfield-2 { animation: animStar 130s linear infinite; opacity: 0.55; }
+.starfield-3 { animation: animStar 190s linear infinite; opacity: 0.4; }
 
 @keyframes animStar {
   from { transform: translateY(0); }
@@ -474,10 +475,20 @@
 @layer base {
   html { background-color: var(--color-background); scroll-behavior: smooth; }
   body { background-color: transparent; color: var(--color-foreground); }
-  body { font-family: var(--font-mono); -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-wrap: anywhere; }
   * { border-color: var(--color-border); }
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 3px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
