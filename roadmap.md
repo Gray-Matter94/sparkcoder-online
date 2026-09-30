@@ -11,4 +11,4 @@
 - [x] Widen homepage and practice layouts with responsive spacing.
 - [x] Balance track controls and convert homepage learning/activity sections to responsive grids.
 - [x] Improve typography, contrast, wrapping, focus visibility, touch targets, background restraint, and reduced motion.
-- [ ] Verify homepage and practice interactions at 375px, 768px, and 1440px.
+- [x] Verify homepage and practice interactions at 375px, 768px, and 1440px.
