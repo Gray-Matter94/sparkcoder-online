@@ -65,7 +65,7 @@ export const TIERS: Tier[] = [
 ];
 
 export function getCurrentTier(progress: Progress): Tier {
-  const earned = Object.keys(progress.weeklyBadges).length;
+  const earned = rankBadgeCount(progress);
   let tier = TIERS[0];
   for (const t of TIERS) {
     if (earned >= t.badgesRequired) tier = t;
@@ -81,6 +81,11 @@ export function getNextTier(progress: Progress): Tier | null {
 export function badgesToNextTier(progress: Progress): number {
   const next = getNextTier(progress);
   if (!next) return 0;
-  const earned = Object.keys(progress.weeklyBadges).length;
+  const earned = rankBadgeCount(progress);
   return Math.max(0, next.badgesRequired - earned);
+}
+
+/** Badges that count toward rank: weekly activity badges plus passed mock exams. */
+export function rankBadgeCount(progress: Progress): number {
+  return Object.keys(progress.weeklyBadges).length + Object.keys(progress.examBadges ?? {}).length;
 }
