@@ -1,3 +1,4 @@
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -54,7 +55,9 @@ function NotFound() {
   return <div className="p-8 text-center text-muted-foreground">Not found.</div>;
 }
 
-function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorView(props: ErrorComponentProps) {
+  const error = props.error as Error;
+  const reset = props.reset;
   const router = useRouter();
   return (
     <div className="min-h-screen flex items-center justify-center p-6">

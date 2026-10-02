@@ -1,3 +1,4 @@
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -79,7 +80,8 @@ function SectionNotFound() {
   );
 }
 
-function SectionError({ error }: { error: Error }) {
+function SectionError(props: ErrorComponentProps) {
+  const error = props.error as Error;
   return (
     <div className="min-h-screen flex items-center justify-center p-6 text-center">
       <div>

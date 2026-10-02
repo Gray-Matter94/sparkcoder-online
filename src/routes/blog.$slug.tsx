@@ -77,7 +77,7 @@ export const Route = createFileRoute("/blog/$slug")({
   errorComponent: ({ error }) => (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-3">
       <h1 className="font-display text-2xl text-destructive">SOMETHING BROKE</h1>
-      <p className="text-xs text-muted-foreground">{error.message}</p>
+      <p className="text-xs text-muted-foreground">{(error as Error).message}</p>
       <Link to="/blog" className="text-accent underline">
         Back to all posts
       </Link>
