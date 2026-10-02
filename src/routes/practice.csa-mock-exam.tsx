@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState , useRef} from "react";
 import { StatsBar } from "@/components/StatsBar";
 import { EditorialNote } from "@/components/EditorialNote";
 import { useProgress } from "@/lib/progress";
@@ -52,7 +52,8 @@ export const Route = createFileRoute("/practice/csa-mock-exam")({
 type Phase = "intro" | "running" | "done";
 
 function CsaMockExam() {
-  const { progress } = useProgress();
+  const { progress, recordExam } = useProgress();
+  const recorded = useRef(false);
   const [phase, setPhase] = useState<Phase>("intro");
   const [exam, setExam] = useState<ExamQuestion[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -78,6 +79,7 @@ function CsaMockExam() {
     setAnswers({});
     setIndex(0);
     setSecondsLeft(CSA_EXAM_MINUTES * 60);
+    recorded.current = false;
     setPhase("running");
   };
 
@@ -95,6 +97,12 @@ function CsaMockExam() {
     const percent = exam.length ? Math.round((right / exam.length) * 100) : 0;
     return { right, percent, byDomain };
   }, [answers, exam]);
+
+  useEffect(() => {
+    if (phase !== "done" || recorded.current || exam.length === 0) return;
+    recorded.current = true;
+    recordExam("csa", result.right, result.percent, result.percent >= CSA_PASS_PERCENT);
+  }, [phase, exam.length, result, recordExam]);
 
   const current = exam[index];
   const mm = String(Math.floor(secondsLeft / 60)).padStart(2, "0");

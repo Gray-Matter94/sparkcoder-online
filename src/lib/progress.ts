@@ -44,6 +44,8 @@ export interface Progress {
   termMastery: Record<string, TermMastery>;
   /** Recorded wrong attempts, newest last (capped). */
   mistakes: MistakeEntry[];
+  /** Passed mock exams, keyed `${examId}:${isoWeek}` — each counts toward rank. */
+  examBadges?: Record<string, { percent: number; date: string }>;
 }
 
 const empty: Progress = {
@@ -139,6 +141,7 @@ function merge(a: Progress, b: Progress): Progress {
     srs,
     termMastery: { ...(a.termMastery ?? {}), ...(b.termMastery ?? {}) },
     mistakes: mergeMistakes(a.mistakes, b.mistakes),
+    examBadges: { ...(a.examBadges ?? {}), ...(b.examBadges ?? {}) },
   };
 }
 
@@ -456,13 +459,47 @@ export function useProgress() {
     [queueCloud],
   );
 
+  /** Record a finished mock exam: XP, streak/active day, and a pass badge per week. */
+  const recordExam = useCallback(
+    (examId: string, correct: number, percent: number, passed: boolean) => {
+      setProgress((prev) => {
+        const today = todayStr();
+        let streak = prev.streak;
+        if (prev.lastPlayed !== today) {
+          streak = prev.lastPlayed === yesterdayStr() ? streak + 1 : 1;
+        } else if (streak === 0) streak = 1;
+        const activeDays = { ...prev.activeDays, [today]: true as const };
+        const weeklyBadges = { ...prev.weeklyBadges };
+        if (activeDaysThisWeek(activeDays) >= WEEKLY_BADGE_THRESHOLD) weeklyBadges[weekKey()] = true;
+        const examBadges = { ...(prev.examBadges ?? {}) };
+        const key = `${examId}:${weekKey()}`;
+        if (passed && (!examBadges[key] || examBadges[key].percent < percent)) {
+          examBadges[key] = { percent, date: today };
+        }
+        const next: Progress = {
+          ...prev,
+          xp: prev.xp + correct * 5 + (passed ? 100 : 0),
+          streak,
+          lastPlayed: today,
+          activeDays,
+          weeklyBadges,
+          examBadges,
+        };
+        write(trackRef.current, next);
+        queueCloud(next);
+        return next;
+      });
+    },
+    [queueCloud],
+  );
+
   const reset = useCallback(() => {
     write(trackRef.current, empty);
     setProgress(empty);
     queueCloud(empty);
   }, [queueCloud]);
 
-  return { progress, award, reset, markDailyChallenge, recordSrs, recordMistake, setTermMastery, track };
+  return { progress, award, reset, markDailyChallenge, recordSrs, recordMistake, setTermMastery, recordExam, track };
 
 }
 

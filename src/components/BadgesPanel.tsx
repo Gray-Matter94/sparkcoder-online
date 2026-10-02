@@ -3,6 +3,7 @@ import { activeDaysThisWeek, weekKey, WEEKLY_BADGE_THRESHOLD } from "@/lib/progr
 
 export function BadgesPanel({ progress }: { progress: Progress }) {
   const weeks = Object.keys(progress.weeklyBadges).sort().reverse().slice(0, 6);
+  const exams = Object.entries(progress.examBadges ?? {}).sort((a, b) => b[1].date.localeCompare(a[1].date)).slice(0, 6);
   const thisWeek = weekKey();
   const daysThisWeek = activeDaysThisWeek(progress.activeDays);
   const weekPct = Math.min(100, (daysThisWeek / WEEKLY_BADGE_THRESHOLD) * 100);
@@ -62,7 +63,7 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
       </div>
 
       {/* Earned week badges trophy case */}
-      {weeks.length > 0 && (
+      {(weeks.length > 0 || exams.length > 0) && (
         <div className="rounded-2xl bg-panel border border-border p-3">
           <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">
             Trophy Case
@@ -76,6 +77,18 @@ export function BadgesPanel({ progress }: { progress: Progress }) {
               >
                 <span className="text-base leading-none">🏅</span>
                 <span className="font-mono text-[10px] text-accent">{w}</span>
+              </div>
+            ))}
+            {exams.map(([k, v]) => (
+              <div
+                key={k}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-primary/10 border border-primary/30"
+                title={`Passed ${k.split(":")[0].toUpperCase()} mock exam with ${v.percent}% (counts toward rank)`}
+              >
+                <span className="text-base leading-none">🎓</span>
+                <span className="font-mono text-[10px] text-primary">
+                  {k.split(":")[0].toUpperCase()} {v.percent}%
+                </span>
               </div>
             ))}
             {Array.from({ length: progress.sessionBadges }).slice(0, 8).map((_, i) => (

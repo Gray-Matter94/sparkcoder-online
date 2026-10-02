@@ -1,11 +1,11 @@
 import type { Progress } from "@/lib/progress";
-import { getCurrentTier, getNextTier, badgesToNextTier, TIERS } from "@/lib/difficulty";
+import { getCurrentTier, getNextTier, badgesToNextTier, rankBadgeCount, TIERS } from "@/lib/difficulty";
 
 export function DifficultyCard({ progress }: { progress: Progress }) {
   const tier = getCurrentTier(progress);
   const next = getNextTier(progress);
   const needed = badgesToNextTier(progress);
-  const earned = Object.keys(progress.weeklyBadges).length;
+  const earned = rankBadgeCount(progress);
   const span = next ? next.badgesRequired - tier.badgesRequired : 1;
   const within = next ? earned - tier.badgesRequired : span;
   const pct = next ? Math.min(100, (within / span) * 100) : 100;
