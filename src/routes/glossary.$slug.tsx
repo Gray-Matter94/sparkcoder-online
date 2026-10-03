@@ -21,6 +21,8 @@ export const Route = createFileRoute("/glossary/$slug")({
           { title: "Glossary term not found — SparkCoder" },
           { name: "description", content: "This glossary term does not exist." },
           { name: "robots", content: "noindex" },
+          { property: "og:title", content: "Glossary term not found — SparkCoder" },
+          { property: "og:description", content: "This glossary term does not exist. Browse the full ServiceNow & ITSM glossary for all defined terms." },
         ],
       };
     }

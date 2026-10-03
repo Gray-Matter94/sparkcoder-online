@@ -14,7 +14,14 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     const post = loaderData?.post;
     if (!post) {
-      return { meta: [{ title: "Post not found — SparkCoder" }] };
+      return {
+        meta: [
+          { title: "Post not found — SparkCoder" },
+          { name: "description", content: "This blog post could not be found. Browse the full SparkCoder ServiceNow curriculum for all published weeks." },
+          { property: "og:title", content: "Post not found — SparkCoder" },
+          { property: "og:description", content: "This blog post could not be found. Browse the full SparkCoder ServiceNow curriculum for all published weeks." },
+        ],
+      };
     }
     const url = `https://www.sparkcoder.online/blog/${post.slug}`;
     const ogImage = "https://www.sparkcoder.online/og/blog-curriculum.jpg";

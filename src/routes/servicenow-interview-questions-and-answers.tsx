@@ -192,27 +192,6 @@ const FAQ_JSONLD = {
   })),
 };
 
-const QAPAGE_JSONLD = {
-  "@context": "https://schema.org",
-  "@type": "QAPage",
-  url: URL,
-  mainEntity: {
-    "@type": "Question",
-    name: "What questions are asked in a ServiceNow interview?",
-    text: "What questions are asked in a ServiceNow interview for developer, admin, IRM, CMDB and ITSM roles?",
-    answerCount: ALL_QAS.length,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: `${ALL_QAS[0]!.q} ${ALL_QAS[0]!.a}`,
-      url: URL,
-    },
-    suggestedAnswer: ALL_QAS.slice(1, 12).map((q) => ({
-      "@type": "Answer",
-      text: `${q.q} ${q.a}`,
-      url: URL,
-    })),
-  },
-};
 
 const BREADCRUMB_JSONLD = {
   "@context": "https://schema.org",
@@ -276,7 +255,6 @@ export const Route = createFileRoute("/servicenow-interview-questions-and-answer
     links: [{ rel: "canonical", href: URL }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(FAQ_JSONLD) },
-      { type: "application/ld+json", children: JSON.stringify(QAPAGE_JSONLD) },
       { type: "application/ld+json", children: JSON.stringify(BREADCRUMB_JSONLD) },
       { type: "application/ld+json", children: JSON.stringify(ROLE_ITEMLIST_JSONLD) },
       { type: "application/ld+json", children: JSON.stringify(ARTICLE_JSONLD) },
