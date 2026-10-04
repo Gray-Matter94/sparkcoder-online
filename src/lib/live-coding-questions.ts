@@ -785,7 +785,7 @@ function buildAll(): LiveCodingQuestion[] {
 
 export const LIVE_CODING_QUESTIONS: LiveCodingQuestion[] = buildAll();
 
-export const LIVE_CODING_TOTAL = LIVE_CODING_QUESTIONS.length; // 2000
+export const LIVE_CODING_TOTAL = LIVE_CODING_QUESTIONS.length; // derived from data
 
 export interface ValidationResult {
   ok: boolean;
