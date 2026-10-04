@@ -181,11 +181,11 @@ const templates: ((i: number) => AdminQ)[] = [
       title: `Run "${j}" on demand`,
       task: `Look up the scheduled script (sysauto_script) named '${j}' and execute it immediately with gs.executeNow().`,
       starter: `// Trigger ${j} now\n`,
-      solution: `var job = new GlideRecord('sysauto_script');\nif (job.get('name', '${j}')) {\n  gs.executeNow(job);\n}`,
+      solution: `var gr = new GlideRecord('sysauto_script');\nif (gr.get('name', '${j}')) {\n  gs.executeNow(gr);\n}`,
       checks: [
         { needle: `new GlideRecord('sysauto_script')`, message: `Scheduled script definitions live on sysauto_script.` },
         { needle: `get('name', '${j}')`, message: `Fetch the job by name inside an if.` },
-        { needle: `gs.executeNow(job)`, message: `Run it with gs.executeNow(job).` },
+        { needle: `gs.executeNow(gr)`, message: `Run it with gs.executeNow(gr).` },
       ],
     };
   },
