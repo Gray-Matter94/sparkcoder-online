@@ -179,13 +179,13 @@ const templates: ((i: number) => AdminQ)[] = [
       stage: 8, side: "server", scriptType: "Background Script (admin)",
       filename: `bg_run_job_${slug(j)}.js`,
       title: `Run "${j}" on demand`,
-      task: `Look up the scheduled script (sysauto_script) named '${j}' and execute it immediately with SncTriggerSynchronizer.executeNow().`,
+      task: `Look up the scheduled script (sysauto_script) named '${j}' and execute it immediately with gs.executeNow().`,
       starter: `// Trigger ${j} now\n`,
-      solution: `var job = new GlideRecord('sysauto_script');\nif (job.get('name', '${j}')) {\n  SncTriggerSynchronizer.executeNow(job);\n}`,
+      solution: `var job = new GlideRecord('sysauto_script');\nif (job.get('name', '${j}')) {\n  gs.executeNow(job);\n}`,
       checks: [
         { needle: `new GlideRecord('sysauto_script')`, message: `Scheduled script definitions live on sysauto_script.` },
         { needle: `get('name', '${j}')`, message: `Fetch the job by name inside an if.` },
-        { needle: `SncTriggerSynchronizer.executeNow(job)`, message: `Run it with SncTriggerSynchronizer.executeNow(job).` },
+        { needle: `gs.executeNow(job)`, message: `Run it with gs.executeNow(job).` },
       ],
     };
   },
