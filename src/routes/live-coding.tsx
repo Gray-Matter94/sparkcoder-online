@@ -5,6 +5,7 @@ import {
   LIVE_CODING_TASK_TOTAL,
   LIVE_CODING_SERVER_TOTAL,
   LIVE_CODING_CLIENT_TOTAL,
+  LIVE_CODING_ADMIN_TOTAL,
 } from "@/lib/task-counts";
 import {
   LIVE_CODING_QUESTIONS,
@@ -97,7 +98,7 @@ export const Route = createFileRoute("/live-coding")({
               name: "How many ServiceNow coding questions are included?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Over 2,000 unique tasks, filterable by server-side or client-side scope and by keyword.",
+                text: "Over 2,000 unique tasks, filterable by server-side, client-side or a 10-stage admin learning path, and by keyword.",
               },
             },
           ],
@@ -375,7 +376,8 @@ function explainLine(raw: string): string {
 
 // ------- Component ---------------------------------------------------------
 
-type Filter = "all" | Side;
+type Filter = "all" | Side | "admin";
+import { ADMIN_STAGES } from "@/lib/live-coding-admin";
 
 function LiveCoding() {
   const { progress, award } = useProgress();
@@ -388,7 +390,9 @@ function LiveCoding() {
     const bySide =
       filter === "all"
         ? LIVE_CODING_QUESTIONS
-        : LIVE_CODING_QUESTIONS.filter((q) => q.side === filter);
+        : filter === "admin"
+          ? LIVE_CODING_QUESTIONS.filter((q) => q.stage != null)
+          : LIVE_CODING_QUESTIONS.filter((q) => q.side === filter);
     const needle = query.trim().toLowerCase();
     if (!needle) return bySide;
     const terms = needle.split(/\s+/).filter(Boolean);
@@ -649,6 +653,7 @@ function LiveCoding() {
                   { id: "all" as const, label: "ALL", count: LIVE_CODING_TASK_TOTAL },
                   { id: "server" as const, label: "SERVER", count: serverCount },
                   { id: "client" as const, label: "CLIENT", count: clientCount },
+                  { id: "admin" as const, label: "ADMIN PATH", count: LIVE_CODING_ADMIN_TOTAL },
                 ]
               ).map((t) => (
                 <button
@@ -853,6 +858,11 @@ function LiveCoding() {
               {q.side === "server" ? "SERVER-SIDE" : "CLIENT-SIDE"} · {q.scriptType}
             </span>
           </div>
+          {q.stage != null && (
+            <p className="text-[10px] font-mono text-accent">
+              Admin path · Stage {q.stage} of {ADMIN_STAGES.length}: {ADMIN_STAGES[q.stage - 1]?.name} — {ADMIN_STAGES[q.stage - 1]?.blurb}
+            </p>
+          )}
           <h2 className="text-base sm:text-lg font-bold leading-tight">{q.title}</h2>
           <p className="text-sm text-foreground/85 leading-relaxed">{q.task}</p>
         </section>
