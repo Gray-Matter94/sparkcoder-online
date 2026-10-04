@@ -21,6 +21,9 @@ import type { TrackId } from "./tracks";
 /** Total number of free-form live-coding tasks, derived from the data. */
 export const LIVE_CODING_TASK_TOTAL = LIVE_CODING_QUESTIONS.length;
 
+/** Admin learning-path tasks (subset of server tasks). */
+export const LIVE_CODING_ADMIN_TOTAL = LIVE_CODING_QUESTIONS.filter((q) => q.stage != null).length;
+
 export const LIVE_CODING_SERVER_TOTAL = LIVE_CODING_QUESTIONS.filter(
   (q) => q.side === "server",
 ).length;

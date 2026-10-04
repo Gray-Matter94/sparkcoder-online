@@ -9,6 +9,8 @@
 // scratchpads, cross-scope calls, and more) plus a set of less common
 // "unique" variants (secure GRs, GlideEncrypter, GlideDBUtil, plural APIs).
 
+import { buildAdminTasks } from "./live-coding-admin";
+
 export type Side = "server" | "client";
 
 export interface LiveCheck {
@@ -28,6 +30,8 @@ export interface LiveCodingQuestion {
   starter: string;
   solution: string;
   checks: LiveCheck[];
+  /** Admin learning-path stage (1-10), only set on admin tasks. */
+  stage?: number;
 }
 
 // ---------- Server side data ----------------------------------------------
@@ -775,6 +779,7 @@ function buildAll(): LiveCodingQuestion[] {
       out.push(q);
     });
   });
+  out.push(...buildAdminTasks(normalize));
   return out;
 }
 
