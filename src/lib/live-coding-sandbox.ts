@@ -58,6 +58,12 @@ function makeMocks(logs: SandboxLog[]) {
     addEncodedQuery(_q: string) {
       return this;
     }
+    addNullQuery(f: string) {
+      return this.addQuery(f, "ISEMPTY", "");
+    }
+    addNotNullQuery(f: string) {
+      return this.addQuery(f, "ISNOTEMPTY", "");
+    }
     addActiveQuery() {
       return this.addQuery("active", true);
     }
@@ -189,6 +195,13 @@ function makeMocks(logs: SandboxLog[]) {
     beginningOfToday: () => new Date().toISOString(),
     endOfToday: () => new Date().toISOString(),
     getProperty: (_k: string, d?: unknown) => d ?? "",
+    setProperty: (k: string, v: unknown) => push("log", [`property ${k} = ${String(v)}`]),
+    executeNow: (_gr: unknown) => "mock_trigger",
+    hoursAgoStart: (_h: number) => new Date().toISOString(),
+    hoursAgo: (_h: number) => new Date().toISOString(),
+    daysAgo: (_d: number) => new Date().toISOString(),
+    daysAgoStart: (_d: number) => new Date().toISOString(),
+    minutesAgo: (_m: number) => new Date().toISOString(),
   };
 
   const g_form = {
