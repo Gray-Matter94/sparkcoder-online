@@ -46,7 +46,23 @@ function makeMocks(logs: SandboxLog[]) {
       this.tableName = String(table);
       // Fabricate a handful of rows so while(gr.next()) actually iterates.
       for (let i = 0; i < 3; i += 1) {
-        this._rows.push({ sys_id: `mock_${this.tableName}_${i}`, number: `MOCK${i + 1}` });
+        const ref = (k: string) => ({
+          sys_id: `mock_${k}_${i}`,
+          name: `Mock ${k} ${i + 1}`,
+          user_name: `mock.${k}${i + 1}`,
+          toString: () => `mock_${k}_${i}`,
+        });
+        this._rows.push({
+          sys_id: `mock_${this.tableName}_${i}`,
+          number: `MOCK${i + 1}`,
+          user: ref("user"),
+          group: ref("group"),
+          role: ref("role"),
+          assigned_to: ref("user"),
+          assignment_group: ref("group"),
+          caller_id: ref("user"),
+          opened_by: ref("user"),
+        });
       }
     }
     addQuery(field: string, opOrVal: unknown, maybeVal?: unknown) {
