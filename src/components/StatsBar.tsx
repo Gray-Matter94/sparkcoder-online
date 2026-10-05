@@ -22,7 +22,7 @@ export function StatsBar({ progress, back, compact = false }: { progress: Progre
           <Link to="/" aria-label="SparkCoder home" className="shrink-0 flex items-center">
             <img
               src={logoAsset.url}
-              alt="SparkCoder - ServiceNow Interview Practice logo"
+              alt="SparkCoder — ServiceNow Scripting Interview Practice"
               width={64}
               height={64}
               fetchPriority="high"
