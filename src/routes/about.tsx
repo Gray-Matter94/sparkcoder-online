@@ -67,9 +67,9 @@ function AboutPage() {
             About · Editorial standards
           </span>
           <h1 className="font-display text-4xl sm:text-5xl leading-[0.95] tracking-tight">
-            ABOUT
+            ABOUT SPARKCODER
             <br />
-            <span className="text-accent">SPARKCODER.</span>
+            <span className="text-accent">SERVICENOW INTERVIEW PRACTICE.</span>
           </h1>
           <p className="text-sm text-foreground/85 leading-relaxed">
             SparkCoder is a free practice site for ServiceNow interviews and scripting. It
