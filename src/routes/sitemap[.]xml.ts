@@ -64,6 +64,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/feedback", changefreq: "monthly", priority: "0.4" },
 
           { path: "/servicenow-interview-questions-and-answers", changefreq: "weekly", priority: "0.95" },
+          { path: "/servicenow-developer-interview-questions", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-irm-architect-practice", changefreq: "monthly", priority: "0.9" },
           { path: "/servicenow-csa-interview-questions-2026", changefreq: "monthly", priority: "0.9" },
           { path: "/practice/csa-mock-exam", changefreq: "monthly", priority: "0.9" },

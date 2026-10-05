@@ -52,6 +52,7 @@ const ROLES: RoleSection[] = [
       },
     ],
     links: [
+      { label: "Developer Q&A deep dive", to: "/servicenow-developer-interview-questions" },
       { label: "GlideRecord puzzles", to: "/practice/$category", params: { category: "gliderecord" }, search: { difficulty: undefined } },
       { label: "Business rules", to: "/practice/$category", params: { category: "business-rules" }, search: { difficulty: undefined } },
       { label: "GlideAjax Q&A", to: "/learn/glideajax-interview-questions" },
