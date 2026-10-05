@@ -46,7 +46,23 @@ function makeMocks(logs: SandboxLog[]) {
       this.tableName = String(table);
       // Fabricate a handful of rows so while(gr.next()) actually iterates.
       for (let i = 0; i < 3; i += 1) {
-        this._rows.push({ sys_id: `mock_${this.tableName}_${i}`, number: `MOCK${i + 1}` });
+        const ref = (k: string) => ({
+          sys_id: `mock_${k}_${i}`,
+          name: `Mock ${k} ${i + 1}`,
+          user_name: `mock.${k}${i + 1}`,
+          toString: () => `mock_${k}_${i}`,
+        });
+        this._rows.push({
+          sys_id: `mock_${this.tableName}_${i}`,
+          number: `MOCK${i + 1}`,
+          user: ref("user"),
+          group: ref("group"),
+          role: ref("role"),
+          assigned_to: ref("user"),
+          assignment_group: ref("group"),
+          caller_id: ref("user"),
+          opened_by: ref("user"),
+        });
       }
     }
     addQuery(field: string, opOrVal: unknown, maybeVal?: unknown) {
@@ -57,6 +73,12 @@ function makeMocks(logs: SandboxLog[]) {
     }
     addEncodedQuery(_q: string) {
       return this;
+    }
+    addNullQuery(f: string) {
+      return this.addQuery(f, "ISEMPTY", "");
+    }
+    addNotNullQuery(f: string) {
+      return this.addQuery(f, "ISNOTEMPTY", "");
     }
     addActiveQuery() {
       return this.addQuery("active", true);
@@ -189,6 +211,13 @@ function makeMocks(logs: SandboxLog[]) {
     beginningOfToday: () => new Date().toISOString(),
     endOfToday: () => new Date().toISOString(),
     getProperty: (_k: string, d?: unknown) => d ?? "",
+    setProperty: (k: string, v: unknown) => push("log", [`property ${k} = ${String(v)}`]),
+    executeNow: (_gr: unknown) => "mock_trigger",
+    hoursAgoStart: (_h: number) => new Date().toISOString(),
+    hoursAgo: (_h: number) => new Date().toISOString(),
+    daysAgo: (_d: number) => new Date().toISOString(),
+    daysAgoStart: (_d: number) => new Date().toISOString(),
+    minutesAgo: (_m: number) => new Date().toISOString(),
   };
 
   const g_form = {
