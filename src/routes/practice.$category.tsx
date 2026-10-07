@@ -161,7 +161,7 @@ function Practice() {
         <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
         <main className="flex-1 grid place-items-center p-8 text-center">
           <div className="space-y-2">
-            <h1 className="text-xl font-bold">{meta.name} puzzles</h1>
+            <h2 className="text-xl font-bold">{meta.name} puzzles</h2>
             <p className="text-muted-foreground text-sm">No puzzles in this module yet.</p>
           </div>
         </main>
@@ -438,7 +438,7 @@ function Completed({ cat, maxLevel, onRestart, onHome }: { cat: string; maxLevel
       <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
         <div className="text-7xl mb-4 animate-pop">🏆</div>
-        <h1 className="font-display text-4xl tracking-tight text-primary mb-2">MODULE CLEARED</h1>
+        <h2 className="font-display text-4xl tracking-tight text-primary mb-2">MODULE CLEARED</h2>
         <p className="text-muted-foreground text-sm mb-8">
           You crushed every puzzle in <span className="text-foreground font-bold">{cat}</span>.
           Streak protected for today.

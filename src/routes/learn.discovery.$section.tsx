@@ -71,7 +71,7 @@ function SectionNotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 text-center space-y-4">
       <div>
-        <h1 className="font-display text-2xl mb-2">Section not found</h1>
+        <h2 className="font-display text-2xl mb-2">Section not found</h2>
         <Link to="/learn/discovery" className="text-accent underline">
           Back to the Discovery hub
         </Link>
@@ -85,7 +85,7 @@ function SectionError(props: ErrorComponentProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 text-center">
       <div>
-        <h1 className="font-display text-2xl mb-2">Something broke</h1>
+        <h2 className="font-display text-2xl mb-2">Something broke</h2>
         <p className="text-sm text-muted-foreground mb-4">{error.message}</p>
         <Link to="/learn/discovery" className="text-accent underline">
           Back to the Discovery hub
