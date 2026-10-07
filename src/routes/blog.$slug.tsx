@@ -75,7 +75,7 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   notFoundComponent: () => (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-3">
-      <h1 className="font-display text-3xl">POST NOT FOUND</h1>
+      <h2 className="font-display text-3xl">POST NOT FOUND</h2>
       <Link to="/blog" className="text-accent underline">
         Back to all posts
       </Link>
@@ -83,7 +83,7 @@ export const Route = createFileRoute("/blog/$slug")({
   ),
   errorComponent: ({ error }) => (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-3">
-      <h1 className="font-display text-2xl text-destructive">SOMETHING BROKE</h1>
+      <h2 className="font-display text-2xl text-destructive">SOMETHING BROKE</h2>
       <p className="text-xs text-muted-foreground">{(error as Error).message}</p>
       <Link to="/blog" className="text-accent underline">
         Back to all posts
