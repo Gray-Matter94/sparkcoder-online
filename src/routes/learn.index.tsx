@@ -193,6 +193,23 @@ function Learn() {
           </p>
         </Link>
         <Link
+          to="/learn/csdm-interview-questions"
+          aria-label="Open the ServiceNow CSDM Interview Questions guide"
+          style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
+          className="dark-glass-option floating-glass block rounded-2xl border-2 border-accent/40 bg-accent/5 p-4 transition-colors animate-fade-in"
+        >
+          <div className="text-[10px] uppercase tracking-[0.25em] text-accent font-bold">
+            New guide
+          </div>
+          <div className="font-display text-lg tracking-tight mt-1">
+            🏛️ CSDM Interview Questions
+          </div>
+          <p className="text-xs text-foreground/75 mt-1">
+            CSDM vs CMDB, the five domains, business service vs service offering, and
+            phased CSDM migration — with simulator traces.
+          </p>
+        </Link>
+        <Link
           to="/servicenow-irm-architect-practice"
           aria-label="Open the ServiceNow IRM Architect practice track"
           style={{ "--dg-glow": "var(--color-accent)" } as CSSProperties}
