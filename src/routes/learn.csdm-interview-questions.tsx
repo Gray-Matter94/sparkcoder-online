@@ -126,7 +126,7 @@ off2.sla  = '99.5% / 4h response';`,
         { time: "", text: "created business service 'Email'", tone: "ok" },
         { time: "", text: "offering 'Email — VIP' linked", tone: "ok" },
         { time: "", text: "offering 'Email — Standard' linked", tone: "ok" },
-        { time: "", text: "SLA definitions attached per offering", tone: "dim" },
+        { time: "", text: "SLA definitions attached per offering", tone: "info" },
       ],
       rows: [
         { number: "Email", state: "business svc", updated: "1 record", highlight: "ok" },
@@ -163,14 +163,14 @@ ci.life_cycle_stage_status = 'In use';`,
     output: {
       table: "cmdb_ci",
       logs: [
-        { time: "", text: "health scan: 400k CIs, 41 classes", tone: "dim" },
+        { time: "", text: "health scan: 400k CIs, 41 classes", tone: "info" },
         { time: "", text: "12% duplicates, 8% stale >90d", tone: "warn" },
         { time: "", text: "phase 1 scope: 5 critical services", tone: "ok" },
       ],
       rows: [
         { number: "phase-1", state: "foundation", updated: "dedupe + IRE", highlight: "ok" },
         { number: "phase-2", state: "crawl", updated: "5 services", highlight: "ok" },
-        { number: "phase-3", state: "walk", updated: "top 20", highlight: "info" },
+        { number: "phase-3", state: "walk", updated: "top 20", highlight: "dim" },
       ],
     },
     pitfall:
