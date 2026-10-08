@@ -36,6 +36,7 @@ import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
 import { Route as LearnClientScriptHowToRouteImport } from './routes/learn.client-script-how-to'
 import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
+import { Route as LearnCsdmInterviewQuestionsRouteImport } from './routes/learn.csdm-interview-questions'
 import { Route as LearnCsmInterviewQuestionsRouteImport } from './routes/learn.csm-interview-questions'
 import { Route as LearnDiscoveryRouteImport } from './routes/learn.discovery'
 import { Route as LearnDiscoveryInterviewQuestionsRouteImport } from './routes/learn.discovery-interview-questions'
@@ -200,6 +201,12 @@ const LearnCmdbInterviewQuestionsRoute =
     path: '/learn/cmdb-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LearnCsdmInterviewQuestionsRoute =
+  LearnCsdmInterviewQuestionsRouteImport.update({
+    id: '/learn/csdm-interview-questions',
+    path: '/learn/csdm-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnCsmInterviewQuestionsRoute =
   LearnCsmInterviewQuestionsRouteImport.update({
     id: '/learn/csm-interview-questions',
@@ -347,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
@@ -396,6 +404,7 @@ export interface FileRoutesByTo {
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
@@ -446,6 +455,7 @@ export interface FileRoutesById {
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
   '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
+  '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
   '/learn/discovery': typeof LearnDiscoveryRouteWithChildren
   '/learn/discovery-interview-questions': typeof LearnDiscoveryInterviewQuestionsRoute
@@ -498,6 +508,7 @@ export interface FileRouteTypes {
     | '/learn/acl-scripting'
     | '/learn/client-script-how-to'
     | '/learn/cmdb-interview-questions'
+    | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
     | '/learn/discovery'
     | '/learn/discovery-interview-questions'
@@ -547,6 +558,7 @@ export interface FileRouteTypes {
     | '/learn/$topic'
     | '/learn/acl-scripting'
     | '/learn/cmdb-interview-questions'
+    | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
     | '/learn/discovery'
     | '/learn/discovery-interview-questions'
@@ -596,6 +608,7 @@ export interface FileRouteTypes {
     | '/learn/acl-scripting'
     | '/learn/client-script-how-to'
     | '/learn/cmdb-interview-questions'
+    | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
     | '/learn/discovery'
     | '/learn/discovery-interview-questions'
@@ -647,6 +660,7 @@ export interface RootRouteChildren {
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
   LearnClientScriptHowToRoute: typeof LearnClientScriptHowToRouteWithChildren
   LearnCmdbInterviewQuestionsRoute: typeof LearnCmdbInterviewQuestionsRoute
+  LearnCsdmInterviewQuestionsRoute: typeof LearnCsdmInterviewQuestionsRoute
   LearnCsmInterviewQuestionsRoute: typeof LearnCsmInterviewQuestionsRoute
   LearnDiscoveryRoute: typeof LearnDiscoveryRouteWithChildren
   LearnDiscoveryInterviewQuestionsRoute: typeof LearnDiscoveryInterviewQuestionsRoute
@@ -857,6 +871,13 @@ declare module '@tanstack/react-router' {
       path: '/learn/cmdb-interview-questions'
       fullPath: '/learn/cmdb-interview-questions'
       preLoaderRoute: typeof LearnCmdbInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/csdm-interview-questions': {
+      id: '/learn/csdm-interview-questions'
+      path: '/learn/csdm-interview-questions'
+      fullPath: '/learn/csdm-interview-questions'
+      preLoaderRoute: typeof LearnCsdmInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/csm-interview-questions': {
@@ -1083,6 +1104,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnAclScriptingRoute: LearnAclScriptingRoute,
   LearnClientScriptHowToRoute: LearnClientScriptHowToRouteWithChildren,
   LearnCmdbInterviewQuestionsRoute: LearnCmdbInterviewQuestionsRoute,
+  LearnCsdmInterviewQuestionsRoute: LearnCsdmInterviewQuestionsRoute,
   LearnCsmInterviewQuestionsRoute: LearnCsmInterviewQuestionsRoute,
   LearnDiscoveryRoute: LearnDiscoveryRouteWithChildren,
   LearnDiscoveryInterviewQuestionsRoute: LearnDiscoveryInterviewQuestionsRoute,
