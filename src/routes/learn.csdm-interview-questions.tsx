@@ -45,7 +45,7 @@ u_my_services              // breaks mapping, impact, upgrades`,
     output: {
       table: "cmdb_ci_service",
       logs: [
-        { time: "", text: "querying service hierarchy", tone: "info" },
+        { time: "", text: "querying service hierarchy", tone: "dim" },
         { time: "", text: "business service → offerings → technical services", tone: "ok" },
         { time: "", text: "impact tree resolved via CSDM relationships", tone: "ok" },
       ],
@@ -84,7 +84,7 @@ Manage     : incident.service_offering,
     output: {
       table: "cmdb_ci",
       logs: [
-        { time: "", text: "classify new CI 'payments-api'", tone: "info" },
+        { time: "", text: "classify new CI 'payments-api'", tone: "dim" },
         { time: "", text: "→ Technical domain: application service", tone: "ok" },
         { time: "", text: "offering 'Payments API — Gold' → Sell/Consume", tone: "ok" },
       ],
@@ -126,7 +126,7 @@ off2.sla  = '99.5% / 4h response';`,
         { time: "", text: "created business service 'Email'", tone: "ok" },
         { time: "", text: "offering 'Email — VIP' linked", tone: "ok" },
         { time: "", text: "offering 'Email — Standard' linked", tone: "ok" },
-        { time: "", text: "SLA definitions attached per offering", tone: "info" },
+        { time: "", text: "SLA definitions attached per offering", tone: "dim" },
       ],
       rows: [
         { number: "Email", state: "business svc", updated: "1 record", highlight: "ok" },
@@ -163,7 +163,7 @@ ci.life_cycle_stage_status = 'In use';`,
     output: {
       table: "cmdb_ci",
       logs: [
-        { time: "", text: "health scan: 400k CIs, 41 classes", tone: "info" },
+        { time: "", text: "health scan: 400k CIs, 41 classes", tone: "dim" },
         { time: "", text: "12% duplicates, 8% stale >90d", tone: "warn" },
         { time: "", text: "phase 1 scope: 5 critical services", tone: "ok" },
       ],
@@ -264,7 +264,7 @@ function CsdmGuide() {
               Discovery guide
             </Link>{" "}
             and the{" "}
-            <Link to="/learn/cmdb" className="text-accent underline">
+            <Link to="/learn/$topic" params={{ topic: "cmdb" }} className="text-accent underline">
               CMDB topic
             </Link>{" "}
             for full architect-level coverage.
