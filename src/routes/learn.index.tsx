@@ -340,8 +340,10 @@ function Learn() {
 
 
 
-        <section className="space-y-3">
-
+        <section className="space-y-3" aria-label="Learning topics">
+          <h2 className="font-display tracking-wider text-sm uppercase text-foreground/80">
+            🗂️ Explore topics
+          </h2>
           {visibleTopics.map((t) => (
             <Link
               key={t.id}
