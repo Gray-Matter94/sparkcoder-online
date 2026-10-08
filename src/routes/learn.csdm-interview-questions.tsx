@@ -45,7 +45,7 @@ u_my_services              // breaks mapping, impact, upgrades`,
     output: {
       table: "cmdb_ci_service",
       logs: [
-        { time: "", text: "querying service hierarchy", tone: "dim" },
+        { time: "", text: "querying service hierarchy", tone: "info" },
         { time: "", text: "business service → offerings → technical services", tone: "ok" },
         { time: "", text: "impact tree resolved via CSDM relationships", tone: "ok" },
       ],
@@ -84,7 +84,7 @@ Manage     : incident.service_offering,
     output: {
       table: "cmdb_ci",
       logs: [
-        { time: "", text: "classify new CI 'payments-api'", tone: "dim" },
+        { time: "", text: "classify new CI 'payments-api'", tone: "info" },
         { time: "", text: "→ Technical domain: application service", tone: "ok" },
         { time: "", text: "offering 'Payments API — Gold' → Sell/Consume", tone: "ok" },
       ],
