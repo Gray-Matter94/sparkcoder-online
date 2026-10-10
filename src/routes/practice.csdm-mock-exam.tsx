@@ -6,7 +6,6 @@ import { useProgress } from "@/lib/progress";
 import {
   CSDM_EXAM_LENGTH,
   CSDM_EXAM_MINUTES,
-  CSDM_EXAM_POOL,
   CSDM_PASS_PERCENT,
   drawCsdmExam,
 } from "@/lib/content/csdm-mock-exam";
@@ -124,8 +123,7 @@ function CsdmMockExam() {
               </h1>
               <p className="text-sm leading-relaxed text-foreground/85">
                 A timed mock test for the ServiceNow Common Service Data Model (CSDM):{" "}
-                {CSDM_EXAM_LENGTH} multiple-choice questions in {CSDM_EXAM_MINUTES} minutes, drawn in random order
-                . You get a score by domain and an
+                {CSDM_EXAM_LENGTH} multiple-choice questions in {CSDM_EXAM_MINUTES} minutes, drawn in random order. You get a score by domain and an
                 explanation for every question at the end. This is an unofficial practice test,
                 not the real exam.
               </p>
