@@ -334,6 +334,12 @@ function CsdmGuide() {
           <h2 className="font-display text-xl tracking-tight">Keep going</h2>
           <div className="flex flex-wrap gap-2">
             <Link
+              to="/practice/csdm-mock-exam"
+              className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-primary bg-primary text-primary-foreground text-sm font-display tracking-wider uppercase"
+            >
+              Take the CSDM practice exam
+            </Link>
+            <Link
               to="/learn"
               className="h-10 px-4 inline-flex items-center rounded-xl border-2 border-border bg-background text-sm font-display tracking-wider uppercase hover:border-accent/50"
             >

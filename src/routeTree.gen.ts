@@ -51,6 +51,7 @@ import { Route as LearnScenarioBasedScriptingRouteImport } from './routes/learn.
 import { Route as LearnServicePortalInterviewQuestionsRouteImport } from './routes/learn.service-portal-interview-questions'
 import { Route as PracticeCategoryRouteImport } from './routes/practice.$category'
 import { Route as PracticeCsaMockExamRouteImport } from './routes/practice.csa-mock-exam'
+import { Route as PracticeCsdmMockExamRouteImport } from './routes/practice.csdm-mock-exam'
 import { Route as ToolsServicenowEncodedQueryBuilderRouteImport } from './routes/tools.servicenow-encoded-query-builder'
 import { Route as ToolsServicenowRegexTesterRouteImport } from './routes/tools.servicenow-regex-tester'
 import { Route as LearnClientScriptHowToIndexRouteImport } from './routes/learn.client-script-how-to.index'
@@ -287,6 +288,11 @@ const PracticeCsaMockExamRoute = PracticeCsaMockExamRouteImport.update({
   path: '/practice/csa-mock-exam',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeCsdmMockExamRoute = PracticeCsdmMockExamRouteImport.update({
+  id: '/practice/csdm-mock-exam',
+  path: '/practice/csdm-mock-exam',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsServicenowEncodedQueryBuilderRoute =
   ToolsServicenowEncodedQueryBuilderRouteImport.update({
     id: '/tools/servicenow-encoded-query-builder',
@@ -369,6 +375,7 @@ export interface FileRoutesByFullPath {
   '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/practice/csa-mock-exam': typeof PracticeCsaMockExamRoute
+  '/practice/csdm-mock-exam': typeof PracticeCsdmMockExamRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
@@ -418,6 +425,7 @@ export interface FileRoutesByTo {
   '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/practice/csa-mock-exam': typeof PracticeCsaMockExamRoute
+  '/practice/csdm-mock-exam': typeof PracticeCsdmMockExamRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog': typeof BlogIndexRoute
@@ -470,6 +478,7 @@ export interface FileRoutesById {
   '/learn/service-portal-interview-questions': typeof LearnServicePortalInterviewQuestionsRoute
   '/practice/$category': typeof PracticeCategoryRoute
   '/practice/csa-mock-exam': typeof PracticeCsaMockExamRoute
+  '/practice/csdm-mock-exam': typeof PracticeCsdmMockExamRoute
   '/tools/servicenow-encoded-query-builder': typeof ToolsServicenowEncodedQueryBuilderRoute
   '/tools/servicenow-regex-tester': typeof ToolsServicenowRegexTesterRoute
   '/blog/': typeof BlogIndexRoute
@@ -523,6 +532,7 @@ export interface FileRouteTypes {
     | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/practice/csa-mock-exam'
+    | '/practice/csdm-mock-exam'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
@@ -572,6 +582,7 @@ export interface FileRouteTypes {
     | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/practice/csa-mock-exam'
+    | '/practice/csdm-mock-exam'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog'
@@ -623,6 +634,7 @@ export interface FileRouteTypes {
     | '/learn/service-portal-interview-questions'
     | '/practice/$category'
     | '/practice/csa-mock-exam'
+    | '/practice/csdm-mock-exam'
     | '/tools/servicenow-encoded-query-builder'
     | '/tools/servicenow-regex-tester'
     | '/blog/'
@@ -675,6 +687,7 @@ export interface RootRouteChildren {
   LearnServicePortalInterviewQuestionsRoute: typeof LearnServicePortalInterviewQuestionsRoute
   PracticeCategoryRoute: typeof PracticeCategoryRoute
   PracticeCsaMockExamRoute: typeof PracticeCsaMockExamRoute
+  PracticeCsdmMockExamRoute: typeof PracticeCsdmMockExamRoute
   ToolsServicenowEncodedQueryBuilderRoute: typeof ToolsServicenowEncodedQueryBuilderRoute
   ToolsServicenowRegexTesterRoute: typeof ToolsServicenowRegexTesterRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -978,6 +991,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticeCsaMockExamRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice/csdm-mock-exam': {
+      id: '/practice/csdm-mock-exam'
+      path: '/practice/csdm-mock-exam'
+      fullPath: '/practice/csdm-mock-exam'
+      preLoaderRoute: typeof PracticeCsdmMockExamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/servicenow-encoded-query-builder': {
       id: '/tools/servicenow-encoded-query-builder'
       path: '/tools/servicenow-encoded-query-builder'
@@ -1123,6 +1143,7 @@ const rootRouteChildren: RootRouteChildren = {
     LearnServicePortalInterviewQuestionsRoute,
   PracticeCategoryRoute: PracticeCategoryRoute,
   PracticeCsaMockExamRoute: PracticeCsaMockExamRoute,
+  PracticeCsdmMockExamRoute: PracticeCsdmMockExamRoute,
   ToolsServicenowEncodedQueryBuilderRoute:
     ToolsServicenowEncodedQueryBuilderRoute,
   ToolsServicenowRegexTesterRoute: ToolsServicenowRegexTesterRoute,

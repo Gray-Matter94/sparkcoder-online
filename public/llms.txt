@@ -29,3 +29,4 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 - [GlideAjax puzzles](/practice/glideajax): Async client-to-server calls and script include wiring.
 - [Script Include puzzles](/practice/script-includes): Reusable server libraries and client-callable patterns.
 - [ServiceNow CSA Practice Exam](https://www.sparkcoder.online/practice/csa-mock-exam): free timed CSA mock test with domain scoring and explanations.
+- [ServiceNow CSDM Practice Exam](https://www.sparkcoder.online/practice/csdm-mock-exam): free timed CSDM mock test with domain scoring and explanations.
