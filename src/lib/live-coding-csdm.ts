@@ -66,7 +66,7 @@ const templates: ((i: number) => CsdmQ)[] = [
         { needle: `get('user_name', 'abel.tuter')`, message: `Resolve the owner by user_name first.` },
         { needle: `new GlideRecord('cmdb_ci_business_app')`, message: `Business applications live on cmdb_ci_business_app.` },
         { needle: `hasNext()`, message: `Check for an existing app with hasNext().` },
-        { needle: `setValue('it_application_owner', owner.getUniqueValue())`, message: `Every business app needs an owner: setValue('it_application_owner', owner.getUniqueValue()).` },
+        { needle: `setValue('it_application_owner', owner.getUniqueValue()`, message: `Every business app needs an owner: setValue('it_application_owner', owner.getUniqueValue()).` },
         { needle: `.insert()`, message: `Create the record with insert().` },
       ],
     };
@@ -86,7 +86,7 @@ const templates: ((i: number) => CsdmQ)[] = [
         { needle: `new GlideRecord('cmdb_ci_sdlc_component')`, message: `Build artefacts are cmdb_ci_sdlc_component records.` },
         { needle: `new GlideRecord('cmdb_rel_ci')`, message: `CSDM relationships are rows on cmdb_rel_ci.` },
         { needle: `setValue('parent', compId)`, message: `The component is the parent: setValue('parent', compId).` },
-        { needle: `setValue('child', app.getUniqueValue())`, message: `The business app is the child: setValue('child', app.getUniqueValue()).` },
+        { needle: `setValue('child', app.getUniqueValue()`, message: `The business app is the child: setValue('child', app.getUniqueValue()).` },
       ],
     };
   },
@@ -104,7 +104,7 @@ const templates: ((i: number) => CsdmQ)[] = [
         { needle: `new GlideRecord('cmdb_ci_service_technical')`, message: `Technical services live on cmdb_ci_service_technical.` },
         { needle: `get('name', '${t}')`, message: `Look the service up by name: get('name', '${t}').` },
         { needle: `new GlideRecord('service_offering')`, message: `Offerings are service_offering records.` },
-        { needle: `setValue('parent', svc.getUniqueValue())`, message: `An offering's parent is its service: setValue('parent', svc.getUniqueValue()).` },
+        { needle: `setValue('parent', svc.getUniqueValue()`, message: `An offering's parent is its service: setValue('parent', svc.getUniqueValue()).` },
         { needle: `.insert()`, message: `Create the offering with insert().` },
       ],
     };
@@ -123,7 +123,7 @@ const templates: ((i: number) => CsdmQ)[] = [
         { needle: `new GlideRecord('cmdb_ci_service_business')`, message: `Business services live on cmdb_ci_service_business.` },
         { needle: `get('name', '${b}')`, message: `Find the service by name: get('name', '${b}').` },
         { needle: `addActiveQuery()`, message: `Only count active offerings: addActiveQuery().` },
-        { needle: `addQuery('parent', biz.getUniqueValue())`, message: `Filter offerings by parent: addQuery('parent', biz.getUniqueValue()).` },
+        { needle: `addQuery('parent', biz.getUniqueValue()`, message: `Filter offerings by parent: addQuery('parent', biz.getUniqueValue()).` },
         { needle: `getRowCount()`, message: `Read the total with getRowCount().` },
         { needle: `gs.warn(`, message: `Flag the gap with gs.warn(...).` },
       ],
