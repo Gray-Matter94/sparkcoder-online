@@ -10,6 +10,7 @@
 // "unique" variants (secure GRs, GlideEncrypter, GlideDBUtil, plural APIs).
 
 import { buildAdminTasks } from "./live-coding-admin";
+import { buildCsdmTasks } from "./live-coding-csdm";
 
 export type Side = "server" | "client";
 
@@ -32,6 +33,8 @@ export interface LiveCodingQuestion {
   checks: LiveCheck[];
   /** Admin learning-path stage (1-10), only set on admin tasks. */
   stage?: number;
+  /** Learning path the staged task belongs to. */
+  path?: "admin" | "csdm";
 }
 
 // ---------- Server side data ----------------------------------------------
@@ -779,7 +782,8 @@ function buildAll(): LiveCodingQuestion[] {
       out.push(q);
     });
   });
-  out.push(...buildAdminTasks(normalize));
+  out.push(...buildAdminTasks(normalize).map((q) => ({ ...q, path: "admin" as const })));
+  out.push(...buildCsdmTasks(normalize));
   return out;
 }
 

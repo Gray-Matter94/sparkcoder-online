@@ -6,6 +6,7 @@ import {
   LIVE_CODING_SERVER_TOTAL,
   LIVE_CODING_CLIENT_TOTAL,
   LIVE_CODING_ADMIN_TOTAL,
+  LIVE_CODING_CSDM_TOTAL,
 } from "@/lib/task-counts";
 import {
   LIVE_CODING_QUESTIONS,
@@ -98,7 +99,7 @@ export const Route = createFileRoute("/live-coding")({
               name: "How many ServiceNow coding questions are included?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Over 2,000 unique tasks, filterable by server-side, client-side or a 10-stage admin learning path, and by keyword.",
+                text: "Over 2,000 unique tasks, filterable by server-side, client-side or a 10-stage admin learning path, a 6-stage CSDM path, and by keyword.",
               },
             },
           ],
@@ -376,8 +377,9 @@ function explainLine(raw: string): string {
 
 // ------- Component ---------------------------------------------------------
 
-type Filter = "all" | Side | "admin";
+type Filter = "all" | Side | "admin" | "csdm";
 import { ADMIN_STAGES } from "@/lib/live-coding-admin";
+import { CSDM_STAGES } from "@/lib/live-coding-csdm";
 
 function LiveCoding() {
   const { progress, award } = useProgress();
@@ -390,8 +392,8 @@ function LiveCoding() {
     const bySide =
       filter === "all"
         ? LIVE_CODING_QUESTIONS
-        : filter === "admin"
-          ? LIVE_CODING_QUESTIONS.filter((q) => q.stage != null)
+        : filter === "admin" || filter === "csdm"
+          ? LIVE_CODING_QUESTIONS.filter((q) => q.path === filter)
           : LIVE_CODING_QUESTIONS.filter((q) => q.side === filter);
     const needle = query.trim().toLowerCase();
     if (!needle) return bySide;
@@ -654,6 +656,7 @@ function LiveCoding() {
                   { id: "server" as const, label: "SERVER", count: serverCount },
                   { id: "client" as const, label: "CLIENT", count: clientCount },
                   { id: "admin" as const, label: "ADMIN PATH", count: LIVE_CODING_ADMIN_TOTAL },
+                  { id: "csdm" as const, label: "CSDM PATH", count: LIVE_CODING_CSDM_TOTAL },
                 ]
               ).map((t) => (
                 <button
@@ -858,11 +861,15 @@ function LiveCoding() {
               {q.side === "server" ? "SERVER-SIDE" : "CLIENT-SIDE"} · {q.scriptType}
             </span>
           </div>
-          {q.stage != null && (
-            <p className="text-[10px] font-mono text-accent">
-              Admin path · Stage {q.stage} of {ADMIN_STAGES.length}: {ADMIN_STAGES[q.stage - 1]?.name} — {ADMIN_STAGES[q.stage - 1]?.blurb}
-            </p>
-          )}
+          {q.stage != null && (() => {
+            const stages = q.path === "csdm" ? CSDM_STAGES : ADMIN_STAGES;
+            const st = stages[q.stage - 1];
+            return (
+              <p className="text-[10px] font-mono text-accent">
+                {q.path === "csdm" ? "CSDM path" : "Admin path"} · Stage {q.stage} of {stages.length}: {st?.name} — {st?.blurb}
+              </p>
+            );
+          })()}
           <h2 className="text-base sm:text-lg font-bold leading-tight">{q.title}</h2>
           <p className="text-sm text-foreground/85 leading-relaxed">{q.task}</p>
         </section>
