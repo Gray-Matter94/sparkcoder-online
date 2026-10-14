@@ -59,5 +59,18 @@ export function drawCsdmExam(): ExamQuestion[] {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  return pool.slice(0, CSDM_EXAM_LENGTH);
+  // Shuffle each question's options too, so the correct answer is not
+  // predictable by position (the pool stores most correct answers first).
+  return pool.slice(0, CSDM_EXAM_LENGTH).map((item) => {
+    const order = item.options.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    return {
+      ...item,
+      options: order.map((i) => item.options[i]),
+      correctIndex: order.indexOf(item.correctIndex),
+    };
+  });
 }
