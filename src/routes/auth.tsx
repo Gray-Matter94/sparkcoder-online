@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/auth")({
   ssr: false,
   validateSearch: (s: Record<string, unknown>) => ({
-    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : "",
+    next: typeof s.next === "string" && /^\/(?![\/\\])[^\\\s]*$/.test(s.next) ? s.next : "",
   }),
   head: () => ({
     meta: [
@@ -45,7 +45,11 @@ function AuthPage() {
   useEffect(() => {
     if (user) {
       if (returnTo === "/") navigate({ to: "/" });
-      else window.location.href = returnTo;
+      else if (/^\/(?![\/\\])[^\\\s]*$/.test(returnTo)) {
+        const target = new URL(returnTo, window.location.origin);
+        if (target.origin === window.location.origin) window.location.href = target.pathname + target.search + target.hash;
+        else navigate({ to: "/" });
+      } else navigate({ to: "/" });
     }
   }, [user, navigate, returnTo]);
 
@@ -77,7 +81,11 @@ function AuthPage() {
         if (err) throw err;
       }
       if (returnTo === "/") navigate({ to: "/" });
-      else window.location.href = returnTo;
+      else if (/^\/(?![\/\\])[^\\\s]*$/.test(returnTo)) {
+        const target = new URL(returnTo, window.location.origin);
+        if (target.origin === window.location.origin) window.location.href = target.pathname + target.search + target.hash;
+        else navigate({ to: "/" });
+      } else navigate({ to: "/" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       setError(

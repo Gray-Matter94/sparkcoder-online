@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 
 export interface Alternative {
@@ -11,10 +12,10 @@ export interface Alternative {
 const InputSchema = z.object({
   questionId: z.string().min(1),
   side: z.enum(["server", "client"]),
-  scriptType: z.string(),
-  title: z.string(),
-  task: z.string(),
-  referenceSolution: z.string(),
+  scriptType: z.string().max(100),
+  title: z.string().max(300),
+  task: z.string().max(4000),
+  referenceSolution: z.string().max(8000),
 });
 
 const SYSTEM = `You are a senior ServiceNow developer coaching an interview candidate.
@@ -27,6 +28,7 @@ Return STRICT JSON matching the tool schema. Each "code" MUST be a complete,
 runnable ServiceNow script (no ellipses, no commentary inside code).`;
 
 export const suggestAlternatives = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => InputSchema.parse(data))
   .handler(async ({ data }): Promise<{ alternatives: Alternative[] }> => {
     const apiKey = process.env.LOVABLE_API_KEY;
