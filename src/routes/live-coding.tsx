@@ -498,7 +498,8 @@ function LiveCoding() {
       });
       setAlternatives(out.alternatives);
     } catch (err) {
-      setAltsError(err instanceof Error ? err.message : "Failed to load alternatives.");
+      const m = err instanceof Error ? err.message : "";
+      setAltsError(m.startsWith("Unauthorized") ? "Sign in to get AI-suggested alternatives." : m || "Failed to load alternatives.");
     } finally {
       setAltsLoading(false);
     }
