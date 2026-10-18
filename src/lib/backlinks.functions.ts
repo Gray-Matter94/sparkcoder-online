@@ -14,9 +14,13 @@ const requireOwner = createMiddleware({ type: "function" })
       .split(",")
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean);
-    const email = String(
-      (context.claims as { email?: string } | undefined)?.email ?? "",
-    ).toLowerCase();
+    // Use the verified account record, not the token claim, and require a
+    // confirmed mailbox so an unverified sign-up can't claim an owner email.
+    const { data: userData, error: userErr } = await context.supabase.auth.getUser();
+    if (userErr || !userData?.user?.email_confirmed_at) {
+      throw new Error("Forbidden: owner access only");
+    }
+    const email = String(userData.user.email ?? "").toLowerCase();
     if (!email || !allow.includes(email)) {
       throw new Error("Forbidden: owner access only");
     }
