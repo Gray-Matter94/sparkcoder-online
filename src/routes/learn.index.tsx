@@ -55,7 +55,7 @@ function Learn() {
     <div className="min-h-screen flex flex-col">
       <ErrorBoundary name="Stats"><StatsBar progress={progress} back /></ErrorBoundary>
 
-      <main className="flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-6">
+      <main className="desktop-learn flex-1 max-w-2xl w-full mx-auto p-5 sm:p-8 space-y-6">
         <TrackSwitcher />
 
         <section className="space-y-2 animate-fade-in">
