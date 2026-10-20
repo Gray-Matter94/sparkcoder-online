@@ -5,3 +5,9 @@
 - [x] Add an in-page learning-path action and ordered, track-specific learning choices.
 - [x] Move XP, streak, rank, and badges below the primary onboarding actions.
 - [x] Verify every track, direct challenge navigation, refresh behavior, and mobile/desktop layout.
+
+# Desktop layout optimization
+
+- [ ] Inspect current desktop issues and capture mobile/tablet baselines.
+- [ ] Apply minimal desktop-only layout adjustments using existing components.
+- [ ] Validate requested desktop widths and unchanged mobile/tablet layouts.
