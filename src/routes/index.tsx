@@ -279,10 +279,10 @@ function Home() {
         />
       </div>
 
-      <main className="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-8 space-y-8">
+      <main className="desktop-home flex-1 max-w-2xl w-full mx-auto p-4 sm:p-8 space-y-8">
         <TrackSwitcher />
 
-        <section className="space-y-3 animate-fade-in">
+        <section className="desktop-home-intro space-y-3 animate-fade-in">
           <span className={`text-[10px] uppercase tracking-[0.25em] font-bold ${accentText}`}>
             {meta.emoji} {meta.name}
           </span>
@@ -352,7 +352,7 @@ function Home() {
           </ol>
         </section>
 
-        <section className="grid grid-cols-3 gap-3">
+        <section className="desktop-home-stats grid grid-cols-3 gap-3">
           <Stat label="XP" value={progress.xp.toLocaleString()} accent="primary" />
           <Stat label="Streak" value={`${progress.streak}d`} accent="accent" />
           <Stat label="Puzzles solved" value={`${solved}/${total}`} accent="secondary" />
@@ -430,7 +430,7 @@ function Home() {
 
         <BadgesPanel progress={progress} />
 
-        <section className="space-y-3">
+        <section className="desktop-home-modules space-y-3">
           <h2 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold ml-1">
             Choose a module · solved / unlocked puzzles
           </h2>

@@ -481,3 +481,110 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Desktop-only layout corrections; smaller-screen rules remain untouched. */
+@media (min-width: 1024px) {
+  .desktop-home,
+  .desktop-learn,
+  .desktop-live-coding {
+    max-width: 72rem;
+    padding-inline: 2rem;
+    min-width: 0;
+  }
+
+  .desktop-stats-bar {
+    padding-inline: max(2rem, calc((100% - 68rem) / 2));
+  }
+
+  [aria-label="Choose a practice track"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .desktop-home-intro > p {
+    max-width: 42rem;
+  }
+
+  .desktop-home-intro > div {
+    max-width: 42rem;
+  }
+
+  .desktop-home #learning-paths > ol,
+  .desktop-home [aria-labelledby="learning-modules-heading"],
+  .desktop-home-modules > .grid,
+  .desktop-home [aria-labelledby="home-faq-heading"] > dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .desktop-home #learning-paths > ol > li,
+  .desktop-home [aria-labelledby="learning-modules-heading"] > *,
+  .desktop-home [aria-labelledby="home-faq-heading"] > dl > * {
+    margin-block: 0;
+    min-width: 0;
+  }
+
+  .desktop-home #learning-paths > ol > li > [aria-hidden] {
+    display: none;
+  }
+
+  .desktop-home #learning-paths > ol > li > a {
+    height: 100%;
+  }
+
+  .desktop-home [aria-labelledby="learning-modules-heading"] h3,
+  .desktop-home-modules h2 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .desktop-home [aria-labelledby="learning-modules-heading"] h3 + span,
+  .desktop-home-modules h2 + span {
+    flex-shrink: 0;
+  }
+
+  .desktop-home [aria-labelledby="learning-modules-heading"] a p {
+    white-space: normal;
+  }
+
+  .desktop-home ~ nav[aria-label="Explore tracks"] {
+    max-width: 72rem;
+  }
+
+  .desktop-learn {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-content: start;
+  }
+
+  .desktop-learn > * {
+    margin-block: 0;
+    min-width: 0;
+  }
+
+  .desktop-learn > :not(a) {
+    grid-column: 1 / -1;
+  }
+
+  .desktop-learn [aria-label="Learning topics"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .desktop-learn [aria-label="Learning topics"] > * {
+    margin-block: 0;
+    min-width: 0;
+  }
+
+  .desktop-learn [aria-label="Learning topics"] > h2 {
+    grid-column: 1 / -1;
+  }
+
+  .desktop-live-coding [aria-label="Filter tasks by side"] {
+    flex-wrap: wrap;
+    min-width: 0;
+    max-width: 100%;
+  }
+}

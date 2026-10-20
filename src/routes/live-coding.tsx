@@ -625,7 +625,7 @@ function LiveCoding() {
         <StatsBar progress={progress} back />
       </ErrorBoundary>
 
-      <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 space-y-5">
+      <main className="desktop-live-coding flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 space-y-5">
         <header className="space-y-2 animate-fade-in">
           <div className="flex items-center gap-2">
             <span className="text-xl">💻</span>
