@@ -8,6 +8,6 @@
 
 # Desktop layout optimization
 
-- [ ] Inspect current desktop issues and capture mobile/tablet baselines.
-- [ ] Apply minimal desktop-only layout adjustments using existing components.
-- [ ] Validate requested desktop widths and unchanged mobile/tablet layouts.
+- [x] Inspect current desktop issues and capture mobile/tablet baselines.
+- [x] Apply minimal desktop-only layout adjustments using existing components.
+- [x] Validate requested desktop widths and unchanged mobile/tablet layouts.
