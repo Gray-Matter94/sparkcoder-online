@@ -55,7 +55,7 @@ const ACCENT_GLOW: Record<CardAccent, string> = {
   primary: "var(--color-primary)",
   accent: "var(--color-accent)",
   secondary: "var(--color-secondary)",
-  amber: "#f59e0b",
+  amber: "var(--color-accent)",
   destructive: "var(--color-destructive)",
 };
 
@@ -274,7 +274,7 @@ function Home() {
       <ErrorBoundary name="Stats"><StatsBar progress={progress} compact /></ErrorBoundary>
       <div className="h-1.5 w-full bg-border">
         <div
-          className="h-full bg-primary shadow-[0_0_12px_rgba(34,197,94,0.5)] transition-all duration-700"
+          className="h-full bg-primary shadow-[0_0_12px_color-mix(in_oklab,var(--color-primary)_50%,transparent)] transition-all duration-700"
           style={{ width: `${pct}%` }}
         />
       </div>

@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Scope desktop layout overrides to named page hooks and a min-width media query in src/styles.css; this isolates presentation adjustments from existing smaller-screen rules.
+- Apply learning-track themes through a root data attribute and CSS semantic-token overrides; keep option identities independent and preserve destructive error semantics.

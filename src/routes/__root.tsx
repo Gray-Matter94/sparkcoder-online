@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Starfield } from "../components/Starfield";
 import { BootSplash } from "../components/BootSplash";
+import { useTrack } from "../lib/tracks";
 
 
 function NotFoundComponent() {
@@ -141,6 +142,11 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [track] = useTrack();
+
+  useEffect(() => {
+    document.documentElement.dataset.learningTrack = track;
+  }, [track]);
 
   return (
     <QueryClientProvider client={queryClient}>

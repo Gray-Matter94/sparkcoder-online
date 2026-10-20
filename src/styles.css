@@ -432,7 +432,7 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at bottom, var(--path-sky, #1b2735) 0%, var(--color-background) 100%);
 }
 .starfield-layer {
   position: absolute;
@@ -587,4 +587,114 @@
     min-width: 0;
     max-width: 100%;
   }
+}
+
+/* Path palettes use shared semantic tokens; layout and error colours stay intact. */
+:root {
+  --path-developer: #4ade80;
+  --path-admin: #fbbf24;
+  --path-irm: #22d3ee;
+  --path-java: #f472b6;
+  --path-angular: #fb7185;
+}
+
+:root[data-learning-track="servicenow-dev"] {
+  --color-primary: #4ade80;
+  --color-primary-foreground: #052e16;
+  --color-primary-deep: #166534;
+  --color-accent: #a3e635;
+  --color-accent-foreground: #1a2e05;
+  --color-secondary: #6ee7b7;
+  --color-secondary-foreground: #022c22;
+  --color-background: #080d0b;
+  --color-panel: #151e19;
+  --color-panel-2: #1c2821;
+  --color-border: #2c3c32;
+  --path-sky: #17362b;
+}
+
+:root[data-learning-track="servicenow-admin"] {
+  --color-primary: #fbbf24;
+  --color-primary-foreground: #422006;
+  --color-primary-deep: #854d0e;
+  --color-accent: #fcd34d;
+  --color-accent-foreground: #422006;
+  --color-secondary: #fde68a;
+  --color-secondary-foreground: #422006;
+  --color-background: #100d08;
+  --color-panel: #211e15;
+  --color-panel-2: #2b271b;
+  --color-border: #403823;
+  --path-sky: #38301a;
+}
+
+:root[data-learning-track="servicenow-irm"] {
+  --color-primary: #22d3ee;
+  --color-primary-foreground: #083344;
+  --color-primary-deep: #155e75;
+  --color-accent: #67e8f9;
+  --color-accent-foreground: #083344;
+  --color-secondary: #7dd3fc;
+  --color-secondary-foreground: #082f49;
+  --color-background: #080e11;
+  --color-panel: #152025;
+  --color-panel-2: #1b2a31;
+  --color-border: #29404a;
+  --path-sky: #153d48;
+}
+
+:root[data-learning-track="java-dev"] {
+  --color-primary: #f472b6;
+  --color-primary-foreground: #500724;
+  --color-primary-deep: #9d174d;
+  --color-accent: #f9a8d4;
+  --color-accent-foreground: #500724;
+  --color-secondary: #f472b6;
+  --color-secondary-foreground: #500724;
+  --color-background: #10090e;
+  --color-panel: #241820;
+  --color-panel-2: #2e1e28;
+  --color-border: #432b3a;
+  --path-sky: #3c1c32;
+}
+
+:root[data-learning-track="angular-dev"] {
+  --color-primary: #fb7185;
+  --color-primary-foreground: #4c0519;
+  --color-primary-deep: #9f1239;
+  --color-accent: #fda4af;
+  --color-accent-foreground: #4c0519;
+  --color-secondary: #fecdd3;
+  --color-secondary-foreground: #4c0519;
+  --color-background: #11090b;
+  --color-panel: #25171c;
+  --color-panel-2: #301d24;
+  --color-border: #462b34;
+  --path-sky: #421c29;
+}
+
+:root[data-learning-track] {
+  --color-ring: var(--color-primary);
+  --color-input: var(--color-border);
+  --color-card: var(--color-panel);
+  --color-popover: var(--color-panel);
+  --color-muted: var(--color-panel);
+  --color-amber-300: var(--color-accent);
+  --color-amber-400: var(--color-accent);
+  --color-amber-500: var(--color-primary);
+}
+
+.track-colour-option[data-track-option="servicenow-dev"] { --option-colour: var(--path-developer); }
+.track-colour-option[data-track-option="servicenow-admin"] { --option-colour: var(--path-admin); }
+.track-colour-option[data-track-option="servicenow-irm"] { --option-colour: var(--path-irm); }
+.track-colour-option[data-track-option="java-dev"] { --option-colour: var(--path-java); }
+.track-colour-option[data-track-option="angular-dev"] { --option-colour: var(--path-angular); }
+
+.track-colour-option {
+  --dg-glow: var(--option-colour);
+  color: var(--option-colour);
+}
+
+.track-colour-option[aria-selected="true"] {
+  border-color: var(--option-colour);
 }
