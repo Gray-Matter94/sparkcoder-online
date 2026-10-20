@@ -595,7 +595,7 @@
   --path-admin: #fbbf24;
   --path-irm: #22d3ee;
   --path-java: #f472b6;
-  --path-angular: #fb7185;
+  --path-angular: #a78bfa;
 }
 
 :root[data-learning-track="servicenow-dev"] {
@@ -651,16 +651,16 @@
 }
 
 :root[data-learning-track="angular-dev"] {
-  --color-primary: #fb7185;
-  --color-primary-foreground: #4c0519;
-  --color-primary-deep: #9f1239;
-  --color-accent: #fda4af;
-  --color-accent-foreground: #4c0519;
-  --color-secondary: #fecdd3;
-  --color-secondary-foreground: #4c0519;
-  --color-panel: #25171c;
-  --color-panel-2: #301d24;
-  --color-border: #462b34;
+  --color-primary: #a78bfa;
+  --color-primary-foreground: #2e1065;
+  --color-primary-deep: #6d28d9;
+  --color-accent: #c4b5fd;
+  --color-accent-foreground: #2e1065;
+  --color-secondary: #ddd6fe;
+  --color-secondary-foreground: #2e1065;
+  --color-panel: #1c1826;
+  --color-panel-2: #251f31;
+  --color-border: #372f4a;
 }
 
 :root[data-learning-track] {
