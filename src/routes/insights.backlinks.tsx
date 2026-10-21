@@ -43,6 +43,8 @@ export const Route = createFileRoute("/insights/backlinks")({
           "Track referring domains, follow/nofollow ratio, and top link sources for sparkcoder.online.",
       },
       { property: "og:url", content: "https://www.sparkcoder.online/insights/backlinks" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://www.sparkcoder.online/insights/backlinks" }],
   }),
@@ -52,7 +54,7 @@ export const Route = createFileRoute("/insights/backlinks")({
 });
 
 function NotFound() {
-  return <div className="p-8 text-center text-muted-foreground">Not found.</div>;
+  return <div className="p-8 text-center text-muted-foreground"><h1 className="text-xl font-semibold">Backlinks insights not found</h1></div>;
 }
 
 function ErrorView(props: ErrorComponentProps) {
@@ -62,7 +64,7 @@ function ErrorView(props: ErrorComponentProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="max-w-md text-center space-y-3">
-        <h2 className="text-xl font-semibold">Couldn't load backlinks</h2>
+        <h1 className="text-xl font-semibold">Couldn't load backlinks insights</h1>
         <p className="text-sm text-muted-foreground">{error.message}</p>
         <button
           className="rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90"
@@ -103,7 +105,7 @@ function BacklinksGate() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <div className="max-w-md text-center space-y-3">
-          <h2 className="text-xl font-semibold">Sign in required</h2>
+          <h1 className="text-xl font-semibold">Sign in to Backlinks Insights</h1>
           <p className="text-sm text-muted-foreground">
             Backlinks Insights is an owner-only dashboard. Sign in to view your
             Semrush-powered link data.
@@ -150,9 +152,9 @@ function BacklinksPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <div className="max-w-md text-center space-y-3">
-          <h2 className="text-xl font-semibold">
-            {forbidden ? "Not authorized" : "Couldn't load backlinks"}
-          </h2>
+          <h1 className="text-xl font-semibold">
+            {forbidden ? "Backlinks Insights access denied" : "Couldn't load backlinks insights"}
+          </h1>
           <p className="text-sm text-muted-foreground">
             {forbidden
               ? "Your account isn't on the owner allowlist for this dashboard."

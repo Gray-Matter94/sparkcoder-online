@@ -20,6 +20,8 @@ export const Route = createFileRoute("/blog/$slug")({
           { name: "description", content: "This blog post could not be found. Browse the full SparkCoder ServiceNow curriculum for all published weeks." },
           { property: "og:title", content: "Post not found — SparkCoder" },
           { property: "og:description", content: "This blog post could not be found. Browse the full SparkCoder ServiceNow curriculum for all published weeks." },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary" },
         ],
       };
     }
@@ -75,7 +77,7 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   notFoundComponent: () => (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-3">
-      <h2 className="font-display text-3xl">POST NOT FOUND</h2>
+      <h1 className="font-display text-3xl">ServiceNow blog post not found</h1>
       <Link to="/blog" className="text-accent underline">
         Back to all posts
       </Link>
@@ -83,7 +85,7 @@ export const Route = createFileRoute("/blog/$slug")({
   ),
   errorComponent: ({ error }) => (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-3">
-      <h2 className="font-display text-2xl text-destructive">SOMETHING BROKE</h2>
+      <h1 className="font-display text-2xl text-destructive">ServiceNow blog post could not load</h1>
       <p className="text-xs text-muted-foreground">{(error as Error).message}</p>
       <Link to="/blog" className="text-accent underline">
         Back to all posts
