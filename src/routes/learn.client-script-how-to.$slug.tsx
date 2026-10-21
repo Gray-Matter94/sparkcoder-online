@@ -16,7 +16,12 @@ export const Route = createFileRoute("/learn/client-script-how-to/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Guide unavailable — SparkCoder" },
+          { title: "Client script guide unavailable — SparkCoder" },
+          { name: "description", content: "This ServiceNow client script guide is unavailable. Browse all published client script how-tos on SparkCoder." },
+          { property: "og:title", content: "Client script guide unavailable — SparkCoder" },
+          { property: "og:description", content: "Browse all published ServiceNow client script how-tos on SparkCoder." },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -88,7 +93,7 @@ export const Route = createFileRoute("/learn/client-script-how-to/$slug")({
 function GuideNotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
-      <h1 className="font-display text-3xl tracking-tight">Guide not found</h1>
+      <h1 className="font-display text-3xl tracking-tight">Client script guide not found</h1>
       <Link to="/learn/client-script-how-to" className="text-accent hover:underline text-sm">
         ← All client script how-tos
       </Link>

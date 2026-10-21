@@ -25,7 +25,17 @@ export const Route = createFileRoute("/learn/discovery/$section")({
   },
   head: ({ loaderData }) => {
     const s = loaderData?.section;
-    if (!s) return {};
+    if (!s) return {
+      meta: [
+        { title: "Discovery interview section unavailable — SparkCoder" },
+        { name: "description", content: "This ServiceNow Discovery interview section is unavailable. Browse the Discovery hub for published interview guides." },
+        { property: "og:title", content: "Discovery interview section unavailable — SparkCoder" },
+        { property: "og:description", content: "Browse SparkCoder's Discovery hub for published ServiceNow interview guides." },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
+        { name: "robots", content: "noindex" },
+      ],
+    };
     const title = `${s.title} — ServiceNow Interview | SparkCoder`;
     const desc = `${s.blurb} Curated Q&A plus AI-expandable scenario drills for ServiceNow interviews.`;
     const url = `https://www.sparkcoder.online/learn/discovery/${s.slug}`;
@@ -71,7 +81,7 @@ function SectionNotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 text-center space-y-4">
       <div>
-        <h2 className="font-display text-2xl mb-2">Section not found</h2>
+        <h1 className="font-display text-2xl mb-2">Discovery interview section not found</h1>
         <Link to="/learn/discovery" className="text-accent underline">
           Back to the Discovery hub
         </Link>
@@ -85,7 +95,7 @@ function SectionError(props: ErrorComponentProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 text-center">
       <div>
-        <h2 className="font-display text-2xl mb-2">Something broke</h2>
+        <h1 className="font-display text-2xl mb-2">Discovery interview section could not load</h1>
         <p className="text-sm text-muted-foreground mb-4">{error.message}</p>
         <Link to="/learn/discovery" className="text-accent underline">
           Back to the Discovery hub
