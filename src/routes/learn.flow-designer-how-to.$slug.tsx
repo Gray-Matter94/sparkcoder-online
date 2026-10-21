@@ -16,7 +16,12 @@ export const Route = createFileRoute("/learn/flow-designer-how-to/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Guide unavailable — SparkCoder" },
+          { title: "Flow Designer guide unavailable — SparkCoder" },
+          { name: "description", content: "This ServiceNow Flow Designer guide is unavailable. Browse all published Flow Designer how-tos on SparkCoder." },
+          { property: "og:title", content: "Flow Designer guide unavailable — SparkCoder" },
+          { property: "og:description", content: "Browse all published ServiceNow Flow Designer how-tos on SparkCoder." },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -88,7 +93,7 @@ export const Route = createFileRoute("/learn/flow-designer-how-to/$slug")({
 function GuideNotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
-      <h1 className="font-display text-3xl tracking-tight">Guide not found</h1>
+      <h1 className="font-display text-3xl tracking-tight">Flow Designer guide not found</h1>
       <Link to="/learn/flow-designer-how-to" className="text-accent hover:underline text-sm">
         ← All Flow Designer how-tos
       </Link>
