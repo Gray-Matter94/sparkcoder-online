@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
@@ -36,7 +36,7 @@ const breadcrumbJsonLd = {
 };
 
 export const Route = createFileRoute("/learn/discovery")({
-  head: () => ({
+  head: ({ matches }) => matches.some((match) => match.routeId === "/learn/discovery/$section") ? {} : ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
@@ -53,8 +53,13 @@ export const Route = createFileRoute("/learn/discovery")({
     ],
   }),
 
-  component: DiscoveryHub,
+  component: DiscoveryRoute,
 });
+
+function DiscoveryRoute() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  return pathname.replace(/\/$/, "") === "/learn/discovery" ? <DiscoveryHub /> : <Outlet />;
+}
 
 function DiscoveryHub() {
   const { progress } = useProgress();
