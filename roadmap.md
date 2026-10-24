@@ -15,5 +15,5 @@
 # SEO failing findings
 
 - [x] Correct and verify missing headings in blog, guide, and backlinks states.
-- [ ] Verify approved share artwork and public page image tags.
+- [x] Verify approved share artwork and public page image tags.
 - [x] Assess the unsupported IRM snippet opportunity; leave unchanged because the stored finding says its evidence does not qualify.
