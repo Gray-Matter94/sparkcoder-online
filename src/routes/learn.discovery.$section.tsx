@@ -16,6 +16,7 @@ import {
 } from "@/lib/discovery-questions.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
+import { SHARE_PREVIEW_META } from "@/lib/share-preview";
 
 export const Route = createFileRoute("/learn/discovery/$section")({
   loader: ({ params }) => {
@@ -66,7 +67,7 @@ export const Route = createFileRoute("/learn/discovery/$section")({
         { property: "og:description", content: desc },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
+        ...SHARE_PREVIEW_META,
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [{ type: "application/ld+json", children: JSON.stringify(faqLd) }],

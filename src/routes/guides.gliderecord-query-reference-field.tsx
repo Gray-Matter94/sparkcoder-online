@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
+import { SHARE_PREVIEW_META } from "@/lib/share-preview";
 
 const TITLE = "GlideRecord Reference Field Query: 4 Ways With Code";
 const DESCRIPTION =
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/guides/gliderecord-query-reference-field"
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: URL },
       { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary_large_image" },
+      ...SHARE_PREVIEW_META,
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [

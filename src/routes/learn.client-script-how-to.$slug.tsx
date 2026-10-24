@@ -3,6 +3,7 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 import { getClientScriptGuide, type ClientScriptGuide } from "@/lib/content/client-script-howto";
+import { SHARE_PREVIEW_META } from "@/lib/share-preview";
 
 const BASE = "https://www.sparkcoder.online/learn/client-script-how-to";
 
@@ -36,7 +37,7 @@ export const Route = createFileRoute("/learn/client-script-how-to/$slug")({
         { property: "og:description", content: g.description },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
+        ...SHARE_PREVIEW_META,
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
