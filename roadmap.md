@@ -14,6 +14,6 @@
 
 # SEO failing findings
 
-- [ ] Correct and verify missing headings in blog, guide, and backlinks states.
-- [ ] Resolve missing share images using relevant approved imagery.
-- [ ] Assess the unsupported IRM snippet opportunity without speculative edits.
+- [x] Correct and verify missing headings in blog, guide, and backlinks states.
+- [ ] Resolve missing share images — awaiting approval to create relevant artwork.
+- [x] Assess the unsupported IRM snippet opportunity; leave unchanged because the stored finding says its evidence does not qualify.
