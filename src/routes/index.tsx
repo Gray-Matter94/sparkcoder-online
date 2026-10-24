@@ -18,6 +18,7 @@ import { getDailyChallenge } from "@/lib/daily";
 import { trackMeta, type TrackId } from "@/lib/tracks";
 import { TopWeeklyBlogs } from "@/components/TopWeeklyBlogs";
 import { levelDifficulty } from "@/lib/hints";
+import { SHARE_PREVIEW_META } from "@/lib/share-preview";
 
 type CardAccent = "primary" | "accent" | "secondary" | "amber" | "destructive";
 
@@ -154,6 +155,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://www.sparkcoder.online/" },
       { property: "og:type", content: "website" },
+      ...SHARE_PREVIEW_META,
     ],
     links: [
       { rel: "canonical", href: "https://www.sparkcoder.online/" },

@@ -4,6 +4,7 @@ import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
 import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
+import { SHARE_PREVIEW_META } from "@/lib/share-preview";
 
 const TITLE = "ServiceNow Discovery & CMDB Interview Hub — SparkCoder";
 const DESCRIPTION =
@@ -44,7 +45,7 @@ export const Route = createFileRoute("/learn/discovery")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:url", content: URL },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      ...SHARE_PREVIEW_META,
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [
