@@ -36,7 +36,7 @@ const breadcrumbJsonLd = {
 };
 
 export const Route = createFileRoute("/learn/discovery")({
-  head: ({ matches }) => matches.some((match) => match.routeId === "/learn/discovery/$section") ? {} : ({
+  head: ({ matches }) => matches.some((match) => String(match.routeId) === "/learn/discovery/$section") ? {} : ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
