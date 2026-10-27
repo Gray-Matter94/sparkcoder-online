@@ -7,7 +7,12 @@ export const Route = createFileRoute("/admin/feedback")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Admin — Feedback Inbox" },
+      { title: "Feedback Inbox — SparkCoder Admin" },
+      { name: "description", content: "Review and resolve user feedback in the SparkCoder admin inbox." },
+      { property: "og:title", content: "Feedback Inbox — SparkCoder Admin" },
+      { property: "og:description", content: "Review and resolve user feedback in the SparkCoder admin inbox." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -170,18 +175,47 @@ function AdminCard({
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    setUrl(null);
     if (!row.screenshot_url) return;
     let cancelled = false;
+    let objectUrl: string | null = null;
+    // Authenticated downloads re-evaluate the storage SELECT policy on every
+    // request. A local blob URL is not a shareable storage access token.
     supabase.storage
       .from("feedback-screenshots")
-      .createSignedUrl(row.screenshot_url, 60 * 60)
-      .then(({ data }) => {
-        if (!cancelled) setUrl(data?.signedUrl ?? null);
+      .download(row.screenshot_url)
+      .then(({ data, error }) => {
+        if (cancelled || error || !data) return;
+        objectUrl = URL.createObjectURL(data);
+        setUrl(objectUrl);
+      })
+      .catch(() => {
+        if (!cancelled) setUrl(null);
       });
     return () => {
       cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [row.screenshot_url]);
+
+  async function downloadScreenshot() {
+    if (!row.screenshot_url) return;
+    // Do not reuse the preview blob for a new download: check current access.
+    const { data, error } = await supabase.storage
+      .from("feedback-screenshots")
+      .download(row.screenshot_url);
+    if (error || !data) {
+      setUrl(null);
+      alert("Screenshot unavailable. Your access may have changed.");
+      return;
+    }
+    const downloadUrl = URL.createObjectURL(data);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = row.screenshot_url.split("/").pop() || "feedback-screenshot";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+  }
 
   return (
     <li className="rounded-2xl border border-border bg-panel p-4 space-y-3">
@@ -211,13 +245,20 @@ function AdminCard({
         </p>
       )}
       {url && (
-        <a href={url} target="_blank" rel="noreferrer" className="block">
+        <div className="space-y-2">
           <img
             src={url}
             alt="Feedback screenshot"
             className="max-h-56 rounded-lg border border-border object-contain"
           />
-        </a>
+          <button
+            type="button"
+            onClick={() => void downloadScreenshot()}
+            className="text-xs text-accent underline"
+          >
+            Download screenshot
+          </button>
+        </div>
       )}
       <textarea
         value={note}
