@@ -13,3 +13,4 @@
 - Apply learning-track themes through a root data attribute and CSS semantic-token overrides; keep option identities independent and preserve destructive error semantics.
 - Discovery's parent route renders its hub only at the exact hub URL and an Outlet for section URLs; keep hub metadata off child matches so sections render and own their canonical.
 - Use the shared brand-preview metadata helper on text-only public practice guides; attach image tags on leaf heads only and preserve distinct page-cover previews where present.
+- Admin feedback screenshots use authenticated storage downloads and local blob previews, never signed links; each new download must re-evaluate current storage permissions.
