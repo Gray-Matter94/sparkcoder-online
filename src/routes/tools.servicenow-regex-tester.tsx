@@ -110,7 +110,8 @@ function isRiskyPattern(pattern: string): boolean {
       hasQuant = stack.pop() ?? false;
       const next = pattern[i + 1];
       const quantified = next === "*" || next === "+" || next === "{" || next === "?";
-      if (inner && quantified && next !== "?") return true;
+      const unbounded = next === "*" || next === "+" || (next === "{" && /^\{\d*,\}/.test(pattern.slice(i + 1)));
+      if (inner && unbounded) return true;
       if (inner || quantified) hasQuant = true;
       continue;
     }
