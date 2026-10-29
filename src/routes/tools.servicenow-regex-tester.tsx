@@ -89,11 +89,11 @@ const PRESETS: Preset[] = [
   },
 ];
 
-export const MAX_PATTERN_LENGTH = 300;
-export const MAX_INPUT_LENGTH = 5000;
+const MAX_PATTERN_LENGTH = 300;
+const MAX_INPUT_LENGTH = 5000;
 
 /** Detects quantified groups that themselves contain a quantifier, e.g. (a+)+ or (\w*)*, and backreferences. */
-export function isRiskyPattern(pattern: string): boolean {
+function isRiskyPattern(pattern: string): boolean {
   if (/\\[1-9]|\\k</.test(pattern)) return true;
   const stack: boolean[] = [];
   let hasQuant = false;
@@ -119,7 +119,7 @@ export function isRiskyPattern(pattern: string): boolean {
   return false;
 }
 
-export function buildRegex(pattern: string, flags: string): { re: RegExp | null; error: string | null } {
+function buildRegex(pattern: string, flags: string): { re: RegExp | null; error: string | null } {
   if (!pattern) return { re: null, error: null };
   if (pattern.length > MAX_PATTERN_LENGTH)
     return { re: null, error: `Pattern is too long (max ${MAX_PATTERN_LENGTH} characters).` };
