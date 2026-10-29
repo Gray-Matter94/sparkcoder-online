@@ -89,8 +89,46 @@ const PRESETS: Preset[] = [
   },
 ];
 
+const MAX_PATTERN_LENGTH = 300;
+const MAX_INPUT_LENGTH = 5000;
+
+/** Detects quantified groups that themselves contain a quantifier, e.g. (a+)+ or (\w*)*, and backreferences. */
+function isRiskyPattern(pattern: string): boolean {
+  if (/\\[1-9]|\\k</.test(pattern)) return true;
+  const stack: boolean[] = [];
+  let hasQuant = false;
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern[i];
+    if (c === "\\") { i++; continue; }
+    if (c === "[") {
+      while (i < pattern.length && pattern[i] !== "]") { if (pattern[i] === "\\") i++; i++; }
+      continue;
+    }
+    if (c === "(") { stack.push(hasQuant); hasQuant = false; continue; }
+    if (c === ")") {
+      const inner = hasQuant;
+      hasQuant = stack.pop() ?? false;
+      const next = pattern[i + 1];
+      const quantified = next === "*" || next === "+" || next === "{" || next === "?";
+      const unbounded = next === "*" || next === "+" || (next === "{" && /^\{\d*,\}/.test(pattern.slice(i + 1)));
+      if (inner && unbounded) return true;
+      if (inner || quantified) hasQuant = true;
+      continue;
+    }
+    if (c === "*" || c === "+" || c === "{") hasQuant = true;
+  }
+  return false;
+}
+
 function buildRegex(pattern: string, flags: string): { re: RegExp | null; error: string | null } {
   if (!pattern) return { re: null, error: null };
+  if (pattern.length > MAX_PATTERN_LENGTH)
+    return { re: null, error: `Pattern is too long (max ${MAX_PATTERN_LENGTH} characters).` };
+  if (isRiskyPattern(pattern))
+    return {
+      re: null,
+      error: "This pattern nests repeats (like (a+)+) or uses backreferences, which can freeze the page. Simplify it to test here.",
+    };
   try {
     return { re: new RegExp(pattern, flags), error: null };
   } catch (e) {
@@ -107,6 +145,7 @@ interface MatchInfo {
 
 function getMatches(re: RegExp | null, input: string): MatchInfo[] {
   if (!re || !input) return [];
+  const started = Date.now();
   const matches: MatchInfo[] = [];
   const global = re.flags.includes("g");
   const safe = global ? re : new RegExp(re.source, re.flags + "g");
@@ -120,7 +159,7 @@ function getMatches(re: RegExp | null, input: string): MatchInfo[] {
       position: m.index,
     });
     if (m[0].length === 0) safe.lastIndex++;
-    if (matches.length > 500) break;
+    if (matches.length > 500 || Date.now() - started > 200) break;
   }
   return matches;
 }
@@ -334,7 +373,8 @@ function RegexTester() {
                 <span className="px-2 flex items-center text-muted-foreground select-none">/</span>
                 <input
                   value={pattern}
-                  onChange={(e) => setPattern(e.target.value)}
+                  onChange={(e) => setPattern(e.target.value.slice(0, MAX_PATTERN_LENGTH))}
+                  maxLength={MAX_PATTERN_LENGTH}
                   spellCheck={false}
                   className="flex-1 bg-transparent py-2 outline-none"
                   aria-label="Regular expression pattern"
@@ -372,7 +412,8 @@ function RegexTester() {
             </span>
             <textarea
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
+              maxLength={MAX_INPUT_LENGTH}
               rows={6}
               spellCheck={false}
               aria-label="Test input"
