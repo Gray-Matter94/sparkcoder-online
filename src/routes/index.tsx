@@ -1,5 +1,11 @@
 import { useMemo, type CSSProperties } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { TabBar } from "glisse";
+import type { AnchorHTMLAttributes } from "react";
+
+function RouterAnchor({ href = "/", ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return <Link to={href} {...(props as object)} />;
+}
 import { CATEGORIES, categoriesForTrack } from "@/lib/questions";
 import {
   LIVE_CODING_TASK_TOTAL,
@@ -305,7 +311,8 @@ function Home() {
                 to="/practice/$category"
                 params={{ category: start.category.id }}
                 search={{ difficulty: levelDifficulty(start.question.level), challenge: start.question.id }}
-                className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border-2 border-primary bg-primary px-5 py-3 text-primary-foreground shadow-[0_7px_0_var(--color-primary-deep),0_0_26px_color-mix(in_oklab,var(--color-primary)_35%,transparent)] transition-all active:translate-y-1 active:shadow-none"
+                data-variant="filled"
+                className="lg-glass lg-button glisse-action glisse-cta flex min-h-14 w-full items-center justify-between gap-3 px-5 py-3"
               >
                 <span>
                   <span className="block font-display text-lg tracking-wide">
@@ -614,25 +621,18 @@ function Home() {
         </section>
       </main>
 
-      <nav
-        aria-label="Explore tracks"
-        className="max-w-md mx-auto px-4 pb-4 flex flex-wrap gap-2 justify-center text-[11px]"
-      >
-        <Link to="/servicenow-irm-architect-practice" className="underline text-muted-foreground hover:text-accent">
-          IRM Architect Track
-        </Link>
-        <Link to="/practice/$category" params={{ category: "grc-tables" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
-          GRC Tables
-        </Link>
-        <Link to="/practice/$category" params={{ category: "risk-scoring" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
-          Risk Scoring
-        </Link>
-        <Link to="/practice/$category" params={{ category: "policy-compliance" }} search={{ difficulty: undefined }} className="underline text-muted-foreground hover:text-accent">
-          Policy &amp; Compliance
-        </Link>
-        <Link to="/learn/irm-architect-interview-questions" className="underline text-muted-foreground hover:text-accent">
-          IRM Interview Q&amp;A
-        </Link>
+      <nav aria-label="Explore tracks" className="glisse-tabbar-wrap max-w-full mx-auto px-4 pb-4 flex justify-center overflow-x-auto">
+        <TabBar
+          link={RouterAnchor}
+          value={null}
+          items={[
+            { value: "irm", label: "IRM Architect", icon: "🛡️", href: "/servicenow-irm-architect-practice" },
+            { value: "grc", label: "GRC Tables", icon: "📋", href: "/practice/grc-tables" },
+            { value: "risk", label: "Risk Scoring", icon: "📈", href: "/practice/risk-scoring" },
+            { value: "policy", label: "Policy", icon: "📜", href: "/practice/policy-compliance" },
+            { value: "qa", label: "IRM Q&A", icon: "💬", href: "/learn/irm-architect-interview-questions" },
+          ]}
+        />
       </nav>
       <footer className="py-6 text-center text-[10px] text-muted-foreground uppercase tracking-widest">
         Built for thumb-driving on the train.
