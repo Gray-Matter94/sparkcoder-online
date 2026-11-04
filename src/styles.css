@@ -703,3 +703,17 @@
 .glisse-search {
   width: 100%;
 }
+.glisse-track-wrap {
+  container-type: inline-size;
+}
+.glisse-track-picker.lg-segmented {
+  --lg-tab-width: calc((100cqw - 6px) / 5);
+  --lg-tab-height: 52px;
+}
+.glisse-search.lg-input {
+  max-width: none;
+}
+.glisse-cta.lg-button {
+  justify-content: space-between;
+  text-align: left;
+}

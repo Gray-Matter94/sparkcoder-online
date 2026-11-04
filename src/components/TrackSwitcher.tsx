@@ -14,6 +14,7 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
           {TRACKS.length} TRACKS
         </span>
       </div>
+      <div className="glisse-track-wrap">
       <SegmentedControl
         aria-label="Choose a practice track"
         className="glisse-track-picker"
@@ -31,6 +32,7 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
           ),
         }))}
       />
+      </div>
       <p className="text-[11px] text-muted-foreground leading-snug px-1">
         {TRACKS.find((t) => t.id === active)?.tagline}
       </p>
