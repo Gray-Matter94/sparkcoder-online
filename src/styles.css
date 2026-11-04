@@ -688,3 +688,18 @@
 .track-colour-option[aria-selected="true"] {
   border-color: var(--option-colour);
 }
+
+/* Glisse liquid-glass controls: follow the selected learning-path colour. */
+:root {
+  --lg-fill: var(--color-primary);
+  --lg-on: var(--color-primary);
+  --lg-segment-thumb: color-mix(in oklab, var(--color-primary) 38%, transparent);
+  --lg-ring: var(--color-ring);
+}
+.glisse-action[data-variant="filled"] {
+  color: var(--color-primary-foreground);
+}
+.glisse-track-picker,
+.glisse-search {
+  width: 100%;
+}
