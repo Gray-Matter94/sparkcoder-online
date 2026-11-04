@@ -1,3 +1,4 @@
+import { SegmentedControl } from "glisse";
 import { TRACKS, useTrack, type TrackId } from "@/lib/tracks";
 
 export function TrackSwitcher({ className = "" }: { className?: string }) {
@@ -13,35 +14,23 @@ export function TrackSwitcher({ className = "" }: { className?: string }) {
           {TRACKS.length} TRACKS
         </span>
       </div>
-      <div
-        role="tablist"
+      <SegmentedControl
         aria-label="Choose a practice track"
-        className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 rounded-2xl border-2 border-border bg-panel"
-      >
-        {TRACKS.map((t) => {
-          const isActive = t.id === active;
-          return (
-            <button
-              key={t.id}
-              role="tab"
-              aria-selected={isActive}
-              aria-label={`Switch to ${t.name} practice track`}
-              onClick={() => setActive(t.id as TrackId)}
-              data-track-option={t.id}
-              className={`track-colour-option group relative flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-all active:translate-y-0.5 dark-glass-option floating-glass ${
-                isActive
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-transparent text-muted-foreground"
-              }`}
-            >
-              <span className="text-xl leading-none">{t.emoji}</span>
-              <span className="font-display text-[11px] tracking-wide leading-tight text-center">
+        className="glisse-track-picker"
+        value={active}
+        onValueChange={(v) => setActive(v as TrackId)}
+        items={TRACKS.map((t) => ({
+          value: t.id,
+          label: (
+            <span className="flex flex-col items-center gap-0.5 py-1" data-track-option={t.id}>
+              <span className="text-lg leading-none">{t.emoji}</span>
+              <span className="font-display text-[10px] tracking-wide leading-tight">
                 {t.short.toUpperCase()}
               </span>
-            </button>
-          );
-        })}
-      </div>
+            </span>
+          ),
+        }))}
+      />
       <p className="text-[11px] text-muted-foreground leading-snug px-1">
         {TRACKS.find((t) => t.id === active)?.tagline}
       </p>
