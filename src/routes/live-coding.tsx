@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { SearchField } from "glisse";
 import { Fragment, useMemo, useRef, useState, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -698,31 +699,13 @@ function LiveCoding() {
             </div>
           </div>
 
-          <div className="relative">
-            <span
-              aria-hidden="true"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
-            >
-              🔍
-            </span>
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…`}
-              aria-label="Search live coding tasks by keyword"
-              className="w-full h-10 pl-9 pr-24 rounded-xl bg-panel border-2 border-border text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:border-amber-500/60"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label="Clear search"
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2 rounded-lg bg-zinc-800 text-[10px] font-bold tracking-widest text-muted-foreground hover:text-foreground border border-zinc-700"
-              >
-                CLEAR
-              </button>
-            )}
-          </div>
+          <SearchField
+            value={query}
+            onValueChange={setQuery}
+            placeholder={`Search ${LIVE_CODING_TASK_TOTAL} live-coding tasks — try 'GlideAggregate', 'onChange', 'incident'…`}
+            aria-label="Search live coding tasks by keyword"
+            className="glisse-search w-full"
+          />
           {query && (
             <p className="text-[11px] text-muted-foreground font-mono">
               {noResults

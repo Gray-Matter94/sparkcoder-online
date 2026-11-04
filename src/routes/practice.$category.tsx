@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
+import { Button as GlassButton } from "glisse";
 import { useMemo, useState, useEffect } from "react";
 import { CATEGORIES, type Category, type Option, type SimulatorOutput } from "@/lib/questions";
 import { allPuzzlesFor, puzzleCountsForCategory } from "@/lib/task-counts";
@@ -406,22 +407,23 @@ function Practice() {
               </div>
             )}
             <div className="p-3 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3">
-              <button
+              <GlassButton
                 onClick={() => setHintOpen((v) => !v)}
                 disabled={status === "running"}
-                className="h-14 px-4 bg-panel border-2 border-border text-foreground font-display text-sm rounded-2xl tracking-wider disabled:opacity-40"
+                className="glisse-action h-14 px-4 font-display text-sm tracking-wider"
                 aria-expanded={hintOpen}
                 aria-label={`Toggle ${difficulty} hint`}
               >
                 💡 HINT
-              </button>
-              <button
+              </GlassButton>
+              <GlassButton
+                variant="filled"
                 onClick={handleRun}
                 disabled={!picked || status === "running"}
-                className="flex-1 h-14 bg-primary text-primary-foreground font-display text-lg rounded-2xl shadow-[0_8px_0_var(--color-primary-deep)] active:translate-y-1 active:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider"
+                className="glisse-action flex-1 h-14 font-display text-lg tracking-wider"
               >
                 {status === "running" ? "RUNNING…" : "▶ RUN SCRIPT"}
-              </button>
+              </GlassButton>
             </div>
           </>
         )}
