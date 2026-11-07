@@ -7,9 +7,9 @@ import { useState } from "react";
 import type { SimulatorOutput } from "@/lib/questions";
 import { QUICK_ANSWERS, SCENARIO_QA } from "@/lib/content/irm-interview";
 
-const TITLE = "ServiceNow IRM Architect Interview Questions & Answers";
+const TITLE = "ServiceNow IRM Architect Interview Questions (2026) — 14 Answered";
 const DESCRIPTION =
-  "14 ServiceNow IRM architect interview questions with answers: risk scoring, control architecture, entity filters, vendor risk, audit evidence — plus simulator traces.";
+  "Prepare for a ServiceNow IRM architect interview: 14 real questions with model answers on risk scoring, control architecture, entity filters, vendor risk and audit evidence — free, with live simulator traces.";
 const URL =
   "https://www.sparkcoder.online/learn/irm-architect-interview-questions";
 
