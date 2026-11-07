@@ -5,9 +5,9 @@ import { ToolAboutBlock } from "@/components/ToolAboutBlock";
 import { useProgress } from "@/lib/progress";
 import { useMemo, useState } from "react";
 
-const TITLE = "ServiceNow Regex Tester — Patterns, Presets & Snippets";
+const TITLE = "Free ServiceNow Regex Tester — Live Patterns & Copy-Ready Snippets";
 const DESCRIPTION =
-  "Live regex tester for ServiceNow scripts: client scripts, business rules, inbound email, ACLs. Presets for sys_id, INC, email, URL — copy-ready snippets.";
+  "Test regex for ServiceNow scripts in your browser: client scripts, business rules, inbound email, ACLs. Built-in presets for sys_id, INC numbers, email and URL — free, no signup.";
 const URL = "https://www.sparkcoder.online/tools/servicenow-regex-tester";
 
 interface Preset {
