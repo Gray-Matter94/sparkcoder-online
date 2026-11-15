@@ -34,7 +34,9 @@ import { Route as InsightsBacklinksRouteImport } from './routes/insights.backlin
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as LearnAclScriptingRouteImport } from './routes/learn.acl-scripting'
+import { Route as LearnBusinessRulesInterviewQuestionsRouteImport } from './routes/learn.business-rules-interview-questions'
 import { Route as LearnClientScriptHowToRouteImport } from './routes/learn.client-script-how-to'
+import { Route as LearnClientScriptInterviewQuestionsRouteImport } from './routes/learn.client-script-interview-questions'
 import { Route as LearnCmdbInterviewQuestionsRouteImport } from './routes/learn.cmdb-interview-questions'
 import { Route as LearnCsdmInterviewQuestionsRouteImport } from './routes/learn.csdm-interview-questions'
 import { Route as LearnCsmInterviewQuestionsRouteImport } from './routes/learn.csm-interview-questions'
@@ -44,6 +46,7 @@ import { Route as LearnFlowDesignerHowToRouteImport } from './routes/learn.flow-
 import { Route as LearnFlowDesignerInterviewQuestionsRouteImport } from './routes/learn.flow-designer-interview-questions'
 import { Route as LearnGlideajaxInterviewQuestionsRouteImport } from './routes/learn.glideajax-interview-questions'
 import { Route as LearnHrsdInterviewQuestionsRouteImport } from './routes/learn.hrsd-interview-questions'
+import { Route as LearnIntegrationInterviewQuestionsRouteImport } from './routes/learn.integration-interview-questions'
 import { Route as LearnIntegrationhubInterviewQuestionsRouteImport } from './routes/learn.integrationhub-interview-questions'
 import { Route as LearnIrmArchitectInterviewQuestionsRouteImport } from './routes/learn.irm-architect-interview-questions'
 import { Route as LearnItsmInterviewQuestionsRouteImport } from './routes/learn.itsm-interview-questions'
@@ -191,11 +194,23 @@ const LearnAclScriptingRoute = LearnAclScriptingRouteImport.update({
   path: '/learn/acl-scripting',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnBusinessRulesInterviewQuestionsRoute =
+  LearnBusinessRulesInterviewQuestionsRouteImport.update({
+    id: '/learn/business-rules-interview-questions',
+    path: '/learn/business-rules-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnClientScriptHowToRoute = LearnClientScriptHowToRouteImport.update({
   id: '/learn/client-script-how-to',
   path: '/learn/client-script-how-to',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnClientScriptInterviewQuestionsRoute =
+  LearnClientScriptInterviewQuestionsRouteImport.update({
+    id: '/learn/client-script-interview-questions',
+    path: '/learn/client-script-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnCmdbInterviewQuestionsRoute =
   LearnCmdbInterviewQuestionsRouteImport.update({
     id: '/learn/cmdb-interview-questions',
@@ -246,6 +261,12 @@ const LearnHrsdInterviewQuestionsRoute =
   LearnHrsdInterviewQuestionsRouteImport.update({
     id: '/learn/hrsd-interview-questions',
     path: '/learn/hrsd-interview-questions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LearnIntegrationInterviewQuestionsRoute =
+  LearnIntegrationInterviewQuestionsRouteImport.update({
+    id: '/learn/integration-interview-questions',
+    path: '/learn/integration-interview-questions',
     getParentRoute: () => rootRouteImport,
   } as any)
 const LearnIntegrationhubInterviewQuestionsRoute =
@@ -358,7 +379,9 @@ export interface FileRoutesByFullPath {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/business-rules-interview-questions': typeof LearnBusinessRulesInterviewQuestionsRoute
   '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
+  '/learn/client-script-interview-questions': typeof LearnClientScriptInterviewQuestionsRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
@@ -368,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
+  '/learn/integration-interview-questions': typeof LearnIntegrationInterviewQuestionsRoute
   '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
@@ -410,6 +434,8 @@ export interface FileRoutesByTo {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/business-rules-interview-questions': typeof LearnBusinessRulesInterviewQuestionsRoute
+  '/learn/client-script-interview-questions': typeof LearnClientScriptInterviewQuestionsRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
@@ -418,6 +444,7 @@ export interface FileRoutesByTo {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
+  '/learn/integration-interview-questions': typeof LearnIntegrationInterviewQuestionsRoute
   '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
@@ -461,7 +488,9 @@ export interface FileRoutesById {
   '/insights/backlinks': typeof InsightsBacklinksRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/learn/acl-scripting': typeof LearnAclScriptingRoute
+  '/learn/business-rules-interview-questions': typeof LearnBusinessRulesInterviewQuestionsRoute
   '/learn/client-script-how-to': typeof LearnClientScriptHowToRouteWithChildren
+  '/learn/client-script-interview-questions': typeof LearnClientScriptInterviewQuestionsRoute
   '/learn/cmdb-interview-questions': typeof LearnCmdbInterviewQuestionsRoute
   '/learn/csdm-interview-questions': typeof LearnCsdmInterviewQuestionsRoute
   '/learn/csm-interview-questions': typeof LearnCsmInterviewQuestionsRoute
@@ -471,6 +500,7 @@ export interface FileRoutesById {
   '/learn/flow-designer-interview-questions': typeof LearnFlowDesignerInterviewQuestionsRoute
   '/learn/glideajax-interview-questions': typeof LearnGlideajaxInterviewQuestionsRoute
   '/learn/hrsd-interview-questions': typeof LearnHrsdInterviewQuestionsRoute
+  '/learn/integration-interview-questions': typeof LearnIntegrationInterviewQuestionsRoute
   '/learn/integrationhub-interview-questions': typeof LearnIntegrationhubInterviewQuestionsRoute
   '/learn/irm-architect-interview-questions': typeof LearnIrmArchitectInterviewQuestionsRoute
   '/learn/itsm-interview-questions': typeof LearnItsmInterviewQuestionsRoute
@@ -515,7 +545,9 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/business-rules-interview-questions'
     | '/learn/client-script-how-to'
+    | '/learn/client-script-interview-questions'
     | '/learn/cmdb-interview-questions'
     | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
@@ -525,6 +557,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/hrsd-interview-questions'
+    | '/learn/integration-interview-questions'
     | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
@@ -567,6 +600,8 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/business-rules-interview-questions'
+    | '/learn/client-script-interview-questions'
     | '/learn/cmdb-interview-questions'
     | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
@@ -575,6 +610,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/hrsd-interview-questions'
+    | '/learn/integration-interview-questions'
     | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
@@ -617,7 +653,9 @@ export interface FileRouteTypes {
     | '/insights/backlinks'
     | '/learn/$topic'
     | '/learn/acl-scripting'
+    | '/learn/business-rules-interview-questions'
     | '/learn/client-script-how-to'
+    | '/learn/client-script-interview-questions'
     | '/learn/cmdb-interview-questions'
     | '/learn/csdm-interview-questions'
     | '/learn/csm-interview-questions'
@@ -627,6 +665,7 @@ export interface FileRouteTypes {
     | '/learn/flow-designer-interview-questions'
     | '/learn/glideajax-interview-questions'
     | '/learn/hrsd-interview-questions'
+    | '/learn/integration-interview-questions'
     | '/learn/integrationhub-interview-questions'
     | '/learn/irm-architect-interview-questions'
     | '/learn/itsm-interview-questions'
@@ -670,7 +709,9 @@ export interface RootRouteChildren {
   InsightsBacklinksRoute: typeof InsightsBacklinksRoute
   LearnTopicRoute: typeof LearnTopicRoute
   LearnAclScriptingRoute: typeof LearnAclScriptingRoute
+  LearnBusinessRulesInterviewQuestionsRoute: typeof LearnBusinessRulesInterviewQuestionsRoute
   LearnClientScriptHowToRoute: typeof LearnClientScriptHowToRouteWithChildren
+  LearnClientScriptInterviewQuestionsRoute: typeof LearnClientScriptInterviewQuestionsRoute
   LearnCmdbInterviewQuestionsRoute: typeof LearnCmdbInterviewQuestionsRoute
   LearnCsdmInterviewQuestionsRoute: typeof LearnCsdmInterviewQuestionsRoute
   LearnCsmInterviewQuestionsRoute: typeof LearnCsmInterviewQuestionsRoute
@@ -680,6 +721,7 @@ export interface RootRouteChildren {
   LearnFlowDesignerInterviewQuestionsRoute: typeof LearnFlowDesignerInterviewQuestionsRoute
   LearnGlideajaxInterviewQuestionsRoute: typeof LearnGlideajaxInterviewQuestionsRoute
   LearnHrsdInterviewQuestionsRoute: typeof LearnHrsdInterviewQuestionsRoute
+  LearnIntegrationInterviewQuestionsRoute: typeof LearnIntegrationInterviewQuestionsRoute
   LearnIntegrationhubInterviewQuestionsRoute: typeof LearnIntegrationhubInterviewQuestionsRoute
   LearnIrmArchitectInterviewQuestionsRoute: typeof LearnIrmArchitectInterviewQuestionsRoute
   LearnItsmInterviewQuestionsRoute: typeof LearnItsmInterviewQuestionsRoute
@@ -872,11 +914,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnAclScriptingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/business-rules-interview-questions': {
+      id: '/learn/business-rules-interview-questions'
+      path: '/learn/business-rules-interview-questions'
+      fullPath: '/learn/business-rules-interview-questions'
+      preLoaderRoute: typeof LearnBusinessRulesInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/client-script-how-to': {
       id: '/learn/client-script-how-to'
       path: '/learn/client-script-how-to'
       fullPath: '/learn/client-script-how-to'
       preLoaderRoute: typeof LearnClientScriptHowToRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/client-script-interview-questions': {
+      id: '/learn/client-script-interview-questions'
+      path: '/learn/client-script-interview-questions'
+      fullPath: '/learn/client-script-interview-questions'
+      preLoaderRoute: typeof LearnClientScriptInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/cmdb-interview-questions': {
@@ -940,6 +996,13 @@ declare module '@tanstack/react-router' {
       path: '/learn/hrsd-interview-questions'
       fullPath: '/learn/hrsd-interview-questions'
       preLoaderRoute: typeof LearnHrsdInterviewQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/integration-interview-questions': {
+      id: '/learn/integration-interview-questions'
+      path: '/learn/integration-interview-questions'
+      fullPath: '/learn/integration-interview-questions'
+      preLoaderRoute: typeof LearnIntegrationInterviewQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/integrationhub-interview-questions': {
@@ -1122,7 +1185,11 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsBacklinksRoute: InsightsBacklinksRoute,
   LearnTopicRoute: LearnTopicRoute,
   LearnAclScriptingRoute: LearnAclScriptingRoute,
+  LearnBusinessRulesInterviewQuestionsRoute:
+    LearnBusinessRulesInterviewQuestionsRoute,
   LearnClientScriptHowToRoute: LearnClientScriptHowToRouteWithChildren,
+  LearnClientScriptInterviewQuestionsRoute:
+    LearnClientScriptInterviewQuestionsRoute,
   LearnCmdbInterviewQuestionsRoute: LearnCmdbInterviewQuestionsRoute,
   LearnCsdmInterviewQuestionsRoute: LearnCsdmInterviewQuestionsRoute,
   LearnCsmInterviewQuestionsRoute: LearnCsmInterviewQuestionsRoute,
@@ -1133,6 +1200,8 @@ const rootRouteChildren: RootRouteChildren = {
     LearnFlowDesignerInterviewQuestionsRoute,
   LearnGlideajaxInterviewQuestionsRoute: LearnGlideajaxInterviewQuestionsRoute,
   LearnHrsdInterviewQuestionsRoute: LearnHrsdInterviewQuestionsRoute,
+  LearnIntegrationInterviewQuestionsRoute:
+    LearnIntegrationInterviewQuestionsRoute,
   LearnIntegrationhubInterviewQuestionsRoute:
     LearnIntegrationhubInterviewQuestionsRoute,
   LearnIrmArchitectInterviewQuestionsRoute:

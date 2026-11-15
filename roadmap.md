@@ -17,3 +17,9 @@
 - [x] Correct and verify missing headings in blog, guide, and backlinks states.
 - [x] Verify approved share artwork and public page image tags.
 - [x] Assess the unsupported IRM snippet opportunity; leave unchanged because the stored finding says its evidence does not qualify.
+
+# New interview guides
+
+- [ ] Write three source-backed guides for business rules, client scripts, and REST integrations.
+- [ ] Add guide links to Learn and the interview hub, with page metadata and sitemap entries.
+- [ ] Verify navigation, readable mobile/desktop pages, and search metadata.

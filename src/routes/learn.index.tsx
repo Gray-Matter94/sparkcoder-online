@@ -5,6 +5,7 @@ import { useProgress, todayStr, daysBetween } from "@/lib/progress";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { TrackSwitcher } from "@/components/TrackSwitcher";
+import { InterviewGuideLinks } from "@/components/InterviewGuide";
 
 export const Route = createFileRoute("/learn/")({
   head: () => {
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/learn/")({
         },
         { property: "og:url", content: "https://www.sparkcoder.online/learn" },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: "https://www.sparkcoder.online/learn" }],
       scripts: [
@@ -72,6 +74,7 @@ function Learn() {
             studied — no XP, no streak pressure.
           </p>
         </section>
+        <InterviewGuideLinks />
         <Link
           to="/glossary"
           aria-label="Open the ServiceNow and ITSM glossary"

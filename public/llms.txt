@@ -9,6 +9,9 @@ SparkCoder turns ServiceNow scripting prep into a mobile-friendly game. Pick a m
 - [Arcade lobby](/): Module list, stats, streak, badges, and the daily challenge.
 - [ServiceNow interview questions and answers](/servicenow-interview-questions-and-answers): Role-by-role interview Q&A hub (developer, admin, IRM, CMDB/Discovery, ITSM).
 - [ServiceNow developer interview questions](/servicenow-developer-interview-questions): Scripting-focused developer Q&A with code examples — GlideRecord, business rules, GlideAjax, Script Includes, REST, performance.
+- [Business Rules interview questions](/learn/business-rules-interview-questions): Eight timing, recursion, validation, and debugging questions with code and official references.
+- [Client Script interview questions](/learn/client-script-interview-questions): Eight event, UI Policy, asynchronous lookup, and validation questions with code and official references.
+- [Integration interview questions](/learn/integration-interview-questions): Eight RESTMessageV2, authentication, timeout, retry, and duplicate-prevention questions with official references.
 - [Daily challenge](/daily): One curated puzzle per day for bonus XP and streak protection.
 - [ServiceNow & ITSM glossary](/glossary): Term hub — definitions, platform examples and interview angles, one page per term (/glossary/incident, /glossary/cmdb, /glossary/acl, ...).
 - [Learn & quiz](/learn): Illustrated ServiceNow glossary and topic quizzes.

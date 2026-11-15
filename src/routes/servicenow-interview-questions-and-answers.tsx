@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsBar } from "@/components/StatsBar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useProgress } from "@/lib/progress";
+import { InterviewGuideLinks } from "@/components/InterviewGuide";
 
 const TITLE = "ServiceNow Interview Questions and Answers (2026 Hub)";
 const DESCRIPTION =
@@ -290,6 +291,8 @@ function HubPage() {
             drills for that topic.
           </p>
         </header>
+
+        <InterviewGuideLinks />
 
         <nav
           aria-label="Roles covered"

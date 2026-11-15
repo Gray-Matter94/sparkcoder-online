@@ -7,6 +7,7 @@ import { FLOW_HOWTO_GUIDES } from "@/lib/content/flow-howto";
 import { CLIENT_SCRIPT_GUIDES } from "@/lib/content/client-script-howto";
 
 import { DISCOVERY_SECTIONS } from "@/lib/discovery-interview";
+import { INTERVIEW_GUIDES } from "@/lib/content/interview-guides";
 
 
 const BASE_URL = "https://www.sparkcoder.online";
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/daily", changefreq: "daily", priority: "0.9" },
           { path: "/learn", changefreq: "weekly", priority: "0.8" },
+          ...INTERVIEW_GUIDES.map(guide => ({ path: guide.path, changefreq: "monthly" as const, priority: "0.8" })),
           { path: "/learn/scenario-based-scripting", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/acl-scripting", changefreq: "monthly", priority: "0.8" },
           { path: "/learn/glideajax-interview-questions", changefreq: "monthly", priority: "0.8" },

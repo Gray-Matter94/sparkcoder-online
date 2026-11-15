@@ -15,3 +15,4 @@
 - Use the shared brand-preview metadata helper on text-only public practice guides; attach image tags on leaf heads only and preserve distinct page-cover previews where present.
 - Admin feedback screenshots use authenticated storage downloads and local blob previews, never signed links; each new download must re-evaluate current storage permissions.
 - Liquid-glass controls come from the glisse package (dark theme via html data-theme); its --lg-* tokens are mapped to path colour tokens in src/styles.css so glass follows the selected path.
+- Focused interview guides use browser-safe content records and a shared guide renderer/head helper; reuse those records for hub links and sitemap entries so published guide discovery stays consistent.
