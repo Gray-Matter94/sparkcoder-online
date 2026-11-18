@@ -20,6 +20,6 @@
 
 # New interview guides
 
-- [ ] Write three source-backed guides for business rules, client scripts, and REST integrations.
-- [ ] Add guide links to Learn and the interview hub, with page metadata and sitemap entries.
-- [ ] Verify navigation, readable mobile/desktop pages, and search metadata.
+- [x] Write three source-backed guides for business rules, client scripts, and REST integrations.
+- [x] Add guide links to Learn and the interview hub, with page metadata and sitemap entries.
+- [x] Verify navigation, readable mobile/desktop pages, and search metadata.
